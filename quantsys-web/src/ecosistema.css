@@ -1,0 +1,10 @@
+:root{--primary:#4F46E5;--accent:#0D9488}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F6F8FB;color:#0F172A;font-family:Mulish,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:#4F46E5;text-decoration:none}
+a:hover{color:#4338CA}
+::selection{background:rgba(20,184,166,.22)}
+@keyframes qsUp{0%{opacity:0;transform:translateY(24px)}100%{opacity:1;transform:none}}
+@keyframes qsBlink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes qsFlowX{0%{transform:translateX(-30%);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateX(520%);opacity:0}}

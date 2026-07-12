@@ -1,0 +1,139 @@
+:root{--primary:#4F46E5;--accent:#0D9488}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+section[id]{scroll-margin-top:80px}
+body{margin:0;background:#F6F8FB;color:#0F172A;font-family:Mulish,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:clip}
+a{color:#4F46E5;text-decoration:none}
+a:hover{color:#4338CA}
+::selection{background:rgba(20,184,166,.22)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#cdd3e4;border-radius:999px;border:3px solid transparent;background-clip:content-box}
+@keyframes qsUp{0%{opacity:0;transform:translateY(24px)}100%{opacity:1;transform:none}}
+@keyframes qsFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes qsBlink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes qsMarq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes qsMarqR{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}
+@keyframes qsVUp{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
+@keyframes qsSpin{to{transform:rotate(360deg)}}
+@keyframes qsSpinR{to{transform:rotate(-360deg)}}
+@keyframes qsFlow{to{stroke-dashoffset:-220}}
+@keyframes qsStep{0%,66%,100%{color:#AEB7C9;opacity:.42;filter:none}33%{color:#5B54E6;opacity:1;filter:drop-shadow(0 0 5px rgba(88,80,230,.55))}}
+@keyframes qsPulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.7);opacity:.25}}
+@keyframes qsFloatB{0%,100%{translate:0 0}50%{translate:0 -13px}}
+/* ---------- DARK THEME (overrides keyed on runtime-serialized inline styles) ---------- */
+[data-theme="dark"]{background:#0A0E1A!important;color:#E7ECF5}
+body[data-theme="dark"]{background:#0A0E1A;color:#E7ECF5}
+[data-theme="dark"] [data-nav]{background:rgba(12,17,28,.85)!important;box-shadow:0 10px 30px -12px rgba(0,0,0,.55)!important}
+/* surfaces */
+[data-theme="dark"] [style*="background: rgb(255, 255, 255)"]{background:#131b2e!important}
+[data-theme="dark"] [style*="background: rgb(245, 247, 251)"],[data-theme="dark"] [style*="background: rgb(247, 249, 252)"],[data-theme="dark"] [style*="background: rgb(241, 244, 249)"],[data-theme="dark"] [style*="background: rgb(238, 241, 248)"],[data-theme="dark"] [style*="background: rgb(238, 242, 248)"]{background:#0e1626!important}
+[data-theme="dark"] [style*="background: rgb(238, 241, 255)"]{background:rgba(99,102,241,.2)!important}
+[data-theme="dark"] [style*="background: rgb(236, 253, 246)"]{background:rgba(20,184,166,.2)!important}
+[data-theme="dark"] [style*="background: rgb(251, 243, 224)"]{background:rgba(224,168,58,.22)!important}
+[data-theme="dark"] [style*="background: rgb(15, 23, 42)"]{background:#1e2a45!important}
+[data-theme="dark"] [style*="background: rgba(15, 23, 42, 0.08)"]{background:rgba(255,255,255,.12)!important}
+/* text + currentColor icons */
+[data-theme="dark"] [style*="color: rgb(15, 23, 42)"]{color:#E7ECF5!important}
+[data-theme="dark"] [style*="color: rgb(30, 41, 59)"]{color:#E7ECF5!important}
+[data-theme="dark"] [style*="color: rgb(51, 65, 85)"]{color:#C6D0E0!important}
+[data-theme="dark"] [style*="color: rgb(71, 85, 105)"]{color:#B4BFD1!important}
+[data-theme="dark"] [style*="color: rgb(100, 116, 139)"]{color:#96A3B8!important}
+[data-theme="dark"] [style*="color: rgb(148, 163, 184)"]{color:#8492A8!important}
+/* borders (scoped by 'solid' to avoid box-shadow rgba) */
+[data-theme="dark"] [style*="solid rgba(15, 23, 42, 0.05)"]{border-color:rgba(255,255,255,.07)!important}
+[data-theme="dark"] [style*="solid rgba(15, 23, 42, 0.06)"]{border-color:rgba(255,255,255,.08)!important}
+[data-theme="dark"] [style*="solid rgba(15, 23, 42, 0.07)"]{border-color:rgba(255,255,255,.09)!important}
+[data-theme="dark"] [style*="solid rgba(15, 23, 42, 0.1)"]{border-color:rgba(255,255,255,.12)!important}
+[data-theme="dark"] [style*="solid rgba(15, 23, 42, 0.12)"]{border-color:rgba(255,255,255,.14)!important}
+[data-theme="dark"] [style*="solid rgba(15, 23, 42, 0.14)"]{border-color:rgba(255,255,255,.16)!important}
+[data-theme="dark"] [style*="solid rgba(15, 23, 42, 0.16)"]{border-color:rgba(255,255,255,.18)!important}
+/* --- dark-theme fixes for light-built elements (glows, stat banner, always-dark card buttons) --- */
+[data-theme="dark"] [data-lightglow]{background:radial-gradient(closest-side,rgba(10,14,26,.94),rgba(10,14,26,.6) 60%,transparent)!important}
+[data-theme="dark"] [data-statbar]{background:rgba(17,24,42,.72)!important;border-color:rgba(255,255,255,.08)!important;box-shadow:0 1px 2px rgba(0,0,0,.3),0 18px 48px -26px rgba(0,0,0,.55)!important}
+[data-theme="dark"] [data-statbar] [style*="background: rgba(15, 23, 42, 0.1)"]{background:rgba(255,255,255,.14)!important}
+[data-theme="dark"] [data-btn-light]{background:#fff!important;color:#0C1220!important}
+/* ===================== RESPONSIVE — 3 range (desktop >1024 · tablet 769-1024 · mobile <=768) ===================== */
+[data-nav-toggle]{display:none}
+@media (min-width:1025px){[data-nav-menu]{display:none!important}[data-hscroll-bar]{display:none!important}}
+@media (max-width:1024px){
+  /* NAV → hamburger */
+  [data-nav-links],[data-nav-desklink]{display:none!important}
+  [data-nav-toggle]{display:grid!important}
+  /* split testo+visual → stack */
+  [data-r="split"],#nocode>div{grid-template-columns:1fr!important;gap:32px!important}
+  /* footer resta su una riga sola, gap più stretto */
+  [data-r="foot"]{gap:18px!important}
+  /* ---- scorrimento orizzontale card: drag + frecce, niente scrollbar ---- */
+  [data-hscroll]{display:flex!important;grid-template-columns:none!important;flex-wrap:nowrap!important;align-items:flex-start;overflow-x:auto;gap:16px!important;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:none;-ms-overflow-style:none;cursor:grab}
+  [data-hscroll]::-webkit-scrollbar{display:none}
+  [data-hscroll]>*{scroll-snap-align:start;grid-row:auto!important}
+  /* card dei caroselli: sempre visibili (il reveal on-scroll non scatta per le card fuori vista in orizzontale) */
+  [data-hscroll]>[data-reveal]{opacity:1!important;transform:none!important}
+  /* Screen 1 — le tre card larghe uguali, quasi a tutto schermo con un piccolo peek + altezza uniforme */
+  [data-hscroll="cards"]{align-items:stretch!important}
+  [data-hscroll="cards"]>*{flex:0 0 86%!important}
+  [data-hscroll="wide"]>*{flex:0 0 clamp(320px,90%,460px)!important}
+  /* copilota: immagine (chat) sopra, testo sotto (colonna) */
+  [data-hscroll="cards"]>div:first-child{flex-direction:column!important}
+  [data-hscroll="cards"]>div:first-child>div:first-child{min-height:230px!important}
+  /* Problema: card screen4 → immagine sotto, testo sopra */
+  /* card 2 e 3: stessa altezza della card 1 (flex column), testo sopra, immagine centrata, spazio riempito */
+  [data-r="card-stack"]{display:flex!important;flex-direction:column!important;align-items:stretch!important}
+  [data-r="card-stack"]>div:nth-child(2){order:1}
+  [data-r="card-stack"]>div:first-child{order:2;width:320px!important;max-width:100%!important;align-self:center}
+  [data-r="card-stack"]>[data-fill]{order:3}
+  [data-hscroll="cards"]>div:last-child{display:flex!important;flex-direction:column!important;align-items:stretch!important}
+  [data-hscroll="cards"]>div:last-child>div:nth-child(2){zoom:1.4;align-self:center}
+  [data-fill]{display:flex!important;flex:1 1 auto;flex-wrap:wrap;gap:8px;align-content:stretch;min-height:76px;margin-top:16px}
+  [data-fill]>*{min-height:50px}
+  /* Perche: card larghe immagine-sx / testo-dx */
+  [data-hscroll="wide"]>div{display:flex!important;flex-direction:row!important;align-items:center;gap:16px}
+  [data-hscroll="wide"]>div>div:first-child{flex:0 0 45%!important}
+  [data-hscroll="wide"]>div>div:last-child{flex:1;padding:0!important}
+  /* Screen 3 — niente animazioni fluttuanti nelle card in vista ridotta */
+  [data-hscroll="wide"] [style*="qsFloatB"]{animation:none!important}
+  /* frecce carosello — barra discreta in basso */
+  [data-hscroll-arrow]:hover{background:#fff!important;color:#0F172A!important}
+  /* Screen 2 — percorso: step in orizzontale sopra il visual (che resta animato) */
+  [data-percorso]{grid-template-columns:1fr!important;gap:22px!important}
+  [data-percorso]>div:last-child{max-width:600px;width:100%;margin-left:auto;margin-right:auto}
+  [data-percorso] [data-steps]{flex-direction:row!important;gap:6px!important;position:relative}
+  [data-steps-trail]{display:block!important;position:absolute;top:5px;left:12.5%;right:12.5%;height:26px;z-index:0;pointer-events:none}
+  [data-percorso] [data-steps]>button [data-stepdot]{position:relative;z-index:1}
+  [data-percorso] [data-steps]>button{flex:1 1 0!important;min-width:0;flex-direction:column!important;align-items:center!important;text-align:center;gap:8px!important;padding-bottom:0!important}
+  [data-percorso] [data-steps]>button>div:first-child>span:nth-child(2){display:none!important}
+  [data-percorso] [data-steps]>button>div:last-child{padding-bottom:0!important}
+  [data-percorso] [data-steps] [data-step-title]{font-size:15px!important;margin-top:0!important}
+  [data-percorso] [data-steps] [data-stepdesc]{display:none!important}
+  [data-percorso] [data-stepdesc-live]{display:block!important}
+}
+@media (max-width:768px){
+  [data-nav-cta]{display:none!important}
+  [style*="max-width: 1152px"],[style*="max-width: 1140px"]{padding-left:20px!important;padding-right:20px!important}
+  [data-r="g3"]{grid-template-columns:1fr!important}
+  #nocode>div{padding:22px!important}
+  #community [style*="height: 600px"]{height:460px!important}
+  /* Caroselli orizzontali (macro-categorie · community · principi): sempre ~1,5 card, in scala */
+  [data-mscroll]{grid-template-columns:none!important;grid-auto-flow:column!important;grid-auto-columns:53%!important;overflow-x:auto!important;gap:12px!important;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:6px}
+  [data-mscroll]::-webkit-scrollbar{display:none}
+  [data-mscroll]>*{scroll-snap-align:start;grid-column:auto!important;margin-top:0!important}
+  /* Numeri del metodo: restano 4 in riga, font in scala, icone nascoste per fare spazio */
+  /* Numeri del metodo: loop orizzontale a dimensioni invariate (niente shrink) */
+  [data-r="logos"]>div{text-align:center}
+  [data-r="logos"]>div>div:first-child{justify-content:center!important}
+  [data-r="logos"] [data-mloop-track]>*{width:210px!important;max-width:210px!important}
+  /* Footer: 4 colonne in una riga, brand QuantSys centrato e leggermente più grande sopra */
+  [data-r="foot"]{grid-template-columns:repeat(4,1fr)!important;gap:14px!important}
+  [data-r="foot"]>div:first-child{grid-column:1/-1!important;display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:8px}
+  [data-r="foot"]>div:first-child p{max-width:460px!important;font-size:14.5px!important}
+  [data-r="foot"]>div:first-child a[href="#top"] span:last-child{font-size:21px!important}
+  [data-r="foot"]>div:not(:first-child) a{font-size:12px!important}
+  /* macro-categorie: card tutte della stessa altezza + frecce di comando dx/sx */
+  [data-tabpanel]{align-items:stretch!important}
+  [data-tab-arrows]{display:flex!important}
+  /* community + principi: loop marquee continuo lento, card ~20% più strette */
+  [data-mloop]{--mloop-on:1}
+  [data-mloop-track]>*{flex:0 0 auto!important;width:48vw!important;max-width:300px!important;margin-top:0!important}
+  /* CTA "Entra nella beta" centrato sopra le card */
+  #principi [data-beta-open]{display:flex!important;width:-moz-fit-content;width:fit-content;margin-left:auto!important;margin-right:auto!important}
+}
