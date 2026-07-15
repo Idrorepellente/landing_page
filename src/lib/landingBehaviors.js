@@ -53,7 +53,7 @@ function initNeural() {
     particles = []; for (let i = 0; i < particleCount; i++) particles.push(new P());
   };
   const animate = () => {
-    ctx.globalAlpha = 1; ctx.fillStyle = 'rgba(' + (S.fadeRgb || fadeRgb) + ',' + trailOpacity + ')'; ctx.fillRect(0, 0, width, height);
+    ctx.globalAlpha = 1; ctx.clearRect(0, 0, width, height); // pulizia completa: niente scie/residui grigi accumulati
     for (const p of particles) { p.update(); p.draw(); }
     S.raf = requestAnimationFrame(animate);
   };
