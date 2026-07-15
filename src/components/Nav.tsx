@@ -33,7 +33,7 @@ export function Nav() {
             </svg>
           </span>
           <span className="display text-lg font-bold" style={{ color: "var(--text)" }}>
-            Quant<span style={{ color: "var(--accent)" }}>Sys</span>
+            LY<span style={{ color: "var(--accent)" }}>RA</span>
           </span>
         </Link>
         <nav className="hidden gap-1 text-sm md:flex">

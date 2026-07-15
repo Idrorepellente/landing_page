@@ -248,3 +248,29 @@ File web di questo giro: `src/app/globals.css`, `src/app/layout.tsx`, `src/app/p
    **selettore compatto** (menu a tendina + "＋ Nuova") per scegliere o creare.
 6. **Studio più largo.** Contenuto allargato (area utile ~1560px, meno margini laterali) e
    editor incorporato più alto: più spazio per IA, grafo e codice.
+
+---
+
+## Rebrand LYRA + nuova landing (sesto giro)
+
+- **Nuova home page.** La pagina principale è ora la landing fornita (Landing_page.zip),
+  integrata nel sito Next come home a tutta larghezza: intestazione, sfondo animato,
+  sezioni "Come funziona / Piattaforma / Community & Fondo / Fiducia / Dati / Per chi è",
+  caroselli, contatori e tema chiaro/scuro propri. L'HTML/CSS/JS originali sono preservati
+  fedelmente (iniettati e avviati come nel progetto di partenza), non riscritti a mano.
+- **Rinominato in "LYRA".** Ovunque compariva "Northrock"/"QuantSys" (logo di nav, logo
+  della landing, footer, testi, metadati, titolo pagina) ora c'è **LYRA**.
+- **Funzioni del sito intatte.** Marketplace, forum, runner, messaggi, feedback, profilo,
+  login e registrazione restano invariati e funzionanti. Sulla home il chrome globale del
+  sito è nascosto (la landing porta il suo); sulle altre pagine resta la barra LYRA.
+- **CTA collegati al sito reale.** I pulsanti "Entra nella beta / Prenota una call /
+  Diventa data partner" della landing portano alla **registrazione** (`/register`). I link
+  alle sotto-pagine della landing originale (che non fanno parte dell'app) rimandano in cima
+  alla home.
+- **Tema unificato.** Il selettore chiaro/scuro della landing e quello del sito condividono
+  lo stesso stato (`qs-theme`) e lo applicano anche a `<html>`, così la scelta resta
+  coerente passando dalla home alle altre pagine.
+
+File nuovi: `src/components/LyraLanding.tsx` (monta la landing), `src/components/Chrome.tsx`
+(nasconde il chrome sulla home), `src/lib/landingBehaviors.js` (comportamenti della landing,
+con `root` risolto a runtime), `src/lib/lyraLandingContent.ts` (HTML+CSS della landing).

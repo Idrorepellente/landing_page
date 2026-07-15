@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Nav } from "@/components/Nav";
 import { Providers } from "@/components/Providers";
-import { NeuralBackground } from "@/components/NeuralBackground";
+import { Chrome } from "@/components/Chrome";
 
 export const metadata: Metadata = {
-  title: "QuantSys — La community per trader quant",
+  title: "LYRA — La community per trader quant",
   description: "Costruisci, valida e automatizza le tue strategie quant — con test onesti, community e marketplace.",
 };
 
@@ -26,11 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <Providers>
-          <NeuralBackground />
-          <div style={{ position: "relative", zIndex: 1 }}>
-            <Nav />
-            <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
-          </div>
+          <Chrome>{children}</Chrome>
         </Providers>
       </body>
     </html>
