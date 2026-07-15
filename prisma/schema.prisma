@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  username      String   @unique
+  passwordHash  String
+  displayName   String?
+  bio           String?
+  name          String?
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime @default(now())
+  artifacts     Artifact[]
+  threads       ForumThread[]
+  posts         ForumPost[]
+  feedback      Feedback[]
+  runners       Runner[]
+  sentMessages  Message[] @relation("sent")
+  conversations ConversationParticipant[]
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  @@unique([identifier, token])
+}
+
+enum ArtifactKind {
+  STRATEGY
+  APPROACH
+  INDICATOR
+  OVERLAY
+  WEIGHT_MODE
+}
+
+model Artifact {
+  id          String       @id @default(cuid())
+  kind        ArtifactKind
+  name        String
+  slug        String
+  description String?
+  code        String
+  language    String       @default("python")
+  isPublic    Boolean      @default(false)
+  tags        String[]
+  likes       Int          @default(0)
+  ownerId     String
+  owner       User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  @@unique([ownerId, kind, slug])
+  @@index([isPublic, kind])
+}
+
+model ForumThread {
+  id        String      @id @default(cuid())
+  title     String
+  category  String      @default("general")
+  authorId  String
+  author    User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+  posts     ForumPost[]
+}
+model ForumPost {
+  id        String      @id @default(cuid())
+  body      String
+  threadId  String
+  thread    ForumThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  subject   String
+  message   String
+  rating    Int?
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+}
+
+model Runner {
+  id        String   @id @default(cuid())
+  name      String
+  config    Json
+  status    String   @default("stopped")
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Conversation {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  participants ConversationParticipant[]
+  messages     Message[]
+}
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([conversationId, userId])
+}
+model Message {
+  id             String       @id @default(cuid())
+  body           String
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation("sent", fields: [senderId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  @@index([conversationId, createdAt])
+}
