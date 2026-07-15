@@ -53,7 +53,12 @@ function initNeural() {
     particles = []; for (let i = 0; i < particleCount; i++) particles.push(new P());
   };
   const animate = () => {
-    ctx.globalAlpha = 1; ctx.clearRect(0, 0, width, height); // pulizia completa: niente scie/residui grigi accumulati
+    // Via di mezzo: ogni frame riparte dallo sfondo PIENO del tema (opaco, non un velo
+    // che si accumula) -> particelle ben visibili e nette, senza scie ne' grigio residuo.
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = (document.documentElement.getAttribute('data-theme') === 'dark'
+      || document.body.getAttribute('data-theme') === 'dark') ? '#0A0E1A' : '#F6F8FB';
+    ctx.fillRect(0, 0, width, height);
     for (const p of particles) { p.update(); p.draw(); }
     S.raf = requestAnimationFrame(animate);
   };
