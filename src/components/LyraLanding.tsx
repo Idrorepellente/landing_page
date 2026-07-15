@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { run } from "@/lib/landingBehaviors";
 import { LANDING_HTML, LANDING_CSS } from "@/lib/lyraLandingContent";
 
@@ -12,98 +13,131 @@ const BEHAVIORS = [
   "mobileLoops", "tabArrows", "stepTrail", "theme", "lang", "hover",
 ];
 
-// Le funzioni del sito, raggiungibili dall'header della landing.
-const APP: [string, string, string][] = [
-  ["/marketplace", "Marketplace", "Strategie, overlay e indicatori"],
-  ["/forum", "Forum", "Discussioni e confronto"],
-  ["/runners", "Runner", "I tuoi runner live"],
-  ["/messages", "Messaggi", "Le tue conversazioni"],
-  ["/feedback", "Feedback", "Segnala e proponi"],
+// Voci del sito mostrate direttamente nell'header della home.
+// (Runner e Messaggi NON stanno qui: sono nel profilo.)
+const NAV: [string, string][] = [
+  ["/marketplace", "Marketplace"],
+  ["/forum", "Forum"],
+  ["/feedback", "Feedback"],
 ];
 
-// Inserisce la navigazione verso le pagine del sito dentro l'header della landing:
-// - trasforma il menu a tendina "Il motore" in un menu "App" con tutte le funzioni;
-// - aggiunge un link "Accedi" accanto al CTA (che porta a /register);
-// - popola anche il menu mobile.
-function wireSiteNav() {
-  // ----- menu a tendina desktop -----
-  const trigger = document.querySelector<HTMLElement>("[data-motore-wrap] > a");
-  if (trigger && trigger.firstChild && trigger.firstChild.nodeType === 3) {
-    trigger.firstChild.nodeValue = "App";
-  }
-  const menuInner = document.querySelector<HTMLElement>("[data-motore-menu] > div");
-  if (menuInner) {
-    menuInner.innerHTML = APP.map(
-      ([href, title, sub]) => `
-      <a href="${href}" style="display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:10px;color: rgb(15, 23, 42);">
-        <span style="flex:0 0 auto;display:grid;place-items:center;height:34px;width:34px;border-radius:10px;background: rgb(238, 241, 255);color: rgb(79, 70, 229);font:700 14px 'Space Grotesk',sans-serif;">${title.charAt(0)}</span>
-        <span style="display:flex;flex-direction:column;gap:1px;">
-          <span style="font:700 13.5px Mulish,sans-serif;color: rgb(15, 23, 42);">${title}</span>
-          <span style="font:500 11.5px Mulish,sans-serif;color: rgb(148, 163, 184);">${sub}</span>
-        </span>
-      </a>`
-    ).join("");
+const NAV_LINK_CSS = "color: rgb(71, 85, 105); text-decoration:none;";
+const MOB_LINK_CSS = "padding:9px 12px;border-radius:9px;font:600 13.5px Mulish,sans-serif;color: rgb(51, 65, 85);display:block;text-decoration:none;";
+
+// Aggiunta UNA VOLTA: link diretti (Marketplace/Forum/Feedback) nell'header,
+// e via il menu a tendina "Il motore/App" (non più usato).
+function setupNavOnce() {
+  const motore = document.querySelector<HTMLElement>("[data-motore-wrap]");
+  if (motore) motore.style.display = "none";
+
+  const navLinks = document.querySelector<HTMLElement>("[data-nav-links]");
+  if (navLinks && !navLinks.querySelector("[data-site-nav]")) {
+    NAV.forEach(([href, label]) => {
+      const a = document.createElement("a");
+      a.href = href; a.textContent = label;
+      a.setAttribute("data-site-nav", "");
+      a.style.cssText = NAV_LINK_CSS;
+      navLinks.appendChild(a);
+    });
   }
 
-  // ----- link "Accedi" accanto al CTA (desktop) -----
-  const cta = document.querySelector<HTMLElement>("[data-nav-cta]");
-  if (cta && cta.parentElement && !cta.parentElement.querySelector("[data-site-login]")) {
-    const a = document.createElement("a");
-    a.href = "/login";
-    a.textContent = "Accedi";
-    a.setAttribute("data-site-login", "");
-    a.style.cssText =
-      "display:inline-flex;align-items:center;height:38px;padding:0 14px;border-radius:10px;font:700 13.5px Mulish,sans-serif;color: rgb(51, 65, 85);cursor:pointer;white-space:nowrap;";
-    cta.parentElement.insertBefore(a, cta);
-  }
-
-  // ----- menu mobile -----
   const mob = document.querySelector<HTMLElement>("[data-nav-menu]");
-  if (mob && !mob.querySelector("[data-site-applink]")) {
+  if (mob && !mob.querySelector("[data-site-nav]")) {
     // via i link alle sotto-pagine della landing originale (neutralizzati a #top)
     Array.from(mob.querySelectorAll('a[href="#top"]')).forEach((el) => el.remove());
-    const linkStyle =
-      "padding:9px 12px;border-radius:9px;font:600 13.5px Mulish,sans-serif;color: rgb(51, 65, 85);display:block;";
-    const frag = document.createDocumentFragment();
-    [...APP.map(([h, t]) => [h, t] as [string, string]), ["/login", "Accedi"] as [string, string]].forEach(
-      ([href, label]) => {
-        const a = document.createElement("a");
-        a.href = href;
-        a.textContent = label;
-        a.setAttribute("data-site-applink", "");
-        a.setAttribute("data-hover", "background:#F1F4F9");
-        a.style.cssText = linkStyle;
-        frag.appendChild(a);
-      }
-    );
     const divider = mob.querySelector("span");
     const ref = divider || mob.querySelector("[data-beta-open]");
-    if (ref) mob.insertBefore(frag, ref);
-    else mob.appendChild(frag);
+    NAV.forEach(([href, label]) => {
+      const a = document.createElement("a");
+      a.href = href; a.textContent = label;
+      a.setAttribute("data-site-nav", "");
+      a.setAttribute("data-hover", "background:#F1F4F9");
+      a.style.cssText = MOB_LINK_CSS;
+      if (ref) mob.insertBefore(a, ref); else mob.appendChild(a);
+    });
+  }
+}
+
+// Aggiornata a OGNI cambio di sessione: se loggato mostra l'avatar del profilo
+// (e nasconde "Registrati"), altrimenti mostra "Accedi" + il CTA di registrazione.
+function updateAuth(user: { name?: string | null; email?: string | null } | null) {
+  const cta = document.querySelector<HTMLElement>("[data-nav-cta]");
+  const actions = cta?.parentElement || null;
+  const mobBtn = document.querySelector<HTMLElement>("[data-nav-menu] [data-beta-open]");
+  const mob = document.querySelector<HTMLElement>("[data-nav-menu]");
+
+  // pulisci gli elementi auth precedenti
+  document.querySelectorAll("[data-site-auth]").forEach((el) => el.remove());
+  document.querySelectorAll("[data-site-auth-mobile]").forEach((el) => el.remove());
+
+  if (user) {
+    // loggato → avatar profilo, niente "Registrati"
+    if (cta) cta.style.display = "none";
+    if (mobBtn) mobBtn.style.display = "none";
+    const initial = ((user.name || user.email || "?").trim().charAt(0) || "?").toUpperCase();
+    if (actions && cta) {
+      const a = document.createElement("a");
+      a.href = "/profile"; a.textContent = initial;
+      a.title = "Profilo — " + (user.name || user.email || "");
+      a.setAttribute("data-site-auth", "");
+      a.style.cssText = "display:grid;place-items:center;height:36px;width:36px;border-radius:999px;background: rgb(238, 241, 255);color: rgb(79, 70, 229);font:700 14px Mulish,sans-serif;text-decoration:none;flex:0 0 auto;";
+      actions.insertBefore(a, cta);
+    }
+    if (mob) {
+      const a = document.createElement("a");
+      a.href = "/profile"; a.textContent = "Profilo";
+      a.setAttribute("data-site-auth-mobile", "");
+      a.setAttribute("data-hover", "background:#F1F4F9");
+      a.style.cssText = MOB_LINK_CSS;
+      const divider = mob.querySelector("span"); const ref = divider || mobBtn;
+      if (ref) mob.insertBefore(a, ref); else mob.appendChild(a);
+    }
+  } else {
+    // non loggato → "Accedi" + CTA "Registrati"
+    if (cta) cta.style.display = "inline-flex";
+    if (mobBtn) mobBtn.style.display = "inline-flex";
+    if (actions && cta) {
+      const a = document.createElement("a");
+      a.href = "/login"; a.textContent = "Accedi";
+      a.setAttribute("data-site-auth", "");
+      a.style.cssText = "display:inline-flex;align-items:center;height:38px;padding:0 14px;border-radius:10px;font:700 13.5px Mulish,sans-serif;color: rgb(51, 65, 85);cursor:pointer;white-space:nowrap;text-decoration:none;";
+      actions.insertBefore(a, cta);
+    }
+    if (mob) {
+      const a = document.createElement("a");
+      a.href = "/login"; a.textContent = "Accedi";
+      a.setAttribute("data-site-auth-mobile", "");
+      a.setAttribute("data-hover", "background:#F1F4F9");
+      a.style.cssText = MOB_LINK_CSS;
+      const divider = mob.querySelector("span"); const ref = divider || mobBtn;
+      if (ref) mob.insertBefore(a, ref); else mob.appendChild(a);
+    }
   }
 }
 
 export function LyraLanding() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const started = useRef(false);
 
+  // Una volta: nav statica + avvio comportamenti + CTA beta → registrazione.
   useEffect(() => {
     if (started.current) return;
     started.current = true;
-
-    // 1) collega la navigazione del sito dentro l'header della landing
-    try { wireSiteNav(); } catch (e) { console.warn("wireSiteNav", e); }
-
-    // 2) i CTA "beta" della landing → registrazione del sito
+    try { setupNavOnce(); } catch (e) { console.warn("setupNav", e); }
     const betas = Array.from(document.querySelectorAll<HTMLElement>("[data-beta-open]"));
     const onBeta = (e: Event) => { e.preventDefault(); router.push("/register"); };
     betas.forEach((b) => b.addEventListener("click", onBeta));
-
-    // 3) avvia canvas, nav sticky, reveal, tab, contatori, tema, ecc.
     run(BEHAVIORS);
-
     return () => { betas.forEach((b) => b.removeEventListener("click", onBeta)); };
   }, [router]);
+
+  // A ogni cambio di stato sessione: aggiorna l'area login/profilo.
+  useEffect(() => {
+    if (status === "loading") return;
+    try { updateAuth((session?.user as { name?: string | null; email?: string | null } | undefined) || null); }
+    catch (e) { console.warn("updateAuth", e); }
+  }, [status, session]);
 
   return (
     <>

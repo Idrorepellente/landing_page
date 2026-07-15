@@ -135,6 +135,12 @@ export default function ProfilePage() {
         )}
       </div>
 
+      {/* Accesso rapido: Runner e Messaggi (spostati qui dall'header della home) */}
+      <div className="flex flex-wrap gap-2">
+        <Link href="/runners" className="btn">Runner</Link>
+        <Link href="/messages" className="btn">Messaggi</Link>
+      </div>
+
       {/* Statistiche */}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Stat label="Runner" value={p.stats.runners} sub={`${p.stats.runnersRunning} in esecuzione`} />

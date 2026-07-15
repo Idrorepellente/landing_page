@@ -1,30 +1,26 @@
-# LYRA — file da sostituire/aggiungere nella repo
+# LYRA — fix "pagina bloccata al primo avvio" + navigazione
 
-Estrai questo archivio nella **radice della repo** (la cartella che contiene `src/`,
-`package.json`, ecc.): i file finiranno automaticamente al posto giusto.
-Percorsi relativi alla radice del progetto.
+Estrai nella **radice della repo**. Contiene l'intero set LYRA coerente.
 
-## Nuovi file (da aggiungere)
-- `src/components/LyraLanding.tsx` — monta la nuova landing LYRA come home: inietta
-  HTML+CSS, avvia i comportamenti (canvas, nav, reveal, tab, contatori, tema) e collega
-  l'header alle funzioni del sito (menu "App", "Accedi", CTA → registrazione).
-- `src/components/Chrome.tsx` — sulla home nasconde la barra e lo sfondo globali (la
-  landing porta i suoi); sulle altre pagine mostra la barra LYRA e il layout a colonna.
-- `src/lib/landingBehaviors.js` — i comportamenti JS della landing (adattati: `root`
-  risolto a runtime; il tema viene applicato anche a `<html>` per restare in sincrono
-  col resto del sito).
-- `src/lib/lyraLandingContent.ts` — l'HTML e la CSS della landing (rebrand LYRA) come
-  stringhe. **File grande, generato automaticamente: non modificarlo a mano.**
+## IMPORTANTE — un file va ELIMINATO
+Cancella dalla repo il vecchio file:
+    src/components/LyraLanding.tsx
+È stato sostituito da `src/components/LandingClient.tsx`. (Se lo lasci non rompe nulla
+perché non è più importato, ma è meglio rimuoverlo.)
 
-## File modificati (da sostituire)
-- `src/app/page.tsx` — la home ora renderizza `<LyraLanding />` (non più la vecchia
-  landing con fetch dal DB). La home è statica e non tocca il database.
-- `src/app/layout.tsx` — usa `<Chrome>` al posto di Nav/NeuralBackground globali;
-  titolo/metadati aggiornati a **LYRA**.
-- `src/components/Nav.tsx` — logo rinominato da **QuantSys** a **LYRA** (barra usata
-  sulle pagine interne).
+## Cosa cambia (il fix del blocco)
+Prima l'enorme HTML della landing (~370KB) veniva incluso nel **bundle JavaScript**:
+al primo caricamento a freddo la pagina restava ferma (contatori a 0, animazioni bloccate)
+finché il bundle non era scaricato e idratato. Ora:
+- `src/app/page.tsx` rende **HTML e CSS della landing lato server** (pagina completa da
+  subito, bundle client piccolo);
+- `src/components/LandingClient.tsx` (nuovo) è un piccolo componente client che avvia i
+  comportamenti (canvas, contatori, tab, tema) e collega la navigazione.
 
-## Note
-- Nessuna dipendenza nuova: non serve toccare `package.json`.
-- Le pagine login/marketplace/forum/runner/messaggi/feedback/profilo restano invariate.
-- Deploy invariato (npm install / Vercel come prima); la home non richiede il database.
+## Navigazione (come richiesto)
+- Header: **Come funziona, Piattaforma, Community & Fondo, Fiducia, Marketplace, Forum,
+  Feedback**; se sei loggato appare l'**avatar del profilo** (niente "Registrati"),
+  altrimenti **Accedi** + registrazione.
+- **Runner** e **Messaggi** stanno nel **profilo** (`src/app/profile/page.tsx`).
+
+Nessuna dipendenza nuova.
