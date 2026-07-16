@@ -53,12 +53,7 @@ function initNeural() {
     particles = []; for (let i = 0; i < particleCount; i++) particles.push(new P());
   };
   const animate = () => {
-    // Via di mezzo: ogni frame riparte dallo sfondo PIENO del tema (opaco, non un velo
-    // che si accumula) -> particelle ben visibili e nette, senza scie ne' grigio residuo.
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = (document.documentElement.getAttribute('data-theme') === 'dark'
-      || document.body.getAttribute('data-theme') === 'dark') ? '#0A0E1A' : '#F6F8FB';
-    ctx.fillRect(0, 0, width, height);
+    ctx.globalAlpha = 1; ctx.fillStyle = (document.documentElement.getAttribute('data-theme') === 'dark' || document.body.getAttribute('data-theme') === 'dark') ? '#0A0E1A' : '#F6F8FB'; ctx.fillRect(0, 0, width, height); // opaco theme-aware: niente scie/residui
     for (const p of particles) { p.update(); p.draw(); }
     S.raf = requestAnimationFrame(animate);
   };
@@ -428,7 +423,6 @@ function initTheme() {
   try { theme = localStorage.getItem('qs-theme') || 'light'; } catch (e) {}
   const apply = (t) => {
     theme = t;
-    document.documentElement.setAttribute('data-theme', t);
     document.body.setAttribute('data-theme', t);
     if (root) root.setAttribute('data-theme', t);
     S.fadeRgb = t === 'dark' ? '10,14,26' : '246,248,251';

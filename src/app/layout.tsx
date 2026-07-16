@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Providers } from "@/components/Providers";
-import { Chrome } from "@/components/Chrome";
 
 export const metadata: Metadata = {
-  title: "LYRA — La community per trader quant",
-  description: "Costruisci, valida e automatizza le tue strategie quant — con test onesti, community e marketplace.",
+  title: "LYRA — Il quant sistematico, per ogni trader",
+  description: "Costruisci, valida e automatizza le tue strategie quant — con validazione fuori campione, ensemble multi-strategia e difese per regime.",
 };
 
-// Applica il tema PRIMA del paint (niente flash): legge qs-theme (default chiaro).
+// Tema applicato prima del paint (niente flash). Chiave condivisa 'qs-theme'.
 const themeScript = `(function(){try{var t=localStorage.getItem('qs-theme')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -23,11 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body>
-        <Providers>
-          <Chrome>{children}</Chrome>
-        </Providers>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
