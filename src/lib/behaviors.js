@@ -17,7 +17,7 @@ export function initBehaviors(rootEl){
       const container = canvas.parentElement;
       const paletteLight = ['#3f3f46', '#52525b', '#18181b', '#71717a', '#a1a1aa'];
       const paletteDark = ['#d4d4d8', '#a1a1aa', '#e7e7ea', '#8a8a92', '#c7c7cc'];
-      const isDark = () => document.body.getAttribute('data-theme') === 'dark';
+      const isDark = () => { try { var s = localStorage.getItem('qs-theme'); if (s === 'dark') return true; if (s === 'light') return false; } catch (e) {} return document.documentElement.getAttribute('data-theme') === 'dark' || document.body.getAttribute('data-theme') === 'dark'; };
       const speed = 0.9, trailOpacity = 0.1, particleCount = 460;
       let width = container.clientWidth, height = container.clientHeight, particles = [];
       const mouse = { x: -1000, y: -1000 };
@@ -44,7 +44,7 @@ export function initBehaviors(rootEl){
         particles = []; for (let i = 0; i < particleCount; i++) particles.push(new P());
       };
       const animate = () => {
-        ctx.globalAlpha = 1; ctx.fillStyle = 'rgba(' + (isDark() ? '14,14,16' : '243,243,244') + ',' + trailOpacity + ')'; ctx.fillRect(0, 0, width, height);
+        ctx.globalAlpha = 1; ctx.clearRect(0, 0, width, height); // canvas pulito a ogni frame: nessun accumulo, nessuna scia (in nessun tema)
         for (const p of particles) { p.update(); p.draw(); }
         this._raf = requestAnimationFrame(animate);
       };

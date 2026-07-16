@@ -152,4 +152,4 @@ body[data-theme="dark"]{background:#0e0e10;color:#ededf0}
 [data-theme="dark"] [style*="solid rgba(63,63,70,.22)"]{border-color:rgba(255,255,255,.14)!important}
 [data-theme="dark"] [style*="solid rgba(63,63,70,.25)"]{border-color:rgba(255,255,255,.14)!important}
 [data-theme="dark"] [style*="solid rgba(79,70,229,.3)"]{border-color:rgba(255,255,255,.14)!important}
-`;
+/* gradienti clippati sul testo: la meta\x27 scura diventa chiara nel tema scuro */\n[data-theme="dark"] [style*="linear-gradient(100deg,#18181b,#5B57D9)"]{background-image:linear-gradient(100deg,#f4f4f5,#8b87ff)!important}\n[data-theme="dark"] [style*="linear-gradient(90deg,#18181b,#52525b)"]{background-image:linear-gradient(90deg,#f4f4f5,#c7c7cc)!important}\n[data-theme="dark"] [style*="linear-gradient(100deg,#71717a,#a1a1aa)"]{background-image:linear-gradient(100deg,#c7c7cc,#ededf0)!important}\n`;
