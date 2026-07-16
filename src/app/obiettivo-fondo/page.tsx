@@ -1,14 +1,13 @@
-import { FONDO_HTML, FONDO_CSS } from "@/lib/landingContent";
-import { LandingClient } from "@/components/LandingClient";
+import type { Metadata } from 'next';
+import StaticPage from '@/components/StaticPage';
+import { html, css } from '@/content/obiettivo-fondo';
+import { DARK_CSS } from '@/content/darkTheme';
 
-const BEHAVIORS = ["neural", "nav", "reveal", "hover"];
+export const metadata: Metadata = {
+  title: "Obiettivo · Fondo — Lyra",
+  description: "Dove punta il capitale collettivo.",
+};
 
-export default function ObiettivoFondo() {
-  return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: FONDO_CSS }} />
-      <div dangerouslySetInnerHTML={{ __html: FONDO_HTML }} />
-      <LandingClient behaviors={BEHAVIORS} />
-    </>
-  );
+export default function Page() {
+  return <StaticPage html={html} css={css + DARK_CSS} />;
 }

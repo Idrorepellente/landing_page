@@ -1,14 +1,13 @@
-import { ECO_HTML, ECO_CSS } from "@/lib/landingContent";
-import { LandingClient } from "@/components/LandingClient";
+import type { Metadata } from 'next';
+import StaticPage from '@/components/StaticPage';
+import { html, css } from '@/content/ecosistema';
+import { DARK_CSS } from '@/content/darkTheme';
 
-const BEHAVIORS = ["neural", "nav", "reveal", "hover"];
+export const metadata: Metadata = {
+  title: "Il motore — Lyra",
+  description: "Il motore quantitativo di Lyra, area per area.",
+};
 
-export default function Ecosistema() {
-  return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: ECO_CSS }} />
-      <div dangerouslySetInnerHTML={{ __html: ECO_HTML }} />
-      <LandingClient behaviors={BEHAVIORS} />
-    </>
-  );
+export default function Page() {
+  return <StaticPage html={html} css={css + DARK_CSS} />;
 }

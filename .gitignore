@@ -1,4 +1,23 @@
-node_modules
-.next
+# dependencies
+/node_modules
+# next.js
+/.next/
+/out/
+# production
+/build
+# misc
+.DS_Store
+*.pem
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+# local env files
+.env*.local
 .env
-*.log
+# typescript
+*.tsbuildinfo
+next-env.d.ts.timestamp
+
+# anteprima statica (solo per sviluppo locale, non fa parte dell’app Next)
+/_preview-landing.html

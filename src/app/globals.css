@@ -1,2 +1,8 @@
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#f3f3f4;color:#18181b;font-family:Mulish,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:clip}
+a{color:#5B57D9;text-decoration:none}
+a:hover{color:#4744C4}
+::selection{background:rgba(82,82,91,.22)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:#d4d4d8;border-radius:999px;border:3px solid transparent;background-clip:content-box}

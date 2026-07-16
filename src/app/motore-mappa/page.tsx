@@ -1,14 +1,13 @@
-import { MOTORE_HTML, MOTORE_CSS } from "@/lib/landingContent";
-import { LandingClient } from "@/components/LandingClient";
+import type { Metadata } from 'next';
+import StaticPage from '@/components/StaticPage';
+import { html, css } from '@/content/motore-mappa';
+import { DARK_CSS } from '@/content/darkTheme';
 
-const BEHAVIORS = ["nav", "reveal", "map", "hover"];
+export const metadata: Metadata = {
+  title: "Mappa del motore — Lyra",
+  description: "Il flusso del motore, nodo per nodo.",
+};
 
-export default function MotoreMappa() {
-  return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: MOTORE_CSS }} />
-      <div dangerouslySetInnerHTML={{ __html: MOTORE_HTML }} />
-      <LandingClient behaviors={BEHAVIORS} />
-    </>
-  );
+export default function Page() {
+  return <StaticPage html={html} css={css + DARK_CSS} />;
 }
