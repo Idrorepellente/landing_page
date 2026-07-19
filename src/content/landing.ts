@@ -229,31 +229,7 @@ export const html = `
       <div style="position: relative;margin: 0 14px">
         <div style="border-radius: 18px 18px 5px 5px;background: linear-gradient(180deg,#2A3448,#18181b);padding: 11px 11px 15px;box-shadow: 0 34px 80px -30px rgba(15,23,42,.55)">
           <div style="display: flex;justify-content: center;padding-bottom: 7px"><span style="height: 5px;width: 5px;border-radius: 999px;background: #39445C"></span></div>
-          <div style="border-radius: 9px;overflow: hidden;background: #0e0e10;aspect-ratio: 16/10">
-<div style="display: flex;align-items: center;gap: 6px;padding: 9px 12px;border-bottom: 1px solid rgba(150,180,190,.12)"><span style="height: 9px;width: 9px;border-radius: 999px;background: #fb7185"></span><span style="height: 9px;width: 9px;border-radius: 999px;background: #fbbf24"></span><span style="height: 9px;width: 9px;border-radius: 999px;background: #34d399"></span><span style="margin-left: 10px;font: 500 10.5px 'IBM Plex Mono',monospace;color: #71717a">lyra.app / workspace</span></div>
-<div style="display: grid;grid-template-columns: 1.5fr 1fr;gap: 10px;padding: 12px;height: calc(100% - 34px)">
-  <div style="border-radius: 12px;background: #1c1c1f;border: 1px solid rgba(150,180,190,.12);padding: 14px;display: flex;flex-direction: column;min-height: 0">
-    <div style="display: flex;align-items: baseline;justify-content: space-between"><span style="font: 600 10px 'IBM Plex Mono',monospace;color: #a1a1aa;letter-spacing: .1em;text-transform: uppercase">Equity · portafoglio</span><span style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 18px;color: #E9EFF1">+34,2%</span></div>
-    <svg viewBox="0 0 340 130" preserveAspectRatio="none" style="width: 100%;flex: 1;margin-top: 8px;min-height: 0"><defs><linearGradient id="heq" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(70,214,192,.35)"></stop><stop offset="1" stop-color="rgba(70,214,192,0)"></stop></linearGradient></defs><path d="M0 112 L30 104 L60 110 L95 86 L130 92 L165 66 L200 74 L240 46 L280 52 L340 22 L340 130 L0 130 Z" fill="url(#heq)"></path><path d="M0 112 L30 104 L60 110 L95 86 L130 92 L165 66 L200 74 L240 46 L280 52 L340 22" fill="none" stroke="#a1a1aa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-    <div style="display: flex;gap: 7px;margin-top: 8px;flex-wrap: wrap"><span style="padding: 4px 8px;border-radius: 6px;background: rgba(70,214,192,.12);color: #e4e4e7;font: 600 10px 'IBM Plex Mono',monospace">Sharpe 1.6</span><span style="padding: 4px 8px;border-radius: 6px;background: rgba(255,255,255,.05);color: #d4d4d8;font: 600 10px 'IBM Plex Mono',monospace">MaxDD -8%</span></div>
-  </div>
-  <div style="display: flex;flex-direction: column;gap: 10px;min-height: 0">
-    <div style="border-radius: 12px;background: #1c1c1f;border: 1px solid rgba(150,180,190,.12);padding: 12px">
-      <span style="font: 600 10px 'IBM Plex Mono',monospace;color: #a1a1aa;letter-spacing: .1em;text-transform: uppercase">Allocazione</span>
-      <div style="display: flex;flex-direction: column;gap: 7px;margin-top: 9px">
-        <div><div style="display: flex;justify-content: space-between;font: 500 9.5px 'IBM Plex Mono',monospace;color: #a1a1aa"><span>Trend</span><span>38%</span></div><div style="height: 4px;border-radius: 999px;background: rgba(255,255,255,.06);margin-top: 3px"><div style="height: 100%;width: 38%;border-radius: 999px;background: #3f3f46"></div></div></div>
-        <div><div style="display: flex;justify-content: space-between;font: 500 9.5px 'IBM Plex Mono',monospace;color: #a1a1aa"><span>Mean-rev</span><span>34%</span></div><div style="height: 4px;border-radius: 999px;background: rgba(255,255,255,.06);margin-top: 3px"><div style="height: 100%;width: 34%;border-radius: 999px;background: #a1a1aa"></div></div></div>
-        <div><div style="display: flex;justify-content: space-between;font: 500 9.5px 'IBM Plex Mono',monospace;color: #a1a1aa"><span>Factor</span><span>28%</span></div><div style="height: 4px;border-radius: 999px;background: rgba(255,255,255,.06);margin-top: 3px"><div style="height: 100%;width: 28%;border-radius: 999px;background: #71717a"></div></div></div>
-      </div>
-    </div>
-    <div style="border-radius: 12px;background: #1c1c1f;border: 1px solid rgba(150,180,190,.12);padding: 12px;display: flex;flex-direction: column;gap: 7px;flex: 1">
-      <span style="font: 600 10px 'IBM Plex Mono',monospace;color: #a1a1aa;letter-spacing: .1em;text-transform: uppercase">Live</span>
-      <div style="display: flex;align-items: center;justify-content: space-between"><span style="color: #E9EFF1;font-size: 11px;font-weight: 600">Trend FX</span><span style="color: #a1a1aa;font: 600 10.5px 'IBM Plex Mono',monospace">+2,1%</span></div>
-      <div style="display: flex;align-items: center;justify-content: space-between"><span style="color: #E9EFF1;font-size: 11px;font-weight: 600">Mean-rev</span><span style="color: #a1a1aa;font: 600 10.5px 'IBM Plex Mono',monospace">+0,7%</span></div>
-      <div style="display: flex;align-items: center;gap: 6px;margin-top: auto"><span style="width: 7px;height: 7px;border-radius: 999px;background: #a1a1aa;box-shadow: 0 0 8px #a1a1aa"></span><span style="color: #a1a1aa;font: 500 9.5px 'IBM Plex Mono',monospace">kill-switch attivo</span></div>
-    </div>
-  </div>
-</div></div>
+          <div style="border-radius: 9px;overflow: hidden;background: #0e0e10;aspect-ratio: 16/10"><img src="/screens/app_overview.png" alt="Lira Dashboard — Overview" style="width:100%;height:100%;object-fit:cover;display:block" /></div>
         </div>
         <div style="position: relative;height: 15px;margin: 0 -26px;background: linear-gradient(180deg,#E6EAF2,#C3CBD9);border-radius: 2px 2px 13px 13px;box-shadow: 0 22px 44px -20px rgba(15,23,42,.45)"><span style="position: absolute;left: 50%;top: 0;transform: translateX(-50%);width: 92px;height: 7px;background: #AEB7C8;border-radius: 0 0 9px 9px"></span></div>
       </div>
@@ -382,30 +358,7 @@ export const html = `
       </div>
     </div>
     <div data-reveal="" data-reveal-dir="right" data-reveal-d="80" style="opacity: 0;transform: translateX(40px);transition: opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)">
-      <div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 20px;box-shadow: 0 24px 60px -26px rgba(15,23,42,.28);padding: 20px">
-        <div style="display: flex;align-items: center;justify-content: space-between">
-          <span style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 15px;color: #18181b">Le mie strategie</span>
-          <div style="display: flex;align-items: center"><img src="https://i.pravatar.cc/40?img=12" style="height: 22px;width: 22px;border-radius: 999px;border: 2px solid #fff;margin-right: -7px;position: relative;z-index: 3" alt=""><img src="https://i.pravatar.cc/40?img=45" style="height: 22px;width: 22px;border-radius: 999px;border: 2px solid #fff;margin-right: -7px;position: relative;z-index: 2" alt=""><img src="https://i.pravatar.cc/40?img=33" style="height: 22px;width: 22px;border-radius: 999px;border: 2px solid #fff;position: relative;z-index: 1" alt=""></div>
-        </div>
-        <div style="display: grid;grid-template-columns: repeat(3,1fr);gap: 10px;margin-top: 14px">
-          <div style="border-radius: 12px;background: #fafafa;border: 1px solid rgba(15,23,42,.05);padding: 10px;display: flex;flex-direction: column;gap: 8px">
-            <p style="margin: 0 0 2px;font: 600 9.5px 'IBM Plex Mono',monospace;letter-spacing: .12em;text-transform: uppercase;color: #a1a1aa">Bozze · 2</p>
-            <div style="border-radius: 9px;background: #fff;border: 1px solid rgba(15,23,42,.07);box-shadow: 0 4px 10px -6px rgba(15,23,42,.14);padding: 9px 10px"><p style="margin: 0;font-weight: 700;font-size: 12px;color: #18181b">Breakout oro</p><div style="display: flex;align-items: center;justify-content: space-between;gap: 6px;margin-top: 6px"><span style="padding: 2.5px 7px;border-radius: 6px;background: #f4f4f5;color: #18181b;font: 600 9.5px 'IBM Plex Mono',monospace">idea</span></div></div>
-            <div style="border-radius: 9px;background: #fff;border: 1px solid rgba(15,23,42,.07);box-shadow: 0 4px 10px -6px rgba(15,23,42,.14);padding: 9px 10px"><p style="margin: 0;font-weight: 700;font-size: 12px;color: #18181b">Pair BTC/ETH</p><div style="display: flex;align-items: center;justify-content: space-between;gap: 6px;margin-top: 6px"><span style="padding: 2.5px 7px;border-radius: 6px;background: #f4f4f5;color: #18181b;font: 600 9.5px 'IBM Plex Mono',monospace">bozza</span></div></div>
-          </div>
-          <div style="border-radius: 12px;background: #fafafa;border: 1px solid rgba(15,23,42,.05);padding: 10px;display: flex;flex-direction: column;gap: 8px">
-            <p style="margin: 0 0 2px;font: 600 9.5px 'IBM Plex Mono',monospace;letter-spacing: .12em;text-transform: uppercase;color: #a1a1aa">In validazione · 2</p>
-            <div style="border-radius: 9px;background: #fff;border: 1px solid rgba(15,23,42,.07);box-shadow: 0 4px 10px -6px rgba(15,23,42,.14);padding: 9px 10px"><p style="margin: 0;font-weight: 700;font-size: 12px;color: #18181b">Momentum SPX</p><div style="display: flex;align-items: center;justify-content: space-between;gap: 6px;margin-top: 6px"><span style="padding: 2.5px 7px;border-radius: 6px;background: #FBF3E0;color: #C68A22;font: 600 9.5px 'IBM Plex Mono',monospace">walk-fwd</span><span style="font: 600 9.5px 'IBM Plex Mono',monospace;color: #a1a1aa">62%</span></div></div>
-            <div style="border-radius: 9px;background: #fff;border: 1px solid rgba(15,23,42,.07);box-shadow: 0 4px 10px -6px rgba(15,23,42,.14);padding: 9px 10px"><p style="margin: 0;font-weight: 700;font-size: 12px;color: #18181b">Mean-rev EURUSD</p><div style="display: flex;align-items: center;justify-content: space-between;gap: 6px;margin-top: 6px"><span style="padding: 2.5px 7px;border-radius: 6px;background: #FBF3E0;color: #C68A22;font: 600 9.5px 'IBM Plex Mono',monospace">OOS</span><span style="font: 600 9.5px 'IBM Plex Mono',monospace;color: #a1a1aa">88%</span></div></div>
-          </div>
-          <div style="border-radius: 12px;background: #fafafa;border: 1px solid rgba(15,23,42,.05);padding: 10px;display: flex;flex-direction: column;gap: 8px">
-            <p style="margin: 0 0 2px;font: 600 9.5px 'IBM Plex Mono',monospace;letter-spacing: .12em;text-transform: uppercase;color: #a1a1aa">Live · 2</p>
-            <div style="border-radius: 9px;background: #fff;border: 1px solid rgba(15,23,42,.07);box-shadow: 0 4px 10px -6px rgba(15,23,42,.14);padding: 9px 10px"><p style="margin: 0;font-weight: 700;font-size: 12px;color: #18181b">Trend FX</p><div style="display: flex;align-items: center;justify-content: space-between;gap: 6px;margin-top: 6px"><span style="padding: 2.5px 7px;border-radius: 6px;background: #f4f4f5;color: #3f3f46;font: 600 9.5px 'IBM Plex Mono',monospace">IBKR</span><span style="font: 600 9.5px 'IBM Plex Mono',monospace;color: #3f3f46">+2,1%</span></div></div>
-            <div style="border-radius: 9px;background: #fff;border: 1px solid rgba(15,23,42,.07);box-shadow: 0 4px 10px -6px rgba(15,23,42,.14);padding: 9px 10px"><p style="margin: 0;font-weight: 700;font-size: 12px;color: #18181b">Mean-rev</p><div style="display: flex;align-items: center;justify-content: space-between;gap: 6px;margin-top: 6px"><span style="padding: 2.5px 7px;border-radius: 6px;background: #f4f4f5;color: #3f3f46;font: 600 9.5px 'IBM Plex Mono',monospace">MT5</span><span style="font: 600 9.5px 'IBM Plex Mono',monospace;color: #3f3f46">+0,7%</span></div></div>
-          </div>
-        </div>
-        <div style="display: flex;align-items: center;gap: 7px;margin-top: 12px;padding-top: 12px;border-top: 1px solid rgba(15,23,42,.06)"><span style="width: 7px;height: 7px;border-radius: 999px;background: #52525b;box-shadow: 0 0 8px #52525b;animation: qsBlink 1.4s ease-in-out infinite"></span><span style="font: 500 10.5px 'IBM Plex Mono',monospace;color: #a1a1aa">motore attivo · kill-switch armato</span></div>
-      </div>
+      <div style="border-radius:20px;overflow:hidden;border:1px solid rgba(15,23,42,.06);box-shadow:0 24px 60px -26px rgba(15,23,42,.28)"><img src="/screens/streams.png" alt="Lira Dashboard — Streams" style="width:100%;display:block" /></div>
     </div>
   </div>
 </section>
@@ -436,24 +389,7 @@ export const html = `
         <div style="display: flex;gap: 11px;align-items: flex-start"><span style="display: grid;place-items: center;height: 22px;width: 22px;border-radius: 999px;flex: none;background: #EEEDFB;color: #5B57D9;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 14.5px;line-height: 1.55"><b style="color: #18181b">Libreria di 29 strategie.</b> Template multi-stile editabili: parti da lì, il copilota li adatta a te.</p></div>
         </div>
       </div>
-      <div><div style="position: relative;border-radius: 22px;background: #f4f4f5;border: 1px solid rgba(15,23,42,.05);min-height: 350px;padding: 26px;overflow: visible">
-        <div style="position: relative;width: 76%;border-radius: 16px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 18px 40px -18px rgba(15,23,42,.28);padding: 16px;transform: rotate(-1.5deg)">
-          <p style="margin: 0;font: 600 9.5px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #a1a1aa">strategy.builder</p>
-          <div style="display: flex;align-items: center;gap: 8px;margin-top: 10px;padding: 10px 12px;border-radius: 10px;background: #f4f4f5;border: 1px solid rgba(24,24,27,.25);color: #000000;font-weight: 700;font-size: 12.5px"><span style="width: 7px;height: 7px;border-radius: 2px;background: #71717a"></span>Se RSI(14) &lt; 30</div>
-          <div style="display: flex;align-items: center;gap: 8px;margin-top: 7px;margin-left: 18px;padding: 10px 12px;border-radius: 10px;background: #f4f4f5;border: 1px solid rgba(63,63,70,.25);color: #3f3f46;font-weight: 700;font-size: 12.5px"><span style="width: 7px;height: 7px;border-radius: 2px;background: #a1a1aa"></span>Compra 2% del capitale</div>
-          <div style="display: flex;align-items: center;gap: 8px;margin-top: 7px;margin-left: 18px;padding: 10px 12px;border-radius: 10px;background: #FBF3E0;border: 1px solid rgba(198,138,34,.3);color: #C68A22;font-weight: 700;font-size: 12.5px"><span style="width: 7px;height: 7px;border-radius: 2px;background: #E0A83A"></span>Stop -1.5 ATR · Trailing</div>
-        </div>
-        <div style="position: absolute;right: 22px;top: 38px;width: 44%;border-radius: 14px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 18px 40px -18px rgba(15,23,42,.3);padding: 14px;transform: rotate(2deg);animation: qsFloatB 6s ease-in-out infinite">
-          <p style="margin: 0;font-weight: 700;font-size: 12.5px;color: #18181b">«Compra i pullback su forza relativa»</p>
-          <p style="margin: 8px 0 0;font: 500 10.5px 'IBM Plex Mono',monospace;color: #3f3f46">testo → regole eseguibili ✓</p>
-        </div>
-        <div style="position: absolute;right: 34px;bottom: 26px;width: 40%;border-radius: 14px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 18px 40px -18px rgba(15,23,42,.3);padding: 14px;animation: qsFloatB 6.6s ease-in-out infinite;animation-delay: .7s">
-          <div style="display: flex;align-items: center;justify-content: space-between"><span style="font-weight: 700;font-size: 12px;color: #18181b">Trend FX</span><span style="font: 600 10px 'IBM Plex Mono',monospace;color: #a1a1aa">regole 8/8</span></div>
-          <div style="display: flex;gap: 3px;margin-top: 8px"><span style="height: 14px;flex: 1;border-radius: 3px;background: #18181b"></span><span style="height: 14px;flex: 1;border-radius: 3px;background: #18181b"></span><span style="height: 14px;flex: 1;border-radius: 3px;background: #3f3f46"></span><span style="height: 14px;flex: 1;border-radius: 3px;background: #71717a"></span><span style="height: 14px;flex: 1;border-radius: 3px;background: #d4d4d8"></span><span style="height: 14px;flex: 1;border-radius: 3px;background: #e4e4e7"></span></div>
-          <p style="margin: 8px 0 0;font: 500 10px 'IBM Plex Mono',monospace;color: #a1a1aa">pronta per il backtest</p>
-        </div>
-        <span style="position: absolute;left: -12px;top: -14px;z-index: 3;display: inline-flex;align-items: center;gap: 6px;padding: 8px 13px;border-radius: 999px;background: #18181b;color: #fff;font: 700 12px Mulish,sans-serif;box-shadow: 0 14px 30px -12px rgba(15,23,42,.55);white-space: nowrap"><span style="width: 6px;height: 6px;border-radius: 999px;background: #d4d4d8"></span>No-code</span>
-        <span style="position: absolute;right: -10px;bottom: -14px;z-index: 3;display: inline-flex;align-items: center;gap: 6px;padding: 8px 13px;border-radius: 999px;background: #18181b;color: #fff;font: 700 12px Mulish,sans-serif;box-shadow: 0 14px 30px -12px rgba(15,23,42,.55);white-space: nowrap"><span style="width: 6px;height: 6px;border-radius: 999px;background: #d4d4d8"></span>Il codice è tuo · export Python</span></div></div>
+      <div><div style="border-radius:22px;overflow:hidden;border:1px solid rgba(15,23,42,.08);box-shadow:0 20px 44px -22px rgba(15,23,42,.32)"><img src="/screens/node_logic.png" alt="Lira — Editor a nodi" style="width:100%;display:block" /></div></div>
     </div>
     <div data-tabpanel="1" data-r="split" style="display: none;grid-template-columns: 1.04fr .96fr;gap: 48px;align-items: center">
       <div><div style="position: relative;border-radius: 22px;background: #f4f4f5;border: 1px solid rgba(15,23,42,.05);min-height: 350px;padding: 26px;overflow: visible">
