@@ -1,3 +1,4 @@
+import { FOOTER } from './footer';
 export const css = `
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -172,5 +173,6 @@ export const html = `
   <p style="text-align: center;font-size: 11.5px;line-height: 1.6;color: #a1a1aa;margin: 28px auto 0;max-width: 820px">Il trading comporta rischi di perdita del capitale. Nulla in questa pagina costituisce consulenza finanziaria o sollecitazione all'investimento. L'eventuale fondo collettivo e l'accesso ad esso sono soggetti a verifica e ai requisiti previsti dalla normativa applicabile. I rendimenti passati non garantiscono risultati futuri.</p>
 </section>
 
+${FOOTER}
 </div>
 `;

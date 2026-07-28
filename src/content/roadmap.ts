@@ -1,3 +1,4 @@
+import { FOOTER } from './footer';
 export const css = `
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -240,27 +241,27 @@ export const html = `
     <div data-reveal="" data-reveal-d="120" style="display: flex;gap: 18px;opacity: 0;transform: translateY(28px);transition: opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)">
       <div style="display: flex;flex-direction: column;align-items: center"><span style="display: grid;place-items: center;height: 44px;min-width: 52px;padding: 0 8px;border-radius: 12px;flex: none;background: #18181b;color: #fff;font: 700 13px 'IBM Plex Mono',monospace">v1.1</span><span style="width: 2px;flex: 1;min-height: 22px;background: repeating-linear-gradient(180deg,#d4d4d8 0 6px,transparent 6px 12px);margin: 6px 0"></span></div>
       <div style="padding-bottom: 26px;min-width: 0">
-        <div style="display: flex;align-items: center;gap: 10px;flex-wrap: wrap"><h3 style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 19px;margin: 0;color: #18181b">Power</h3><span style="display: inline-flex;padding: 4px 10px;border-radius: 999px;background: #f4f4f5;font: 600 10.5px 'IBM Plex Mono',monospace;letter-spacing: .08em;text-transform: uppercase;color: #52525b">M6–8</span></div>
-        <p style="color: #6b7280;font-size: 13.5px;line-height: 1.55;margin: 7px 0 0;max-width: 560px">Il valore da terminale reso visibile — e la doppia porta d’accesso per chi non programma.</p>
-        <div style="display: flex;flex-wrap: wrap;gap: 7px;margin-top: 11px"><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">UX ensemble &amp; regime</span><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Multi-conto</span><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Alert email/webhook</span><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Governance del decadimento</span><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Blueprint builder no-code v0</span></div>
+        <div style="display: flex;align-items: center;gap: 10px;flex-wrap: wrap"><h3 style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 19px;margin: 0;color: #18181b">Opzioni</h3><span style="display: inline-flex;padding: 4px 10px;border-radius: 999px;background: #f4f4f5;font: 600 10.5px 'IBM Plex Mono',monospace;letter-spacing: .08em;text-transform: uppercase;color: #52525b">M6–8</span></div>
+        <p style="color: #6b7280;font-size: 13.5px;line-height: 1.55;margin: 7px 0 0;max-width: 560px">Supporto agli strumenti a opzioni: catene, greche e strategie che usano le opzioni.</p>
+        <div style="display: flex;flex-wrap: wrap;gap: 7px;margin-top: 11px"><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Catene di opzioni</span><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Greche</span><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Strategie su opzioni</span></div>
       </div>
     </div>
     
     <div data-reveal="" data-reveal-d="180" style="display: flex;gap: 18px;opacity: 0;transform: translateY(28px);transition: opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)">
       <div style="display: flex;flex-direction: column;align-items: center"><span style="display: grid;place-items: center;height: 44px;min-width: 52px;padding: 0 8px;border-radius: 12px;flex: none;background: #18181b;color: #fff;font: 700 13px 'IBM Plex Mono',monospace">v1.2</span><span style="width: 2px;flex: 1;min-height: 22px;background: repeating-linear-gradient(180deg,#d4d4d8 0 6px,transparent 6px 12px);margin: 6px 0"></span></div>
       <div style="padding-bottom: 26px;min-width: 0">
-        <div style="display: flex;align-items: center;gap: 10px;flex-wrap: wrap"><h3 style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 19px;margin: 0;color: #18181b">Copilot</h3><span style="display: inline-flex;padding: 4px 10px;border-radius: 999px;background: #f4f4f5;font: 600 10.5px 'IBM Plex Mono',monospace;letter-spacing: .08em;text-transform: uppercase;color: #52525b">M8–10</span></div>
-        <p style="color: #6b7280;font-size: 13.5px;line-height: 1.55;margin: 7px 0 0;max-width: 560px">La feature-manifesto: un’AI che non ti asseconda, ti critica.</p>
-        <div style="display: flex;flex-wrap: wrap;gap: 7px;margin-top: 11px"><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Copilota AI (BYO-key)</span><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Robustness Critic: l’AI che attacca il tuo backtest</span><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Spiegazione dei risultati</span></div>
+        <div style="display: flex;align-items: center;gap: 10px;flex-wrap: wrap"><h3 style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 19px;margin: 0;color: #18181b">Marketplace</h3><span style="display: inline-flex;padding: 4px 10px;border-radius: 999px;background: #f4f4f5;font: 600 10.5px 'IBM Plex Mono',monospace;letter-spacing: .08em;text-transform: uppercase;color: #52525b">M8–10</span></div>
+        <p style="color: #6b7280;font-size: 13.5px;line-height: 1.55;margin: 7px 0 0;max-width: 560px">Il marketplace entra in funzione: pubblichi, scopri e scarichi codice — strategie, overlay, metodi — mai segnali.</p>
+        <div style="display: flex;flex-wrap: wrap;gap: 7px;margin-top: 11px"><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Pubblica &amp; scopri</span><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Strategie · overlay · metodi</span><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Mai segnali</span></div>
       </div>
     </div>
     
     <div data-reveal="" data-reveal-d="240" style="display: flex;gap: 18px;opacity: 0;transform: translateY(28px);transition: opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)">
       <div style="display: flex;flex-direction: column;align-items: center"><span style="display: grid;place-items: center;height: 44px;min-width: 52px;padding: 0 8px;border-radius: 12px;flex: none;background: #18181b;color: #fff;font: 700 13px 'IBM Plex Mono',monospace">v1.3</span><span style="width: 2px;flex: 1;min-height: 22px;background: repeating-linear-gradient(180deg,#d4d4d8 0 6px,transparent 6px 12px);margin: 6px 0"></span></div>
       <div style="padding-bottom: 26px;min-width: 0">
-        <div style="display: flex;align-items: center;gap: 10px;flex-wrap: wrap"><h3 style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 19px;margin: 0;color: #18181b">Desk &amp; Market</h3><span style="display: inline-flex;padding: 4px 10px;border-radius: 999px;background: #f4f4f5;font: 600 10.5px 'IBM Plex Mono',monospace;letter-spacing: .08em;text-transform: uppercase;color: #52525b">M10–12</span></div>
-        <p style="color: #6b7280;font-size: 13.5px;line-height: 1.55;margin: 7px 0 0;max-width: 560px">Il motore si apre ai team e alla community: si compra e si vende codice, mai segnali.</p>
-        <div style="display: flex;flex-wrap: wrap;gap: 7px;margin-top: 11px"><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Multi-utente + audit log</span><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Deploy self-hosted assistito</span><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Marketplace codice v0</span><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Scanner base</span></div>
+        <div style="display: flex;align-items: center;gap: 10px;flex-wrap: wrap"><h3 style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 19px;margin: 0;color: #18181b">Runner via Claude</h3><span style="display: inline-flex;padding: 4px 10px;border-radius: 999px;background: #f4f4f5;font: 600 10.5px 'IBM Plex Mono',monospace;letter-spacing: .08em;text-transform: uppercase;color: #52525b">M10–12</span></div>
+        <p style="color: #6b7280;font-size: 13.5px;line-height: 1.55;margin: 7px 0 0;max-width: 560px">Avvii i runner direttamente via Claude: deleghi l’esecuzione in linguaggio naturale.</p>
+        <div style="display: flex;flex-wrap: wrap;gap: 7px;margin-top: 11px"><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Avvio runner via Claude</span><span style="display: inline-flex;padding: 6px 11px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.08);font: 600 11.5px Mulish,sans-serif;color: #3f3f46">Deleghi in linguaggio naturale</span></div>
       </div>
     </div>
     
@@ -329,49 +330,7 @@ export const html = `
 </section>
 
 <!-- ============ FOOTER ============ -->
-<footer style="background: #0e0e10;color: #a1a1aa">
-  <div style="max-width: 1152px;margin: 0 auto;padding: 56px 32px 28px">
-    <div data-r="foot" style="display: grid;grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;gap: 32px">
-      <div>
-        <a href="#top" style="display: flex;align-items: center;gap: 9px"><span style="display: grid;place-items: center;height: 30px;width: 30px;border-radius: 9px;background: linear-gradient(135deg,#5B57D9,#18181b)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20c0-8 2.5-12 9.5-16"></path><path d="M10.5 20c0-6 2.2-9 7-11"></path><path d="M14 20c0-4 1.6-6 5-7.2"></path></svg></span><span style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 16px;color: #fff">Lyra</span></a>
-        <p style="font-size: 13px;line-height: 1.6;margin: 14px 0 0;max-width: 280px">Dall'idea al fondo: costruisci strategie, dimostra che funzionano, guadagnaci — insieme a una community.</p>
-        <div style="display: flex;gap: 10px;margin-top: 16px">
-          <a href="#top" aria-label="Discord" style="display: grid;place-items: center;height: 34px;width: 34px;border-radius: 9px;background: rgba(255,255,255,.06);color: #d4d4d8"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg></a>
-          <a href="https://github.com/Idrorepellente" target="_blank" rel="noopener noreferrer" aria-label="GitHub" style="display: grid;place-items: center;height: 34px;width: 34px;border-radius: 9px;background: rgba(255,255,255,.06);color: #d4d4d8"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg></a>
-          
-        </div>
-      </div>
-      <div>
-        <p style="font: 600 11px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #71717a;margin: 0 0 14px">Prodotto</p>
-        <div style="display: flex;flex-direction: column;gap: 9px;font-size: 13px">
-          <a href="#soluzione" style="color: #a1a1aa">Come funziona</a><a href="/soluzione" style="color: #a1a1aa">La nostra soluzione</a><a href="#funzioni" style="color: #a1a1aa">Scanner</a><a href="#funzioni" style="color: #a1a1aa">No-code builder</a>
-        </div>
-      </div>
-      <div>
-        <p style="font: 600 11px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #71717a;margin: 0 0 14px">Sviluppatori</p>
-        <div style="display: flex;flex-direction: column;gap: 9px;font-size: 13px">
-          <a href="#top" style="color: #a1a1aa">API REST</a><a href="#top" style="color: #a1a1aa">SDK Python</a><a href="#top" style="color: #a1a1aa">Documentazione</a><a href="#top" style="color: #a1a1aa">GitHub</a><a href="#top" style="color: #a1a1aa">Changelog</a>
-        </div>
-      </div>
-      <div>
-        <p style="font: 600 11px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #71717a;margin: 0 0 14px">Ecosistema</p>
-        <div style="display: flex;flex-direction: column;gap: 9px;font-size: 13px">
-          <a href="/ecosistema" style="color: #a1a1aa">Il motore</a><a href="/obiettivo-fondo" style="color: #a1a1aa">Obiettivo · Fondo</a><a href="#community" style="color: #a1a1aa">Community &amp; Contest</a><a href="#community" style="color: #a1a1aa">Marketplace</a>
-        </div>
-      </div>
-      <div>
-        <p style="font: 600 11px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #71717a;margin: 0 0 14px">Legale</p>
-        <div style="display: flex;flex-direction: column;gap: 9px;font-size: 13px">
-          <a href="#top" style="color: #a1a1aa">Termini</a><a href="#top" style="color: #a1a1aa">Privacy</a><a href="#top" style="color: #a1a1aa">Cookie</a><a href="#top" style="color: #a1a1aa">Disclaimer rischi</a>
-        </div>
-      </div>
-    </div>
-    <div style="margin-top: 36px;padding-top: 22px;border-top: 1px solid rgba(150,180,190,.12)">
-      <p style="font-size: 11.5px;line-height: 1.6;color: #71717a;margin: 0;max-width: 900px">Il trading comporta rischi di perdita del capitale. Lyra è una piattaforma di ricerca, sviluppo e automazione di strategie: nulla in questa pagina costituisce consulenza finanziaria o sollecitazione all'investimento. I risultati dei backtest e i rendimenti passati non garantiscono risultati futuri. L'accesso al fondo collettivo è soggetto a verifica e ai requisiti previsti dalla normativa applicabile.</p>
-      <p style="font: 500 11.5px 'IBM Plex Mono',monospace;color: #71717a;margin: 14px 0 0">© 2026 Lyra · P.IVA 00000000000 · Italia</p>
-    </div>
-  </div>
-</footer>
+${FOOTER}
 
 <!-- ============ BETA MODAL ============ -->
 <div data-beta-modal="" style="position: fixed;inset: 0;z-index: 100;display: none;align-items: center;justify-content: center;padding: 20px;background: rgba(12,17,19,.55);backdrop-filter: blur(6px);-webkit-backdrop-filter: blur(6px);opacity: 0;transition: opacity .26s ease">

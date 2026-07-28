@@ -1,3 +1,4 @@
+import { FOOTER } from './footer';
 export const css = `
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -155,5 +156,6 @@ export const html = `
   </div>
 </section>
 
+${FOOTER}
 </div>
 `;

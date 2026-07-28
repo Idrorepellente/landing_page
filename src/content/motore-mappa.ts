@@ -1,3 +1,4 @@
+import { FOOTER } from './footer';
 export const css = `
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -125,6 +126,7 @@ export const html = `
     </div>
   </div>
 </section>
-<button aria-label="Cerca con AI" style="position: fixed;right: 24px;bottom: 24px;z-index: 40;display: grid;place-items: center;height: 60px;width: 60px;border-radius: 18px;border: none;cursor: pointer;background: #fff;box-shadow: 0 18px 40px -16px rgba(15,23,42,.4);color: #18181b"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path><path d="M11 8.5 11.7 10l1.5.7-1.5.7-.7 1.5-.7-1.5L8.3 10.7 9.8 10z" fill="currentColor"></path></svg></button>
+
+${FOOTER}
 </div>
 `;

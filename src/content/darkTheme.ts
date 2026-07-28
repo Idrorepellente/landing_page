@@ -156,4 +156,7 @@ body[data-theme="dark"]{background:#0e0e10;color:#ededf0}
 /* Fix dark: gradienti chiari non coperti — overlay hero (neural canvas) e fascia "Tre modi" */
 [data-theme="dark"] [style*="linear-gradient(180deg,rgba(243,243,244,0)"]{background:linear-gradient(180deg,rgba(14,14,16,0) 45%,rgba(14,14,16,.92) 100%)!important}
 [data-theme="dark"] [style*="linear-gradient(180deg,#f3f3f4,#EAEEF7"]{background:linear-gradient(180deg,#0e0e10,#1c1c1f 30%,#1c1c1f 70%,#0e0e10)!important}
+
+/* Fix dark: hover voci (style-hover appende "background:#f4f4f5" senza spazio) */
+[data-theme="dark"] [style*="background:#f4f4f5"]{background:#2a2a2e!important}
 `;

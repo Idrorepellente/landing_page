@@ -1,3 +1,4 @@
+import { FOOTER } from './footer';
 export const css = `
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -213,7 +214,7 @@ export const html = `
 </section>
 <!-- ============ TIERS ============ -->
 <section style="max-width: 1152px;margin: 0 auto;padding: 36px 32px 10px">
-  <div data-mscroll="" style="display: grid;grid-template-columns: repeat(4,1fr);gap: 16px;align-items: stretch">
+  <div data-mscroll="" style="display: grid;grid-template-columns: repeat(2,1fr);gap: 16px;align-items: stretch">
     
     <div data-reveal="" data-reveal-d="0" style="position: relative;display: flex;flex-direction: column;background: #fff;border: 1px solid rgba(24,24,27,.07);border-radius: 20px;box-shadow: 0 1px 2px rgba(24,24,27,.04),0 12px 32px -20px rgba(24,24,27,.16);padding: 26px;opacity: 0;transform: translateY(28px);transition: opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)">
       
@@ -235,44 +236,11 @@ export const html = `
       <p style="margin: 16px 0 0;font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 38px;line-height: 1;color: #18181b">€29<span style="font-size: 14px;font-weight: 600;color: #6b7280"> /mese</span></p>
       <p style="margin: 8px 0 0;font: 500 11.5px 'IBM Plex Mono',monospace;color: #a1a1aa">prezzo bloccato per gli early adopter</p>
       <div style="display: flex;flex-direction: column;gap: 10px;margin-top: 20px;padding-top: 18px;border-top: 1px solid rgba(24,24,27,.07);flex: 1">
-        <div style="display: flex;gap: 10px;align-items: flex-start"><span style="display: grid;place-items: center;height: 20px;width: 20px;border-radius: 999px;flex: none;background: #EEEDFB;color: #5B57D9;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 13px;line-height: 1.5">Tutti i 29 template, editabili</p></div>
-        <div style="display: flex;gap: 10px;align-items: flex-start"><span style="display: grid;place-items: center;height: 20px;width: 20px;border-radius: 999px;flex: none;background: #EEEDFB;color: #5B57D9;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 13px;line-height: 1.5">Walk-forward completo out-of-sample</p></div>
-        <div style="display: flex;gap: 10px;align-items: flex-start"><span style="display: grid;place-items: center;height: 20px;width: 20px;border-radius: 999px;flex: none;background: #EEEDFB;color: #5B57D9;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 13px;line-height: 1.5">1 conto broker live (IBKR o MT5)</p></div>
-        <div style="display: flex;gap: 10px;align-items: flex-start"><span style="display: grid;place-items: center;height: 20px;width: 20px;border-radius: 999px;flex: none;background: #EEEDFB;color: #5B57D9;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 13px;line-height: 1.5">Export Python, zero lock-in</p></div>
-      </div>
+        <div style="display: flex;gap: 10px;align-items: flex-start"><span style="display: grid;place-items: center;height: 20px;width: 20px;border-radius: 999px;flex: none;background: #EEEDFB;color: #5B57D9;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 13px;line-height: 1.5">Uso dei runner via Claude</p></div></div>
       <button data-beta-open="" style="display: flex;width: 100%;justify-content: center;align-items: center;gap: 8px;margin-top: 22px;height: 44px;border-radius: 999px;border: 1px solid rgba(24,24,27,.14);cursor: pointer;font: 700 14px Mulish,sans-serif;color: #18181b;background: #fff">Entra nella beta</button>
     </div>
     
-    <div data-reveal="" data-reveal-d="160" style="position: relative;display: flex;flex-direction: column;background: #131316;border: 1px solid #131316;border-radius: 20px;box-shadow: 0 1px 2px rgba(24,24,27,.04),0 28px 60px -24px rgba(24,24,27,.5);padding: 26px;opacity: 0;transform: translateY(28px);transition: opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)">
-      <span style="position: absolute;top: -12px;left: 50%;transform: translateX(-50%);display: inline-flex;padding: 5px 13px;border-radius: 999px;background: #18181b;border: 1px solid rgba(255,255,255,.2);font: 700 10.5px 'IBM Plex Mono',monospace;letter-spacing: .12em;text-transform: uppercase;color: #fff;white-space: nowrap">Più valore</span>
-      <div style="display: flex;align-items: center;justify-content: space-between;gap: 8px"><span style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 17px;color: #fff">Power</span><span style="display: inline-flex;padding: 4px 9px;border-radius: 999px;background: rgba(22,163,74,.18);border: 1px solid rgba(22,163,74,.3);font: 700 10px 'IBM Plex Mono',monospace;letter-spacing: .08em;text-transform: uppercase;color: #16a34a;white-space: nowrap">1° anno €0</span></div>
-      <p style="margin: 16px 0 0;font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 38px;line-height: 1;color: #fff">€99<span style="font-size: 14px;font-weight: 600;color: #a1a1aa"> /mese</span></p>
-      <p style="margin: 8px 0 0;font: 500 11.5px 'IBM Plex Mono',monospace;color: #a1a1aa">il valore da terminale istituzionale</p>
-      <div style="display: flex;flex-direction: column;gap: 10px;margin-top: 20px;padding-top: 18px;border-top: 1px solid rgba(255,255,255,.1);flex: 1">
-        <div style="display: flex;gap: 10px;align-items: flex-start"><span style="display: grid;place-items: center;height: 20px;width: 20px;border-radius: 999px;flex: none;background: rgba(255,255,255,.1);color: #fff;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #d4d4d8;font-size: 13px;line-height: 1.5">Tutto di Pro</p></div>
-        <div style="display: flex;gap: 10px;align-items: flex-start"><span style="display: grid;place-items: center;height: 20px;width: 20px;border-radius: 999px;flex: none;background: rgba(255,255,255,.1);color: #fff;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #d4d4d8;font-size: 13px;line-height: 1.5">Ensemble vol-targeted + analisi di capacità</p></div>
-        <div style="display: flex;gap: 10px;align-items: flex-start"><span style="display: grid;place-items: center;height: 20px;width: 20px;border-radius: 999px;flex: none;background: rgba(255,255,255,.1);color: #fff;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #d4d4d8;font-size: 13px;line-height: 1.5">6 gate di regime</p></div>
-        <div style="display: flex;gap: 10px;align-items: flex-start"><span style="display: grid;place-items: center;height: 20px;width: 20px;border-radius: 999px;flex: none;background: rgba(255,255,255,.1);color: #fff;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #d4d4d8;font-size: 13px;line-height: 1.5">Retraining ML schedulato + registry</p></div>
-        <div style="display: flex;gap: 10px;align-items: flex-start"><span style="display: grid;place-items: center;height: 20px;width: 20px;border-radius: 999px;flex: none;background: rgba(255,255,255,.1);color: #fff;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #d4d4d8;font-size: 13px;line-height: 1.5">Multi-conto e priorità</p></div>
-      </div>
-      <button data-beta-open="" style="display: flex;width: 100%;justify-content: center;align-items: center;gap: 8px;margin-top: 22px;height: 44px;border-radius: 999px;border: none;cursor: pointer;font: 700 14px Mulish,sans-serif;color: #131316;background: #fff">Entra nella beta</button>
     </div>
-    
-    <div data-reveal="" data-reveal-d="240" style="position: relative;display: flex;flex-direction: column;background: #fff;border: 1px solid rgba(24,24,27,.07);border-radius: 20px;box-shadow: 0 1px 2px rgba(24,24,27,.04),0 12px 32px -20px rgba(24,24,27,.16);padding: 26px;opacity: 0;transform: translateY(28px);transition: opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)">
-      
-      <div style="display: flex;align-items: center;justify-content: space-between;gap: 8px"><span style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 17px;color: #18181b">Desk</span><span style="display: inline-flex;padding: 4px 9px;border-radius: 999px;background: #f0fdf4;border: 1px solid rgba(22,163,74,.3);font: 700 10px 'IBM Plex Mono',monospace;letter-spacing: .08em;text-transform: uppercase;color: #16a34a;white-space: nowrap">1° anno €0</span></div>
-      <p style="margin: 16px 0 0;font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 38px;line-height: 1;color: #18181b">da €500<span style="font-size: 14px;font-weight: 600;color: #6b7280"> /mese</span></p>
-      <p style="margin: 8px 0 0;font: 500 11.5px 'IBM Plex Mono',monospace;color: #a1a1aa">per micro-desk, prop e family office</p>
-      <div style="display: flex;flex-direction: column;gap: 10px;margin-top: 20px;padding-top: 18px;border-top: 1px solid rgba(24,24,27,.07);flex: 1">
-        <div style="display: flex;gap: 10px;align-items: flex-start"><span style="display: grid;place-items: center;height: 20px;width: 20px;border-radius: 999px;flex: none;background: #EEEDFB;color: #5B57D9;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 13px;line-height: 1.5">Tutto di Power</p></div>
-        <div style="display: flex;gap: 10px;align-items: flex-start"><span style="display: grid;place-items: center;height: 20px;width: 20px;border-radius: 999px;flex: none;background: #EEEDFB;color: #5B57D9;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 13px;line-height: 1.5">Multi-utente e audit log</p></div>
-        <div style="display: flex;gap: 10px;align-items: flex-start"><span style="display: grid;place-items: center;height: 20px;width: 20px;border-radius: 999px;flex: none;background: #EEEDFB;color: #5B57D9;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 13px;line-height: 1.5">Deploy self-hosted assistito</p></div>
-        <div style="display: flex;gap: 10px;align-items: flex-start"><span style="display: grid;place-items: center;height: 20px;width: 20px;border-radius: 999px;flex: none;background: #EEEDFB;color: #5B57D9;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 13px;line-height: 1.5">Onboarding e supporto dedicati</p></div>
-        <div style="display: flex;gap: 10px;align-items: flex-start"><span style="display: grid;place-items: center;height: 20px;width: 20px;border-radius: 999px;flex: none;background: #EEEDFB;color: #5B57D9;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 13px;line-height: 1.5">Conti illimitati</p></div>
-      </div>
-      <button data-beta-open="" style="display: flex;width: 100%;justify-content: center;align-items: center;gap: 8px;margin-top: 22px;height: 44px;border-radius: 999px;border: 1px solid rgba(24,24,27,.14);cursor: pointer;font: 700 14px Mulish,sans-serif;color: #18181b;background: #fff">Entra nella beta</button>
-    </div>
-  </div>
   <div data-reveal="" style="margin-top: 16px;border-radius: 14px;background: #fff;border: 1px solid rgba(24,24,27,.07);padding: 14px 20px;display: flex;flex-wrap: wrap;align-items: center;gap: 8px 18px;opacity: 0;transform: translateY(28px);transition: opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)">
     <span style="font: 600 10.5px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #a1a1aa">Add-on a consumo · Power e Desk</span>
     <span style="font: 500 12.5px Mulish,sans-serif;color: #6b7280">conto broker aggiuntivo · strategie live oltre soglia · fasce di capitale — misuriamo l'intensità d'uso, <b style="color: #18181b">mai il tuo P&amp;L</b></span>
@@ -314,49 +282,7 @@ export const html = `
 </section>
 
 <!-- ============ FOOTER ============ -->
-<footer style="background: #0e0e10;color: #a1a1aa">
-  <div style="max-width: 1152px;margin: 0 auto;padding: 56px 32px 28px">
-    <div data-r="foot" style="display: grid;grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;gap: 32px">
-      <div>
-        <a href="#top" style="display: flex;align-items: center;gap: 9px"><span style="display: grid;place-items: center;height: 30px;width: 30px;border-radius: 9px;background: linear-gradient(135deg,#5B57D9,#18181b)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20c0-8 2.5-12 9.5-16"></path><path d="M10.5 20c0-6 2.2-9 7-11"></path><path d="M14 20c0-4 1.6-6 5-7.2"></path></svg></span><span style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 16px;color: #fff">Lyra</span></a>
-        <p style="font-size: 13px;line-height: 1.6;margin: 14px 0 0;max-width: 280px">Dall'idea al fondo: costruisci strategie, dimostra che funzionano, guadagnaci — insieme a una community.</p>
-        <div style="display: flex;gap: 10px;margin-top: 16px">
-          <a href="#top" aria-label="Discord" style="display: grid;place-items: center;height: 34px;width: 34px;border-radius: 9px;background: rgba(255,255,255,.06);color: #d4d4d8"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg></a>
-          <a href="https://github.com/Idrorepellente" target="_blank" rel="noopener noreferrer" aria-label="GitHub" style="display: grid;place-items: center;height: 34px;width: 34px;border-radius: 9px;background: rgba(255,255,255,.06);color: #d4d4d8"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg></a>
-          
-        </div>
-      </div>
-      <div>
-        <p style="font: 600 11px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #71717a;margin: 0 0 14px">Prodotto</p>
-        <div style="display: flex;flex-direction: column;gap: 9px;font-size: 13px">
-          <a href="#soluzione" style="color: #a1a1aa">Come funziona</a><a href="/soluzione" style="color: #a1a1aa">La nostra soluzione</a><a href="#funzioni" style="color: #a1a1aa">Scanner</a><a href="#funzioni" style="color: #a1a1aa">No-code builder</a>
-        </div>
-      </div>
-      <div>
-        <p style="font: 600 11px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #71717a;margin: 0 0 14px">Sviluppatori</p>
-        <div style="display: flex;flex-direction: column;gap: 9px;font-size: 13px">
-          <a href="#top" style="color: #a1a1aa">API REST</a><a href="#top" style="color: #a1a1aa">SDK Python</a><a href="#top" style="color: #a1a1aa">Documentazione</a><a href="#top" style="color: #a1a1aa">GitHub</a><a href="#top" style="color: #a1a1aa">Changelog</a>
-        </div>
-      </div>
-      <div>
-        <p style="font: 600 11px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #71717a;margin: 0 0 14px">Ecosistema</p>
-        <div style="display: flex;flex-direction: column;gap: 9px;font-size: 13px">
-          <a href="/ecosistema" style="color: #a1a1aa">Il motore</a><a href="/obiettivo-fondo" style="color: #a1a1aa">Obiettivo · Fondo</a><a href="#community" style="color: #a1a1aa">Community &amp; Contest</a><a href="#community" style="color: #a1a1aa">Marketplace</a>
-        </div>
-      </div>
-      <div>
-        <p style="font: 600 11px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #71717a;margin: 0 0 14px">Legale</p>
-        <div style="display: flex;flex-direction: column;gap: 9px;font-size: 13px">
-          <a href="#top" style="color: #a1a1aa">Termini</a><a href="#top" style="color: #a1a1aa">Privacy</a><a href="#top" style="color: #a1a1aa">Cookie</a><a href="#top" style="color: #a1a1aa">Disclaimer rischi</a>
-        </div>
-      </div>
-    </div>
-    <div style="margin-top: 36px;padding-top: 22px;border-top: 1px solid rgba(150,180,190,.12)">
-      <p style="font-size: 11.5px;line-height: 1.6;color: #71717a;margin: 0;max-width: 900px">Il trading comporta rischi di perdita del capitale. Lyra è una piattaforma di ricerca, sviluppo e automazione di strategie: nulla in questa pagina costituisce consulenza finanziaria o sollecitazione all'investimento. I risultati dei backtest e i rendimenti passati non garantiscono risultati futuri. L'accesso al fondo collettivo è soggetto a verifica e ai requisiti previsti dalla normativa applicabile.</p>
-      <p style="font: 500 11.5px 'IBM Plex Mono',monospace;color: #71717a;margin: 14px 0 0">© 2026 Lyra · P.IVA 00000000000 · Italia</p>
-    </div>
-  </div>
-</footer>
+${FOOTER}
 
 <!-- ============ BETA MODAL ============ -->
 <div data-beta-modal="" style="position: fixed;inset: 0;z-index: 100;display: none;align-items: center;justify-content: center;padding: 20px;background: rgba(12,17,19,.55);backdrop-filter: blur(6px);-webkit-backdrop-filter: blur(6px);opacity: 0;transition: opacity .26s ease">
