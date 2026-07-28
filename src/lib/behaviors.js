@@ -418,7 +418,24 @@ export function initBehaviors(rootEl){
       openers.forEach((b) => b.addEventListener('click', show));
       closers.forEach((b) => b.addEventListener('click', hide));
       modal.addEventListener('click', (e) => { if (e.target === modal) hide(); });
-      if (form) form.addEventListener('submit', (e) => { e.preventDefault(); if (formBox) formBox.style.display = 'none'; if (success) success.style.display = ''; });
+      if (form) form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        try {
+          const _em = form.querySelector('input[type="email"]');
+          const _sel = form.querySelector('select');
+          const _email = _em ? _em.value.trim() : '';
+          const _profile = _sel ? _sel.value : '';
+          if (_email) {
+            fetch('/api/beta', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: _email, profile: _profile }),
+            }).catch(() => {});
+          }
+        } catch (_e) {}
+        if (formBox) formBox.style.display = 'none';
+        if (success) success.style.display = '';
+      });
     }
   
     _initPseudoStyles(){

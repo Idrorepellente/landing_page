@@ -245,12 +245,9 @@ export const html = `
     <div style="display: flex;justify-content: center;align-items: center;gap: 36px;flex-wrap: wrap;margin-top: 20px">
       <span style="font: 800 19px Mulish,sans-serif;letter-spacing: -.01em;color: #52525b;white-space: nowrap">Interactive Brokers</span>
       <span style="font: 800 19px Mulish,sans-serif;font-style: italic;color: #52525b;white-space: nowrap">MetaTrader 5</span>
-      <span style="font: 700 20px 'Space Grotesk',sans-serif;color: #52525b;white-space: nowrap">Darwinex</span>
       <span style="height: 16px;width: 1px;background: rgba(24,24,27,.14)"></span>
       <span style="font: 600 11px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #a1a1aa">bring-your-own-data</span>
       <span style="font: 700 19px 'Space Grotesk',sans-serif;color: #52525b;white-space: nowrap">Polygon</span>
-      <span style="font: 800 19px Mulish,sans-serif;color: #52525b;white-space: nowrap">Nasdaq</span>
-      <span style="font: 800 19px Mulish,sans-serif;color: #52525b;white-space: nowrap">CME</span>
     </div>
   </div>
 </section>
@@ -398,9 +395,6 @@ export const html = `
           <svg viewBox="0 0 300 110" preserveAspectRatio="none" style="width: 100%;height: 96px;margin-top: 8px"><defs><linearGradient id="cveq" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(82,82,91,.28)"></stop><stop offset="1" stop-color="rgba(82,82,91,0)"></stop></linearGradient></defs><path d="M0 92 L40 84 L80 88 L120 66 L160 72 L200 46 L240 36 L300 20 L300 110 L0 110 Z" fill="url(#cveq)"></path><path d="M0 92 L40 84 L80 88 L120 66 L160 72 L200 46 L240 36 L300 20" fill="none" stroke="#52525b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path><line x1="196" y1="0" x2="196" y2="110" stroke="rgba(198,138,34,.55)" stroke-width="1.5" stroke-dasharray="4 4"></line></svg>
           <div style="display: flex;gap: 7px;flex-wrap: wrap;margin-top: 8px"><span style="padding: 5px 9px;border-radius: 999px;background: #f4f4f5;color: #3f3f46;font: 600 10.5px 'IBM Plex Mono',monospace">OOS ✓</span><span style="padding: 5px 9px;border-radius: 999px;background: #f4f4f5;color: #52525b;font: 600 10.5px 'IBM Plex Mono',monospace">MaxDD -9%</span><span style="padding: 5px 9px;border-radius: 999px;background: #FBF3E0;color: #C68A22;font: 600 10.5px 'IBM Plex Mono',monospace">costi reali inclusi</span></div>
         </div>
-        <div style="position: absolute;right: 20px;top: 54px;width: 46%;border-radius: 14px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 18px 40px -18px rgba(15,23,42,.3);padding: 14px;animation: qsFloatB 6.2s ease-in-out infinite">
-          <div style="display: flex;gap: 9px;align-items: flex-start"><span style="flex: none;display: grid;place-items: center;height: 24px;width: 24px;border-radius: 8px;background: linear-gradient(135deg,#5B57D9,#18181b);color: #fff"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0L14.06 8.5A2 2 0 0 0 15.5 9.94l6.14 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 12px;line-height: 1.5"><b style="color: #18181b">Copilota:</b> campione corto sul 2020 — rischio overfitting. Estendo il walk-forward?</p></div>
-        </div>
         <div style="position: absolute;right: 44px;bottom: 24px;border-radius: 12px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 14px 30px -16px rgba(15,23,42,.3);padding: 11px 14px;animation: qsFloatB 6.8s ease-in-out infinite;animation-delay: .6s">
           <p style="margin: 0;font: 600 10.5px 'IBM Plex Mono',monospace;color: #52525b">Monte Carlo · <b style="color: #3f3f46">1.000 scenari ✓</b></p>
         </div>
@@ -415,7 +409,7 @@ export const html = `
           
         <div style="display: flex;gap: 11px;align-items: flex-start"><span style="display: grid;place-items: center;height: 22px;width: 22px;border-radius: 999px;flex: none;background: #E4F5F2;color: #0E9384;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 14.5px;line-height: 1.55"><b style="color: #18181b">Walk-forward &amp; Monte Carlo.</b> Migliaia di scenari: misuri la robustezza, non la fortuna.</p></div>
           
-        <div style="display: flex;gap: 11px;align-items: flex-start"><span style="display: grid;place-items: center;height: 22px;width: 22px;border-radius: 999px;flex: none;background: #E4F5F2;color: #0E9384;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 14.5px;line-height: 1.55"><b style="color: #18181b">Robustness Critic.</b> L’AI attacca il tuo backtest: overfitting, fragilità, look-ahead — prima del mercato.</p></div>
+        <div style="display: flex;gap: 11px;align-items: flex-start"><span style="display: grid;place-items: center;height: 22px;width: 22px;border-radius: 999px;flex: none;background: #E4F5F2;color: #0E9384;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 14.5px;line-height: 1.55"><b style="color: #18181b">Robustness Critic.</b> Il sistema attacca il tuo backtest: overfitting, fragilità, look-ahead — prima del mercato.</p></div>
         </div>
       </div>
     </div>
@@ -818,8 +812,8 @@ export const html = `
         <p style="font-size: 13px;line-height: 1.6;margin: 14px 0 0;max-width: 280px">Dall'idea al fondo: costruisci strategie, dimostra che funzionano, guadagnaci — insieme a una community.</p>
         <div style="display: flex;gap: 10px;margin-top: 16px">
           <a href="#top" aria-label="Discord" style="display: grid;place-items: center;height: 34px;width: 34px;border-radius: 9px;background: rgba(255,255,255,.06);color: #d4d4d8"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg></a>
-          <a href="#top" aria-label="GitHub" style="display: grid;place-items: center;height: 34px;width: 34px;border-radius: 9px;background: rgba(255,255,255,.06);color: #d4d4d8"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg></a>
-          <a href="#top" aria-label="X" style="display: grid;place-items: center;height: 34px;width: 34px;border-radius: 9px;background: rgba(255,255,255,.06);color: #d4d4d8"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg></a>
+          <a href="https://github.com/Idrorepellente" target="_blank" rel="noopener noreferrer" aria-label="GitHub" style="display: grid;place-items: center;height: 34px;width: 34px;border-radius: 9px;background: rgba(255,255,255,.06);color: #d4d4d8"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg></a>
+          
         </div>
       </div>
       <div>
