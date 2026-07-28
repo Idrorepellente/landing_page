@@ -825,13 +825,13 @@ export const html = `
       <div>
         <p style="font: 600 11px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #71717a;margin: 0 0 14px">Sviluppatori</p>
         <div style="display: flex;flex-direction: column;gap: 9px;font-size: 13px">
-          <a href="#top" style="color: #a1a1aa">API REST</a><a href="#top" style="color: #a1a1aa">SDK Python</a><a href="#top" style="color: #a1a1aa">Documentazione</a><a href="#top" style="color: #a1a1aa">GitHub</a><a href="#top" style="color: #a1a1aa">Changelog</a>
+          <a href="#top" style="color: #a1a1aa">Documentazione</a><a href="#top" style="color: #a1a1aa">GitHub</a>
         </div>
       </div>
       <div>
         <p style="font: 600 11px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #71717a;margin: 0 0 14px">Ecosistema</p>
         <div style="display: flex;flex-direction: column;gap: 9px;font-size: 13px">
-          <a href="/ecosistema" style="color: #a1a1aa">Il motore</a><a href="/obiettivo-fondo" style="color: #a1a1aa">Obiettivo · Fondo</a><a href="#community" style="color: #a1a1aa">Community &amp; Contest</a><a href="#community" style="color: #a1a1aa">Marketplace</a>
+          <a href="/ecosistema" style="color: #a1a1aa">Il motore</a><a href="/obiettivo-fondo" style="color: #a1a1aa">Obiettivo · Fondo</a><a href="#community" style="color: #a1a1aa">Marketplace</a>
         </div>
       </div>
       <div>

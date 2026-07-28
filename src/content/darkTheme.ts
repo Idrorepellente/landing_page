@@ -152,4 +152,8 @@ body[data-theme="dark"]{background:#0e0e10;color:#ededf0}
 [data-theme="dark"] [style*="solid rgba(63,63,70,.22)"]{border-color:rgba(255,255,255,.14)!important}
 [data-theme="dark"] [style*="solid rgba(63,63,70,.25)"]{border-color:rgba(255,255,255,.14)!important}
 [data-theme="dark"] [style*="solid rgba(79,70,229,.3)"]{border-color:rgba(255,255,255,.14)!important}
-/* gradienti clippati sul testo: la meta\x27 scura diventa chiara nel tema scuro */\n[data-theme="dark"] [style*="linear-gradient(100deg,#18181b,#5B57D9)"]{background-image:linear-gradient(100deg,#f4f4f5,#8b87ff)!important}\n[data-theme="dark"] [style*="linear-gradient(90deg,#18181b,#52525b)"]{background-image:linear-gradient(90deg,#f4f4f5,#c7c7cc)!important}\n[data-theme="dark"] [style*="linear-gradient(100deg,#71717a,#a1a1aa)"]{background-image:linear-gradient(100deg,#c7c7cc,#ededf0)!important}\n`;
+/* gradienti clippati sul testo: la meta\x27 scura diventa chiara nel tema scuro */\n[data-theme="dark"] [style*="linear-gradient(100deg,#18181b,#5B57D9)"]{background-image:linear-gradient(100deg,#f4f4f5,#8b87ff)!important}\n[data-theme="dark"] [style*="linear-gradient(90deg,#18181b,#52525b)"]{background-image:linear-gradient(90deg,#f4f4f5,#c7c7cc)!important}\n[data-theme="dark"] [style*="linear-gradient(100deg,#71717a,#a1a1aa)"]{background-image:linear-gradient(100deg,#c7c7cc,#ededf0)!important}\n
+/* Fix dark: gradienti chiari non coperti — overlay hero (neural canvas) e fascia "Tre modi" */
+[data-theme="dark"] [style*="linear-gradient(180deg,rgba(243,243,244,0)"]{background:linear-gradient(180deg,rgba(14,14,16,0) 45%,rgba(14,14,16,.92) 100%)!important}
+[data-theme="dark"] [style*="linear-gradient(180deg,#f3f3f4,#EAEEF7"]{background:linear-gradient(180deg,#0e0e10,#1c1c1f 30%,#1c1c1f 70%,#0e0e10)!important}
+`;
