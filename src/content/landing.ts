@@ -230,7 +230,7 @@ export const html = `
       <div style="position: relative;margin: 0 14px">
         <div style="border-radius: 18px 18px 5px 5px;background: linear-gradient(180deg,#2A3448,#18181b);padding: 11px 11px 15px;box-shadow: 0 34px 80px -30px rgba(15,23,42,.55)">
           <div style="display: flex;justify-content: center;padding-bottom: 7px"><span style="height: 5px;width: 5px;border-radius: 999px;background: #39445C"></span></div>
-          <div style="border-radius: 9px;overflow: hidden;background: #0e0e10;aspect-ratio: 16/10"><img src="/screens/app_overview.png" alt="Lira Dashboard — Overview" style="width:100%;height:100%;object-fit:cover;display:block" /></div>
+          <div style="border-radius: 9px;overflow: hidden;background: #0e0e10;aspect-ratio: 16/10"><img src="/screens/app_overview.png" alt="Lira Dashboard — Overview" style="width:100%;height:100%;object-fit:fill;display:block" /></div>
         </div>
         <div style="position: relative;height: 15px;margin: 0 -26px;background: linear-gradient(180deg,#E6EAF2,#C3CBD9);border-radius: 2px 2px 13px 13px;box-shadow: 0 22px 44px -20px rgba(15,23,42,.45)"><span style="position: absolute;left: 50%;top: 0;transform: translateX(-50%);width: 92px;height: 7px;background: #AEB7C8;border-radius: 0 0 9px 9px"></span></div>
       </div>
