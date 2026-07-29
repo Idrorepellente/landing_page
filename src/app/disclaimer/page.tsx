@@ -6,6 +6,9 @@ import { DARK_CSS } from '@/content/darkTheme';
 export const metadata: Metadata = {
   title: "Disclaimer — Lyra",
   description: "Avvertenze, finalità informativa e limitazioni di responsabilità.",
+  keywords: ['disclaimer', 'avvertenze', 'limitazione di responsabilita', 'finalita informativa'],
+  openGraph: { title: "Disclaimer — Lyra", description: "Avvertenze, finalità informativa e limitazioni di responsabilità." },
+  twitter: { title: "Disclaimer — Lyra", description: "Avvertenze, finalità informativa e limitazioni di responsabilità." },
 };
 
 export default function Page() {

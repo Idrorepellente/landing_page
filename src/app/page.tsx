@@ -7,6 +7,9 @@ import { getPool } from '@/lib/pg';
 export const metadata: Metadata = {
   title: "Lyra — Il workbench quantitativo",
   description: "Dall’idea al live. Se regge, va.",
+  keywords: ['workbench quantitativo', 'trading quantitativo', 'backtest', 'walk-forward', 'strategie no-code', 'live trading', 'broker', 'ensemble', 'quant'],
+  openGraph: { title: "Lyra — Il workbench quantitativo", description: "Dall’idea al live. Se regge, va." },
+  twitter: { title: "Lyra — Il workbench quantitativo", description: "Dall’idea al live. Se regge, va." },
 };
 
 // Il contatore "già in lista d'attesa" riflette le iscrizioni beta reali nel DB

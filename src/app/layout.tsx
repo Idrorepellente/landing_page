@@ -2,8 +2,26 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.lyra-capital.it'),
   title: 'Lyra — Il workbench quantitativo',
   description: 'Costruisci strategie senza codice, validale con backtest riproducibili e mandale live sul tuo broker. Validation-first, local-first.',
+  keywords: ['trading quantitativo', 'trading algoritmico', 'backtest', 'walk-forward', 'strategie di trading', 'no-code trading', 'ensemble', 'quant', 'automazione trading', 'validazione strategie', 'Lyra'],
+  applicationName: 'Lyra',
+  authors: [{ name: 'Lyra' }],
+  robots: { index: true, follow: true },
+  openGraph: {
+    type: 'website',
+    locale: 'it_IT',
+    siteName: 'Lyra',
+    url: 'https://www.lyra-capital.it',
+    title: 'Lyra — Il workbench quantitativo',
+    description: 'Costruisci strategie senza codice, validale con backtest riproducibili e mandale live sul tuo broker.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Lyra — Il workbench quantitativo',
+    description: 'Costruisci strategie senza codice, validale con backtest riproducibili e mandale live sul tuo broker.',
+  },
 };
 
 // Applica il tema PRIMA che il contenuto venga dipinto (niente flash). Le regole dark del

@@ -1,0 +1,9 @@
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#f3f3f4;color:#18181b;font-family:Mulish,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:#5B57D9;text-decoration:none}
+a:hover{color:#4744C4}
+::selection{background:rgba(20,184,166,.22)}
+@keyframes qsUp{0%{opacity:0;transform:translateY(24px)}100%{opacity:1;transform:none}}
+@keyframes qsDash{to{stroke-dashoffset:-32}}

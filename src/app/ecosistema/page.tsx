@@ -6,6 +6,9 @@ import { DARK_CSS } from '@/content/darkTheme';
 export const metadata: Metadata = {
   title: "Il motore — Lyra",
   description: "Il motore quantitativo di Lyra, area per area.",
+  keywords: ['ecosistema quant', 'pipeline di trading', 'dati di mercato', 'gestione del rischio', 'segnali', 'overlay'],
+  openGraph: { title: "Il motore — Lyra", description: "Il motore quantitativo di Lyra, area per area." },
+  twitter: { title: "Il motore — Lyra", description: "Il motore quantitativo di Lyra, area per area." },
 };
 
 export default function Page() {

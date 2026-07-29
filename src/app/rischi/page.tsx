@@ -6,6 +6,9 @@ import { DARK_CSS } from '@/content/darkTheme';
 export const metadata: Metadata = {
   title: "Avvertenza sui rischi — Lyra",
   description: "Informazioni sui rischi del trading e degli investimenti.",
+  keywords: ['rischi trading', 'avvertenza sui rischi', 'rischio di perdita', 'leva finanziaria', 'volatilita'],
+  openGraph: { title: "Avvertenza sui rischi — Lyra", description: "Informazioni sui rischi del trading e degli investimenti." },
+  twitter: { title: "Avvertenza sui rischi — Lyra", description: "Informazioni sui rischi del trading e degli investimenti." },
 };
 
 export default function Page() {
