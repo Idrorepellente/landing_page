@@ -311,16 +311,25 @@ export function initBehaviors(rootEl){
   
     _initCount() {
       const els = [...this._q('[data-count]')]; if (!els.length) return;
+      // Valore di partenza = numero gia' mostrato (es. conteggio reale dal server); default 0.
+      const numOf = (el) => parseInt(((el.textContent || '').match(/\d/g) || ['0']).join(''), 10) || 0;
       const run = (el) => {
+        const from = parseFloat(el.getAttribute('data-count-from') || '0');
         const to = parseFloat(el.getAttribute('data-count')), suf = el.getAttribute('data-count-suffix') || '';
         const dur = parseInt(el.getAttribute('data-count-dur') || '1400', 10), dec = parseInt(el.getAttribute('data-count-dec') || '0', 10);
         const t0 = performance.now();
         const fmt = (v) => v.toLocaleString('it-IT', { minimumFractionDigits: dec, maximumFractionDigits: dec });
-        const frame = (t) => { const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(to * e) + suf; if (p < 1) requestAnimationFrame(frame); };
+        const frame = (t) => { const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(from + (to - from) * e) + suf; if (p < 1) requestAnimationFrame(frame); };
         requestAnimationFrame(frame);
       };
       const io = new IntersectionObserver((ents) => { ents.forEach((e) => { if (e.isIntersecting) { run(e.target); io.unobserve(e.target); } }); }, { threshold: 0.5 });
-      els.forEach((el) => { el.textContent = '0' + (el.getAttribute('data-count-suffix') || ''); io.observe(el); });
+      els.forEach((el) => {
+        const dec = parseInt(el.getAttribute('data-count-dec') || '0', 10);
+        const from = numOf(el);
+        el.setAttribute('data-count-from', String(from));
+        el.textContent = from.toLocaleString('it-IT', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + (el.getAttribute('data-count-suffix') || '');
+        io.observe(el);
+      });
       this._cio = io;
     }
   

@@ -34,6 +34,15 @@ async function betaCount(): Promise<number | null> {
 
 export default async function Page() {
   const n = await betaCount();
-  const out = n != null ? html.replace('data-count="500"', `data-count="${n}"`) : html;
+  // Numero reale iniettato sia nell'attributo (target dell'animazione) sia nel testo
+  // visibile, così è corretto anche nell'HTML server-rendered (SEO / no-JS). In assenza
+  // di DB resta il fallback statico della pagina.
+  const out =
+    n != null
+      ? html.replace(
+          'data-count="500" data-count-suffix="+">0+</span>',
+          `data-count="${n}" data-count-suffix="+">${n.toLocaleString('it-IT')}+</span>`,
+        )
+      : html;
   return <StaticPage html={out} css={css + DARK_CSS} />;
 }
