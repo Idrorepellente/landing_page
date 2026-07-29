@@ -322,7 +322,15 @@ export function initBehaviors(rootEl){
         const frame = (t) => { const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(from + (to - from) * e) + suf; if (p < 1) requestAnimationFrame(frame); };
         requestAnimationFrame(frame);
       };
-      const io = new IntersectionObserver((ents) => { ents.forEach((e) => { if (e.isIntersecting) { run(e.target); io.unobserve(e.target); } }); }, { threshold: 0.5 });
+      // Contatore "live": recupera il numero reale di iscritti (/api/beta) e poi anima.
+      const start = (el) => {
+        if (el.hasAttribute('data-live-count')) {
+          fetch('/api/beta').then((r) => (r.ok ? r.json() : null)).then((d) => {
+            if (d && d.ok && typeof d.count === 'number') el.setAttribute('data-count', String(d.count));
+          }).catch(() => {}).then(() => run(el));
+        } else { run(el); }
+      };
+      const io = new IntersectionObserver((ents) => { ents.forEach((e) => { if (e.isIntersecting) { start(e.target); io.unobserve(e.target); } }); }, { threshold: 0.5 });
       els.forEach((el) => {
         const dec = parseInt(el.getAttribute('data-count-dec') || '0', 10);
         const from = numOf(el);
