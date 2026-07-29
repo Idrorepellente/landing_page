@@ -32,13 +32,12 @@ export const FOOTER = `<footer style="background: #0e0e10;color: #a1a1aa">
       <div>
         <p style="font: 600 11px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #71717a;margin: 0 0 14px">Legale</p>
         <div style="display: flex;flex-direction: column;gap: 9px;font-size: 13px">
-          <a href="#top" style="color: #a1a1aa">Termini</a><a href="#top" style="color: #a1a1aa">Privacy</a><a href="#top" style="color: #a1a1aa">Cookie</a><a href="#top" style="color: #a1a1aa">Disclaimer rischi</a>
+          <a href="/termini" style="color: #a1a1aa">Termini</a><a href="/privacy" style="color: #a1a1aa">Privacy</a><a href="/cookie" style="color: #a1a1aa">Cookie</a><a href="/disclaimer" style="color: #a1a1aa">Disclaimer</a><a href="/rischi" style="color: #a1a1aa">Rischi</a>
         </div>
       </div>
     </div>
     <div style="margin-top: 36px;padding-top: 22px;border-top: 1px solid rgba(150,180,190,.12)">
       <p style="font-size: 11.5px;line-height: 1.6;color: #71717a;margin: 0;max-width: 900px">Il trading comporta rischi di perdita del capitale. Lyra è una piattaforma di ricerca, sviluppo e automazione di strategie: nulla in questa pagina costituisce consulenza finanziaria o sollecitazione all'investimento. I risultati dei backtest e i rendimenti passati non garantiscono risultati futuri. L'accesso al fondo collettivo è soggetto a verifica e ai requisiti previsti dalla normativa applicabile.</p>
-      <p style="font: 500 11.5px 'IBM Plex Mono',monospace;color: #71717a;margin: 14px 0 0">© 2026 Lyra · P.IVA 00000000000 · Italia</p>
     </div>
   </div>
 </footer>`;
