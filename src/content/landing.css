@@ -192,3 +192,26 @@ html:not([data-theme="dark"]) footer [data-logo-box]{
 @media (max-width:900px){
   [data-float-card]{ display:none !important; }
 }
+
+/* ---------- Mockup del laptop nella hero ----------
+   La scocca era fluida mentre lo schermo aveva larghezza FISSA (524px): sotto i
+   1025px la hero passa a colonna singola, la scocca arrivava a ~960px e la
+   differenza si vedeva come una fascia nera che cresceva e si restringeva con
+   la finestra. Qui la scocca non supera mai la larghezza dello schermo, quindi
+   resta di dimensione costante e senza fascia nera. */
+[data-laptop]{ max-width:546px; margin-left:auto !important; margin-right:auto !important; }
+[data-screen]{ width:100% !important; max-width:524px; height:auto !important; }
+[data-screen] img{ left:0 !important; top:0 !important; width:100% !important;
+  height:100% !important; object-fit:cover; }
+
+/* Colonna singola: le due card flottanti si sovrapponevano in alto.
+   Una in alto a sinistra del PC, l'altra in basso a sinistra. */
+@media (max-width:1024px) and (min-width:901px){
+  [data-float-card="inner"]{
+    left:-7% !important; right:auto !important; top:-9% !important;
+    width:clamp(128px, 15vw, 158px) !important; }
+  [data-float-card="outer"]{
+    left:calc(50% - 273px - 26px) !important; right:auto !important;
+    top:auto !important; bottom:34px !important;
+    width:clamp(150px, 18vw, 190px) !important; }
+}
