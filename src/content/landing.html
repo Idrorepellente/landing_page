@@ -1,4 +1,7 @@
 
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-bg-color="#0e0e10"><rect width="512" height="512" fill="#0e0e10"/><g transform="translate(154,150)"><path d="M52 8 C40 70 34 132 40 196 C42 214 58 214 60 196 C66 138 74 78 88 20 C92 4 56 -8 52 8 Z" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/><path d="M44 190 C96 214 156 214 204 188 C218 181 210 156 196 162 C152 182 100 182 58 166 C44 160 32 184 44 190 Z" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="round"/></g></svg></template>
+<div id="lyra-root">
+
 <div style="min-height: 100vh;background: transparent;color: #18181b;overflow-x: clip;position: relative">
 
 <!-- sfondo animato full-page -->
@@ -9,9 +12,11 @@
 <!-- ============ TOP NAV ============ -->
 <header data-nav="" style="position: fixed;top: 0;left: 0;right: 0;z-index: 50;transition: transform .3s ease,box-shadow .3s ease,background .3s ease;background: rgba(255,255,255,.8);backdrop-filter: blur(12px);-webkit-backdrop-filter: blur(12px)">
   <div style="max-width: 1152px;margin: 0 auto;display: flex;align-items: center;gap: 12px;padding: 0 32px;height: 60px">
-    <a href="#top" style="display: flex;align-items: center;gap: 9px">
-      <img src="/logo.svg" alt="" width="30" height="30" style="height: 30px;width: 30px;display: block;object-fit: contain">
-      <span style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 16px;letter-spacing: -.02em;color: #18181b">Lyra</span>
+    <a href="/" style="display: flex;align-items: center;gap: 9px">
+      <span style="display: grid;place-items: center;height: 30px;width: 30px;border-radius: 9px;background: #fff;border: 1px solid rgba(15,23,42,.1);box-shadow: 0 6px 16px -6px rgba(24,24,27,.35)">
+        <img src="/logo-lyra.png" alt="Lyra" style="width: 24px;height: 24px;object-fit: contain;display: block">
+      </span>
+      <span style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 16px;letter-spacing: -.02em;color: #18181b">Lyra Capital</span>
     </a>
     <nav data-nav-links="" style="display: flex;align-items: center;gap: 26px;margin-left: 34px;font-size: 13.5px;font-weight: 600;color: #52525b">
       <a href="/soluzione" style="color: #52525b">La nostra soluzione</a>
@@ -67,7 +72,7 @@
         <a href="#community" style="display: inline-flex;align-items: center;gap: 8px;height: 48px;padding: 0 24px;border-radius: 999px;border: 1px solid rgba(15,23,42,.14);background: #fff;white-space: nowrap;font: 700 15px Mulish,sans-serif;color: #18181b">Unisciti al Discord</a>
       </div>
       <div style="display: flex;align-items: center;gap: 12px;margin-top: 24px">
-        <div style="display: flex;align-items: center"><img src="https://i.pravatar.cc/64?img=13" style="height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;margin-right: -9px;position: relative;z-index: 4" alt=""><img src="https://i.pravatar.cc/64?img=33" style="height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;margin-right: -9px;position: relative;z-index: 3" alt=""><img src="https://i.pravatar.cc/64?img=52" style="height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;margin-right: -9px;position: relative;z-index: 2" alt=""><img src="https://i.pravatar.cc/64?img=45" style="height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;position: relative;z-index: 1" alt=""></div>
+        <div style="display: flex;align-items: center"><img src="/avatars/a13.png" style="height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;margin-right: -9px;position: relative;z-index: 4" alt=""><img src="/avatars/a33.png" style="height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;margin-right: -9px;position: relative;z-index: 3" alt=""><img src="/avatars/a52.png" style="height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;margin-right: -9px;position: relative;z-index: 2" alt=""><img src="/avatars/a45.png" style="height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;position: relative;z-index: 1" alt=""></div>
         <p style="margin: 0;font-size: 13.5px;color: #6b7280"><b style="color: #18181b;font-family: 'Space Grotesk',sans-serif"><span data-live-count data-count="500" data-count-suffix="+">0+</span></b> già in lista d'attesa</p>
       </div>
       <div style="display: flex;margin-top: 30px;border-top: 1px solid rgba(15,23,42,.08);padding-top: 22px">
@@ -78,42 +83,22 @@
     </div>
     <div data-reveal="" data-reveal-d="120" style="opacity: 0;transform: translateY(28px);transition: opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)">
       <div style="position: relative">
-        <div style="position: absolute;left: -10px;top: -16px;z-index: 4;animation: qsFloatB 5.6s ease-in-out infinite"><span style="display: inline-flex;align-items: center;gap: 6px;height: 28px;padding: 0 12px;border-radius: 999px;background: #f4f4f5;border: 1px solid rgba(63,63,70,.22);box-shadow: 0 10px 24px -12px rgba(63,63,70,.5);font: 700 12px Mulish,sans-serif;color: #3f3f46;white-space: nowrap"><span style="display: inline-flex;color: #3f3f46"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span>Backtest OK</span></div>
-        <div style="position: absolute;right: -8px;bottom: 26px;z-index: 4;animation: qsFloatB 6.2s ease-in-out infinite;animation-delay: .8s"><span style="display: inline-flex;align-items: center;gap: 6px;height: 28px;padding: 0 12px;border-radius: 999px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 10px 26px -12px rgba(15,23,42,.35);font: 700 12px Mulish,sans-serif;color: #3f3f46;white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7M12 19V5"></path></svg>+2,1% oggi</span></div>
+        <div style="position: absolute;left: -10px;top: -16px;z-index: 4;animation: qsFloatB 5.6s ease-in-out infinite"></div>
+        <div style="position: absolute;right: -8px;bottom: 26px;z-index: 4;animation: qsFloatB 6.2s ease-in-out infinite;animation-delay: .8s"></div>
 
       <div style="position: relative;margin: 0 14px">
-        <div style="border-radius: 18px 18px 5px 5px;background: linear-gradient(180deg,#2A3448,#18181b);padding: 11px 11px 15px;box-shadow: 0 34px 80px -30px rgba(15,23,42,.55)">
+        <div style="border-radius: 18px 18px 5px 5px;background: linear-gradient(180deg,#2A3448,#18181b);padding: 11px 11px 15px;box-shadow: 0 34px 80px -30px rgba(15,23,42,.55);padding-top: 6px;position: relative">
           <div style="display: flex;justify-content: center;padding-bottom: 7px"><span style="height: 5px;width: 5px;border-radius: 999px;background: #39445C"></span></div>
-          <div style="border-radius: 9px;overflow: hidden;background: #0e0e10;aspect-ratio: 16/10">
-<div style="display: flex;align-items: center;gap: 6px;padding: 9px 12px;border-bottom: 1px solid rgba(150,180,190,.12)"><span style="height: 9px;width: 9px;border-radius: 999px;background: #fb7185"></span><span style="height: 9px;width: 9px;border-radius: 999px;background: #fbbf24"></span><span style="height: 9px;width: 9px;border-radius: 999px;background: #34d399"></span><span style="margin-left: 10px;font: 500 10.5px 'IBM Plex Mono',monospace;color: #71717a">lyra.app / workspace</span></div>
-<div style="display: grid;grid-template-columns: 1.5fr 1fr;gap: 10px;padding: 12px;height: calc(100% - 34px)">
-  <div style="border-radius: 12px;background: #1c1c1f;border: 1px solid rgba(150,180,190,.12);padding: 14px;display: flex;flex-direction: column;min-height: 0">
-    <div style="display: flex;align-items: baseline;justify-content: space-between"><span style="font: 600 10px 'IBM Plex Mono',monospace;color: #a1a1aa;letter-spacing: .1em;text-transform: uppercase">Equity · portafoglio</span><span style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 18px;color: #E9EFF1">+34,2%</span></div>
-    <svg viewBox="0 0 340 130" preserveAspectRatio="none" style="width: 100%;flex: 1;margin-top: 8px;min-height: 0"><defs><linearGradient id="heq" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(70,214,192,.35)"></stop><stop offset="1" stop-color="rgba(70,214,192,0)"></stop></linearGradient></defs><path d="M0 112 L30 104 L60 110 L95 86 L130 92 L165 66 L200 74 L240 46 L280 52 L340 22 L340 130 L0 130 Z" fill="url(#heq)"></path><path d="M0 112 L30 104 L60 110 L95 86 L130 92 L165 66 L200 74 L240 46 L280 52 L340 22" fill="none" stroke="#a1a1aa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-    <div style="display: flex;gap: 7px;margin-top: 8px;flex-wrap: wrap"><span style="padding: 4px 8px;border-radius: 6px;background: rgba(70,214,192,.12);color: #e4e4e7;font: 600 10px 'IBM Plex Mono',monospace">Sharpe 1.6</span><span style="padding: 4px 8px;border-radius: 6px;background: rgba(255,255,255,.05);color: #d4d4d8;font: 600 10px 'IBM Plex Mono',monospace">MaxDD -8%</span></div>
-  </div>
-  <div style="display: flex;flex-direction: column;gap: 10px;min-height: 0">
-    <div style="border-radius: 12px;background: #1c1c1f;border: 1px solid rgba(150,180,190,.12);padding: 12px">
-      <span style="font: 600 10px 'IBM Plex Mono',monospace;color: #a1a1aa;letter-spacing: .1em;text-transform: uppercase">Allocazione</span>
-      <div style="display: flex;flex-direction: column;gap: 7px;margin-top: 9px">
-        <div><div style="display: flex;justify-content: space-between;font: 500 9.5px 'IBM Plex Mono',monospace;color: #a1a1aa"><span>Trend</span><span>38%</span></div><div style="height: 4px;border-radius: 999px;background: rgba(255,255,255,.06);margin-top: 3px"><div style="height: 100%;width: 38%;border-radius: 999px;background: #3f3f46"></div></div></div>
-        <div><div style="display: flex;justify-content: space-between;font: 500 9.5px 'IBM Plex Mono',monospace;color: #a1a1aa"><span>Mean-rev</span><span>34%</span></div><div style="height: 4px;border-radius: 999px;background: rgba(255,255,255,.06);margin-top: 3px"><div style="height: 100%;width: 34%;border-radius: 999px;background: #a1a1aa"></div></div></div>
-        <div><div style="display: flex;justify-content: space-between;font: 500 9.5px 'IBM Plex Mono',monospace;color: #a1a1aa"><span>Factor</span><span>28%</span></div><div style="height: 4px;border-radius: 999px;background: rgba(255,255,255,.06);margin-top: 3px"><div style="height: 100%;width: 28%;border-radius: 999px;background: #71717a"></div></div></div>
-      </div>
-    </div>
-    <div style="border-radius: 12px;background: #1c1c1f;border: 1px solid rgba(150,180,190,.12);padding: 12px;display: flex;flex-direction: column;gap: 7px;flex: 1">
-      <span style="font: 600 10px 'IBM Plex Mono',monospace;color: #a1a1aa;letter-spacing: .1em;text-transform: uppercase">Live</span>
-      <div style="display: flex;align-items: center;justify-content: space-between"><span style="color: #E9EFF1;font-size: 11px;font-weight: 600">Trend FX</span><span style="color: #a1a1aa;font: 600 10.5px 'IBM Plex Mono',monospace">+2,1%</span></div>
-      <div style="display: flex;align-items: center;justify-content: space-between"><span style="color: #E9EFF1;font-size: 11px;font-weight: 600">Mean-rev</span><span style="color: #a1a1aa;font: 600 10.5px 'IBM Plex Mono',monospace">+0,7%</span></div>
-      <div style="display: flex;align-items: center;gap: 6px;margin-top: auto"><span style="width: 7px;height: 7px;border-radius: 999px;background: #a1a1aa;box-shadow: 0 0 8px #a1a1aa"></span><span style="color: #a1a1aa;font: 500 9.5px 'IBM Plex Mono',monospace">kill-switch attivo</span></div>
-    </div>
-  </div>
-</div></div>
+          <div style="border-radius: 9px;overflow: hidden;background: #0e0e10">
+<div style="aspect-ratio: 1920/1038;overflow: hidden;position: relative;width: 524px;height: 304px"><img src="/group-1000002321-ms61bu47-b2e3.png" alt="Overview — dashboard Lyra" style="position: absolute;left: -6px;width: 529px;height: 306px;top: 4px"></div>
+</div>
+          <div style="box-sizing: border-box;display: flex;flex-direction: column;gap: 12px;padding: 16px;border-radius: 2px;box-shadow: 0 1px 3px rgba(0,0,0,.08);position: absolute;left: 204px;top: -99px;width: 197px;height: 252px;background: url('./group-1000002320-ms61fk3r-eith.png') center / cover no-repeat;z-index: 0"></div>
         </div>
         <div style="position: relative;height: 15px;margin: 0 -26px;background: linear-gradient(180deg,#E6EAF2,#C3CBD9);border-radius: 2px 2px 13px 13px;box-shadow: 0 22px 44px -20px rgba(15,23,42,.45)"><span style="position: absolute;left: 50%;top: 0;transform: translateX(-50%);width: 92px;height: 7px;background: #AEB7C8;border-radius: 0 0 9px 9px"></span></div>
       </div>
       </div>
     </div>
+    <div style="box-sizing: border-box;display: flex;flex-direction: column;gap: 12px;padding: 16px;border-radius: 2px;box-shadow: 0 1px 3px rgba(0,0,0,.08);position: absolute;left: 891px;top: 318px;width: 235px;height: 151px;background: url('./image-308-ms61hjri-s6v7.png') center / cover no-repeat"></div>
   </div>
 </section>
 
@@ -147,7 +132,7 @@
     <div data-hscroll="cards" style="display: grid;grid-template-columns: .92fr 1fr 1.28fr;gap: 16px;margin-top: 36px;align-items: stretch">
       <div style="display: flex;flex-direction: column;gap: 16px">
         <div data-reveal="" style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 18px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -12px rgba(15,23,42,.12);border-radius: 16px;padding: 16px 18px;display: flex;align-items: center;gap: 12px;opacity: 0;transform: translateY(28px);transition: opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)">
-          <div style="display: flex;align-items: center"><img src="https://i.pravatar.cc/56?img=12" style="height: 28px;width: 28px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;margin-right: -8px;position: relative;z-index: 3" alt=""><img src="https://i.pravatar.cc/56?img=45" style="height: 28px;width: 28px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;margin-right: -8px;position: relative;z-index: 2" alt=""><img src="https://i.pravatar.cc/56?img=33" style="height: 28px;width: 28px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;position: relative;z-index: 1" alt=""></div>
+          <div style="display: flex;align-items: center"><img src="/avatars/a12.png" style="height: 28px;width: 28px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;margin-right: -8px;position: relative;z-index: 3" alt=""><img src="/avatars/a45.png" style="height: 28px;width: 28px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;margin-right: -8px;position: relative;z-index: 2" alt=""><img src="/avatars/a33.png" style="height: 28px;width: 28px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;position: relative;z-index: 1" alt=""></div>
           <span style="font: 600 10.5px 'IBM Plex Mono',monospace;letter-spacing: .1em;text-transform: uppercase;color: #6b7280">Migliaia di retail<br>stessi errori</span>
         </div>
         
@@ -230,36 +215,19 @@
         </div>
         
         <div style="position: relative;z-index: 1;text-align: center">
-          <span style="display: grid;place-items: center;height: 48px;width: 48px;border-radius: 999px;background: #f4f4f5;color: #3f3f46;margin: 0 auto;box-shadow: 0 0 0 6px #f3f3f4"><img src="/logo.svg" alt="" width="19" height="19" style="height: 19px;width: 19px;display: block;object-fit: contain"></span>
+          <span style="display: grid;place-items: center;height: 48px;width: 48px;border-radius: 999px;background: #f4f4f5;color: #3f3f46;margin: 0 auto;box-shadow: 0 0 0 6px #f3f3f4"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20c0-8 2.5-12 9.5-16"></path><path d="M10.5 20c0-6 2.2-9 7-11"></path><path d="M14 20c0-4 1.6-6 5-7.2"></path></svg></span>
           <h3 style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 15px;margin: 12px 0 0;color: #18181b">4. Guadagna</h3>
           <p style="color: #6b7280;font-size: 12.5px;line-height: 1.5;margin: 6px 0 0">Contest, marketplace e fondo.</p>
         </div>
       </div>
     </div>
     <div data-reveal="" data-reveal-dir="right" data-reveal-d="80" style="opacity: 0;transform: translateX(40px);transition: opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)">
-      <div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 20px;box-shadow: 0 24px 60px -26px rgba(15,23,42,.28);padding: 20px">
-        <div style="display: flex;align-items: center;justify-content: space-between">
-          <span style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 15px;color: #18181b">Le mie strategie</span>
-          <div style="display: flex;align-items: center"><img src="https://i.pravatar.cc/40?img=12" style="height: 22px;width: 22px;border-radius: 999px;border: 2px solid #fff;margin-right: -7px;position: relative;z-index: 3" alt=""><img src="https://i.pravatar.cc/40?img=45" style="height: 22px;width: 22px;border-radius: 999px;border: 2px solid #fff;margin-right: -7px;position: relative;z-index: 2" alt=""><img src="https://i.pravatar.cc/40?img=33" style="height: 22px;width: 22px;border-radius: 999px;border: 2px solid #fff;position: relative;z-index: 1" alt=""></div>
+      <div style="position: relative">
+        <div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 20px;box-shadow: 0 24px 60px -26px rgba(15,23,42,.28);padding: 10px">
+          <div style="border-radius: 13px;overflow: hidden;background: #0e0e10"><div style="aspect-ratio: 1920/1038;overflow: hidden;position: relative"><img src="/screens-ref/20260723_23285181.png" alt="Progetti — le mie strategie" style="position: absolute;left: 0;bottom: 0;width: 100%"></div></div>
         </div>
-        <div style="display: grid;grid-template-columns: repeat(3,1fr);gap: 10px;margin-top: 14px">
-          <div style="border-radius: 12px;background: #fafafa;border: 1px solid rgba(15,23,42,.05);padding: 10px;display: flex;flex-direction: column;gap: 8px">
-            <p style="margin: 0 0 2px;font: 600 9.5px 'IBM Plex Mono',monospace;letter-spacing: .12em;text-transform: uppercase;color: #a1a1aa">Bozze · 2</p>
-            <div style="border-radius: 9px;background: #fff;border: 1px solid rgba(15,23,42,.07);box-shadow: 0 4px 10px -6px rgba(15,23,42,.14);padding: 9px 10px"><p style="margin: 0;font-weight: 700;font-size: 12px;color: #18181b">Breakout oro</p><div style="display: flex;align-items: center;justify-content: space-between;gap: 6px;margin-top: 6px"><span style="padding: 2.5px 7px;border-radius: 6px;background: #f4f4f5;color: #18181b;font: 600 9.5px 'IBM Plex Mono',monospace">idea</span></div></div>
-            <div style="border-radius: 9px;background: #fff;border: 1px solid rgba(15,23,42,.07);box-shadow: 0 4px 10px -6px rgba(15,23,42,.14);padding: 9px 10px"><p style="margin: 0;font-weight: 700;font-size: 12px;color: #18181b">Pair BTC/ETH</p><div style="display: flex;align-items: center;justify-content: space-between;gap: 6px;margin-top: 6px"><span style="padding: 2.5px 7px;border-radius: 6px;background: #f4f4f5;color: #18181b;font: 600 9.5px 'IBM Plex Mono',monospace">bozza</span></div></div>
-          </div>
-          <div style="border-radius: 12px;background: #fafafa;border: 1px solid rgba(15,23,42,.05);padding: 10px;display: flex;flex-direction: column;gap: 8px">
-            <p style="margin: 0 0 2px;font: 600 9.5px 'IBM Plex Mono',monospace;letter-spacing: .12em;text-transform: uppercase;color: #a1a1aa">In validazione · 2</p>
-            <div style="border-radius: 9px;background: #fff;border: 1px solid rgba(15,23,42,.07);box-shadow: 0 4px 10px -6px rgba(15,23,42,.14);padding: 9px 10px"><p style="margin: 0;font-weight: 700;font-size: 12px;color: #18181b">Momentum SPX</p><div style="display: flex;align-items: center;justify-content: space-between;gap: 6px;margin-top: 6px"><span style="padding: 2.5px 7px;border-radius: 6px;background: #FBF3E0;color: #C68A22;font: 600 9.5px 'IBM Plex Mono',monospace">walk-fwd</span><span style="font: 600 9.5px 'IBM Plex Mono',monospace;color: #a1a1aa">62%</span></div></div>
-            <div style="border-radius: 9px;background: #fff;border: 1px solid rgba(15,23,42,.07);box-shadow: 0 4px 10px -6px rgba(15,23,42,.14);padding: 9px 10px"><p style="margin: 0;font-weight: 700;font-size: 12px;color: #18181b">Mean-rev EURUSD</p><div style="display: flex;align-items: center;justify-content: space-between;gap: 6px;margin-top: 6px"><span style="padding: 2.5px 7px;border-radius: 6px;background: #FBF3E0;color: #C68A22;font: 600 9.5px 'IBM Plex Mono',monospace">OOS</span><span style="font: 600 9.5px 'IBM Plex Mono',monospace;color: #a1a1aa">88%</span></div></div>
-          </div>
-          <div style="border-radius: 12px;background: #fafafa;border: 1px solid rgba(15,23,42,.05);padding: 10px;display: flex;flex-direction: column;gap: 8px">
-            <p style="margin: 0 0 2px;font: 600 9.5px 'IBM Plex Mono',monospace;letter-spacing: .12em;text-transform: uppercase;color: #a1a1aa">Live · 2</p>
-            <div style="border-radius: 9px;background: #fff;border: 1px solid rgba(15,23,42,.07);box-shadow: 0 4px 10px -6px rgba(15,23,42,.14);padding: 9px 10px"><p style="margin: 0;font-weight: 700;font-size: 12px;color: #18181b">Trend FX</p><div style="display: flex;align-items: center;justify-content: space-between;gap: 6px;margin-top: 6px"><span style="padding: 2.5px 7px;border-radius: 6px;background: #f4f4f5;color: #3f3f46;font: 600 9.5px 'IBM Plex Mono',monospace">IBKR</span><span style="font: 600 9.5px 'IBM Plex Mono',monospace;color: #3f3f46">+2,1%</span></div></div>
-            <div style="border-radius: 9px;background: #fff;border: 1px solid rgba(15,23,42,.07);box-shadow: 0 4px 10px -6px rgba(15,23,42,.14);padding: 9px 10px"><p style="margin: 0;font-weight: 700;font-size: 12px;color: #18181b">Mean-rev</p><div style="display: flex;align-items: center;justify-content: space-between;gap: 6px;margin-top: 6px"><span style="padding: 2.5px 7px;border-radius: 6px;background: #f4f4f5;color: #3f3f46;font: 600 9.5px 'IBM Plex Mono',monospace">MT5</span><span style="font: 600 9.5px 'IBM Plex Mono',monospace;color: #3f3f46">+0,7%</span></div></div>
-          </div>
-        </div>
-        <div style="display: flex;align-items: center;gap: 7px;margin-top: 12px;padding-top: 12px;border-top: 1px solid rgba(15,23,42,.06)"><span style="width: 7px;height: 7px;border-radius: 999px;background: #52525b;box-shadow: 0 0 8px #52525b;animation: qsBlink 1.4s ease-in-out infinite"></span><span style="font: 500 10.5px 'IBM Plex Mono',monospace;color: #a1a1aa">motore attivo · kill-switch armato</span></div>
+        <div style="position: absolute;left: -20px;bottom: -22px;width: 46%;z-index: 2;border-radius: 14px;overflow: hidden;background: #fff;border: 1px solid rgba(15,23,42,.12);box-shadow: 0 28px 60px -20px rgba(15,23,42,.5);transform: perspective(950px) rotateY(9deg) rotateX(3deg);animation: qsFloatB 6.4s ease-in-out infinite">
+<div style="aspect-ratio: 16/8.4;background: url('uploads/Screen dashboard/20260723_23285181.png') no-repeat;background-size: 280%;background-position: 10% 34%"></div><div style="display: flex;align-items: center;gap: 6px;padding: 8px 12px;border-top: 1px solid rgba(15,23,42,.06);background: #fff"><span style="width: 6px;height: 6px;border-radius: 999px;background: #34d399;animation: qsBlink 1.4s ease-in-out infinite"></span><p style="margin: 0;font: 600 10px 'IBM Plex Mono',monospace;color: #52525b">motore attivo · kill-switch armato</p></div></div>
       </div>
     </div>
   </div>
@@ -291,40 +259,18 @@
         <div style="display: flex;gap: 11px;align-items: flex-start"><span style="display: grid;place-items: center;height: 22px;width: 22px;border-radius: 999px;flex: none;background: #EEEDFB;color: #5B57D9;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 14.5px;line-height: 1.55"><b style="color: #18181b">Libreria di 29 strategie.</b> Template multi-stile editabili: parti da lì, il copilota li adatta a te.</p></div>
         </div>
       </div>
-      <div><div style="position: relative;border-radius: 22px;background: #f4f4f5;border: 1px solid rgba(15,23,42,.05);min-height: 350px;padding: 26px;overflow: visible">
-        <div style="position: relative;width: 76%;border-radius: 16px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 18px 40px -18px rgba(15,23,42,.28);padding: 16px;transform: rotate(-1.5deg)">
-          <p style="margin: 0;font: 600 9.5px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #a1a1aa">strategy.builder</p>
-          <div style="display: flex;align-items: center;gap: 8px;margin-top: 10px;padding: 10px 12px;border-radius: 10px;background: #f4f4f5;border: 1px solid rgba(24,24,27,.25);color: #000000;font-weight: 700;font-size: 12.5px"><span style="width: 7px;height: 7px;border-radius: 2px;background: #71717a"></span>Se RSI(14) &lt; 30</div>
-          <div style="display: flex;align-items: center;gap: 8px;margin-top: 7px;margin-left: 18px;padding: 10px 12px;border-radius: 10px;background: #f4f4f5;border: 1px solid rgba(63,63,70,.25);color: #3f3f46;font-weight: 700;font-size: 12.5px"><span style="width: 7px;height: 7px;border-radius: 2px;background: #a1a1aa"></span>Compra 2% del capitale</div>
-          <div style="display: flex;align-items: center;gap: 8px;margin-top: 7px;margin-left: 18px;padding: 10px 12px;border-radius: 10px;background: #FBF3E0;border: 1px solid rgba(198,138,34,.3);color: #C68A22;font-weight: 700;font-size: 12.5px"><span style="width: 7px;height: 7px;border-radius: 2px;background: #E0A83A"></span>Stop -1.5 ATR · Trailing</div>
-        </div>
-        <div style="position: absolute;right: 22px;top: 38px;width: 44%;border-radius: 14px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 18px 40px -18px rgba(15,23,42,.3);padding: 14px;transform: rotate(2deg);animation: qsFloatB 6s ease-in-out infinite">
-          <p style="margin: 0;font-weight: 700;font-size: 12.5px;color: #18181b">«Compra i pullback su forza relativa»</p>
-          <p style="margin: 8px 0 0;font: 500 10.5px 'IBM Plex Mono',monospace;color: #3f3f46">testo → regole eseguibili ✓</p>
-        </div>
-        <div style="position: absolute;right: 34px;bottom: 26px;width: 40%;border-radius: 14px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 18px 40px -18px rgba(15,23,42,.3);padding: 14px;animation: qsFloatB 6.6s ease-in-out infinite;animation-delay: .7s">
-          <div style="display: flex;align-items: center;justify-content: space-between"><span style="font-weight: 700;font-size: 12px;color: #18181b">Trend FX</span><span style="font: 600 10px 'IBM Plex Mono',monospace;color: #a1a1aa">regole 8/8</span></div>
-          <div style="display: flex;gap: 3px;margin-top: 8px"><span style="height: 14px;flex: 1;border-radius: 3px;background: #18181b"></span><span style="height: 14px;flex: 1;border-radius: 3px;background: #18181b"></span><span style="height: 14px;flex: 1;border-radius: 3px;background: #3f3f46"></span><span style="height: 14px;flex: 1;border-radius: 3px;background: #71717a"></span><span style="height: 14px;flex: 1;border-radius: 3px;background: #d4d4d8"></span><span style="height: 14px;flex: 1;border-radius: 3px;background: #e4e4e7"></span></div>
-          <p style="margin: 8px 0 0;font: 500 10px 'IBM Plex Mono',monospace;color: #a1a1aa">pronta per il backtest</p>
-        </div>
-        <span style="position: absolute;left: -12px;top: -14px;z-index: 3;display: inline-flex;align-items: center;gap: 6px;padding: 8px 13px;border-radius: 999px;background: #18181b;color: #fff;font: 700 12px Mulish,sans-serif;box-shadow: 0 14px 30px -12px rgba(15,23,42,.55);white-space: nowrap"><span style="width: 6px;height: 6px;border-radius: 999px;background: #d4d4d8"></span>No-code</span>
-        <span style="position: absolute;right: -10px;bottom: -14px;z-index: 3;display: inline-flex;align-items: center;gap: 6px;padding: 8px 13px;border-radius: 999px;background: #18181b;color: #fff;font: 700 12px Mulish,sans-serif;box-shadow: 0 14px 30px -12px rgba(15,23,42,.55);white-space: nowrap"><span style="width: 6px;height: 6px;border-radius: 999px;background: #d4d4d8"></span>Il codice è tuo · export Python</span></div></div>
+      <div><div style="position: relative;border-radius: 22px;background: #f4f4f5;border: 1px solid rgba(15,23,42,.05);padding: 20px;overflow: visible"><div style="border-radius: 14px;overflow: hidden;background: #0e0e10;border: 1px solid rgba(15,23,42,.1);box-shadow: 0 26px 60px -24px rgba(15,23,42,.45)"><div style="aspect-ratio: 1920/1038;overflow: hidden;position: relative"><img src="/screens-ref/20260723_23283450.png" alt="Studio — crea strategie con AI, codice o blueprint" style="position: absolute;left: 0;bottom: 0;width: 100%"></div></div>
+  <div style="position: absolute;right: -16px;bottom: 26px;width: 45%;z-index: 2;border-radius: 14px;overflow: hidden;background: #fff;border: 1px solid rgba(15,23,42,.12);box-shadow: 0 28px 60px -20px rgba(15,23,42,.5);transform: perspective(950px) rotateY(-9deg) rotateX(3deg);animation: qsFloatB 6.2s ease-in-out infinite">
+<div style="aspect-ratio: 16/9;background: url('uploads/Screen dashboard/20260723_23283450.png') no-repeat;background-size: 240%;background-position: 12% 55%"></div><div style="display: flex;align-items: center;gap: 6px;padding: 8px 12px;border-top: 1px solid rgba(15,23,42,.06);background: #fff"><span style="width: 6px;height: 6px;border-radius: 999px;background: #34d399;animation: qsBlink 1.4s ease-in-out infinite"></span><p style="margin: 0;font: 600 10px 'IBM Plex Mono',monospace;color: #52525b">descrivi la strategia · l'AI la compila</p></div></div>
+  <span style="position: absolute;left: -12px;top: -14px;z-index: 3;display: inline-flex;align-items: center;gap: 6px;padding: 8px 13px;border-radius: 999px;background: #18181b;color: #fff;font: 700 12px Mulish,sans-serif;box-shadow: 0 14px 30px -12px rgba(15,23,42,.55);white-space: nowrap"><span style="width: 6px;height: 6px;border-radius: 999px;background: #d4d4d8"></span>No-code</span>
+  <span style="position: absolute;right: -10px;bottom: -14px;z-index: 3;display: inline-flex;align-items: center;gap: 6px;padding: 8px 13px;border-radius: 999px;background: #18181b;color: #fff;font: 700 12px Mulish,sans-serif;box-shadow: 0 14px 30px -12px rgba(15,23,42,.55);white-space: nowrap"><span style="width: 6px;height: 6px;border-radius: 999px;background: #d4d4d8"></span>Il codice è tuo · export Python</span></div></div>
     </div>
     <div data-tabpanel="1" data-r="split" style="display: none;grid-template-columns: 1.04fr .96fr;gap: 48px;align-items: center">
-      <div><div style="position: relative;border-radius: 22px;background: #f4f4f5;border: 1px solid rgba(15,23,42,.05);min-height: 350px;padding: 26px;overflow: visible">
-        <div style="position: relative;width: 78%;border-radius: 16px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 18px 40px -18px rgba(15,23,42,.28);padding: 16px">
-          <div style="display: flex;align-items: center;justify-content: space-between"><span style="font: 600 9.5px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #a1a1aa">walk-forward · out-of-sample</span><span style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 16px;color: #18181b">Sharpe 1.4</span></div>
-          <svg viewBox="0 0 300 110" preserveAspectRatio="none" style="width: 100%;height: 96px;margin-top: 8px"><defs><linearGradient id="cveq" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(82,82,91,.28)"></stop><stop offset="1" stop-color="rgba(82,82,91,0)"></stop></linearGradient></defs><path d="M0 92 L40 84 L80 88 L120 66 L160 72 L200 46 L240 36 L300 20 L300 110 L0 110 Z" fill="url(#cveq)"></path><path d="M0 92 L40 84 L80 88 L120 66 L160 72 L200 46 L240 36 L300 20" fill="none" stroke="#52525b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path><line x1="196" y1="0" x2="196" y2="110" stroke="rgba(198,138,34,.55)" stroke-width="1.5" stroke-dasharray="4 4"></line></svg>
-          <div style="display: flex;gap: 7px;flex-wrap: wrap;margin-top: 8px"><span style="padding: 5px 9px;border-radius: 999px;background: #f4f4f5;color: #3f3f46;font: 600 10.5px 'IBM Plex Mono',monospace">OOS ✓</span><span style="padding: 5px 9px;border-radius: 999px;background: #f4f4f5;color: #52525b;font: 600 10.5px 'IBM Plex Mono',monospace">MaxDD -9%</span><span style="padding: 5px 9px;border-radius: 999px;background: #FBF3E0;color: #C68A22;font: 600 10.5px 'IBM Plex Mono',monospace">costi reali inclusi</span></div>
-        </div>
-        <div style="position: absolute;right: 20px;top: 54px;width: 46%;border-radius: 14px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 18px 40px -18px rgba(15,23,42,.3);padding: 14px;animation: qsFloatB 6.2s ease-in-out infinite">
-          <div style="display: flex;gap: 9px;align-items: flex-start"><span style="flex: none;display: grid;place-items: center;height: 24px;width: 24px;border-radius: 8px;background: linear-gradient(135deg,#5B57D9,#18181b);color: #fff"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.94 15.5A2 2 0 0 0 8.5 14.06l-6.14-1.58a.5.5 0 0 1 0-.96L8.5 9.94A2 2 0 0 0 9.94 8.5l1.58-6.14a.5.5 0 0 1 .96 0L14.06 8.5A2 2 0 0 0 15.5 9.94l6.14 1.58a.5.5 0 0 1 0 .96L15.5 14.06a2 2 0 0 0-1.44 1.44l-1.58 6.14a.5.5 0 0 1-.96 0z"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 12px;line-height: 1.5"><b style="color: #18181b">Copilota:</b> campione corto sul 2020 — rischio overfitting. Estendo il walk-forward?</p></div>
-        </div>
-        <div style="position: absolute;right: 44px;bottom: 24px;border-radius: 12px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 14px 30px -16px rgba(15,23,42,.3);padding: 11px 14px;animation: qsFloatB 6.8s ease-in-out infinite;animation-delay: .6s">
-          <p style="margin: 0;font: 600 10.5px 'IBM Plex Mono',monospace;color: #52525b">Monte Carlo · <b style="color: #3f3f46">1.000 scenari ✓</b></p>
-        </div>
-        <span style="position: absolute;left: -12px;top: -14px;z-index: 3;display: inline-flex;align-items: center;gap: 6px;padding: 8px 13px;border-radius: 999px;background: #18181b;color: #fff;font: 700 12px Mulish,sans-serif;box-shadow: 0 14px 30px -12px rgba(15,23,42,.55);white-space: nowrap"><span style="width: 6px;height: 6px;border-radius: 999px;background: #d4d4d8"></span>Walk-forward</span>
-        <span style="position: absolute;right: -10px;top: 44%;z-index: 3;display: inline-flex;align-items: center;gap: 6px;padding: 8px 13px;border-radius: 999px;background: #18181b;color: #fff;font: 700 12px Mulish,sans-serif;box-shadow: 0 14px 30px -12px rgba(15,23,42,.55);white-space: nowrap"><span style="width: 6px;height: 6px;border-radius: 999px;background: #d4d4d8"></span>Red-team AI</span></div></div>
+      <div><div style="position: relative;border-radius: 22px;background: #f4f4f5;border: 1px solid rgba(15,23,42,.05);padding: 20px;overflow: visible"><div style="border-radius: 14px;overflow: hidden;background: #0e0e10;border: 1px solid rgba(15,23,42,.1);box-shadow: 0 26px 60px -24px rgba(15,23,42,.45)"><div style="aspect-ratio: 1920/1038;overflow: hidden;position: relative"><img src="/screens-ref/20260723_23295918.png" alt="Backtest — walk-forward e coda job" style="position: absolute;left: 0;bottom: 0;width: 100%"></div></div>
+  <div style="position: absolute;left: -16px;bottom: 24px;width: 46%;z-index: 2;border-radius: 14px;overflow: hidden;background: #0e0e10;border: 1px solid rgba(255,255,255,.14);box-shadow: 0 28px 60px -20px rgba(15,23,42,.5);transform: perspective(950px) rotateY(9deg) rotateX(3deg);animation: qsFloatB 6.2s ease-in-out infinite">
+<div style="aspect-ratio: 16/9;background: url('uploads/Screen dashboard/20260723_23295918.png') no-repeat;background-size: 260%;background-position: 96% 60%"></div><div style="display: flex;align-items: center;gap: 6px;padding: 8px 12px;border-top: 1px solid rgba(255,255,255,.08);background: #18181b"><span style="width: 6px;height: 6px;border-radius: 999px;background: #34d399;animation: qsBlink 1.4s ease-in-out infinite"></span><p style="margin: 0;font: 600 10px 'IBM Plex Mono',monospace;color: #a1a1aa">walk-forward · log in tempo reale</p></div></div>
+  <span style="position: absolute;left: -12px;top: -14px;z-index: 3;display: inline-flex;align-items: center;gap: 6px;padding: 8px 13px;border-radius: 999px;background: #18181b;color: #fff;font: 700 12px Mulish,sans-serif;box-shadow: 0 14px 30px -12px rgba(15,23,42,.55);white-space: nowrap"><span style="width: 6px;height: 6px;border-radius: 999px;background: #d4d4d8"></span>Walk-forward</span>
+  <span style="position: absolute;right: -10px;top: 44%;z-index: 3;display: inline-flex;align-items: center;gap: 6px;padding: 8px 13px;border-radius: 999px;background: #18181b;color: #fff;font: 700 12px Mulish,sans-serif;box-shadow: 0 14px 30px -12px rgba(15,23,42,.55);white-space: nowrap"><span style="width: 6px;height: 6px;border-radius: 999px;background: #d4d4d8"></span>Red-team AI</span></div></div>
       <div>
         <h3 style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 27px;line-height: 1.16;letter-spacing: -.015em;margin: 0;color: #18181b">Numeri che sopravvivono al fuori campione</h3>
         <p style="color: #6b7280;font-size: 14.5px;line-height: 1.6;margin: 14px 0 0;max-width: 440px">Nessun numero entra nel sistema finché non regge a test seri, con costi reali inclusi.</p>
@@ -351,22 +297,11 @@
         <div style="display: flex;gap: 11px;align-items: flex-start"><span style="display: grid;place-items: center;height: 22px;width: 22px;border-radius: 999px;flex: none;background: #FBF3E0;color: #C68A22;margin-top: 1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span><p style="margin: 0;color: #3f3f46;font-size: 14.5px;line-height: 1.55"><b style="color: #18181b">Sei gate di regime.</b> Correlazione, stress, volatilità, macro: l’allocazione si modula da sola.</p></div>
         </div>
       </div>
-      <div><div style="position: relative;border-radius: 22px;background: #f4f4f5;border: 1px solid rgba(15,23,42,.05);min-height: 350px;padding: 26px;overflow: visible">
-        <div style="position: relative;width: 74%;border-radius: 16px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 18px 40px -18px rgba(15,23,42,.28);padding: 16px;display: flex;flex-direction: column;gap: 8px">
-          <p style="margin: 0 0 2px;font: 600 9.5px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #a1a1aa">portafoglio · live</p>
-          <div style="display: flex;align-items: center;justify-content: space-between;padding: 10px 12px;border-radius: 10px;background: #fafafa;border: 1px solid rgba(15,23,42,.06)"><span style="color: #18181b;font-weight: 700;font-size: 12.5px">IBKR · Trend FX</span><span style="color: #3f3f46;font: 600 12px 'IBM Plex Mono',monospace">+2,1%</span></div>
-          <div style="display: flex;align-items: center;justify-content: space-between;padding: 10px 12px;border-radius: 10px;background: #fafafa;border: 1px solid rgba(15,23,42,.06)"><span style="color: #18181b;font-weight: 700;font-size: 12.5px">MT5 · Mean-rev FX</span><span style="color: #3f3f46;font: 600 12px 'IBM Plex Mono',monospace">+0,7%</span></div>
-          <div style="display: flex;align-items: center;justify-content: space-between;padding: 10px 12px;border-radius: 10px;background: #fafafa;border: 1px solid rgba(15,23,42,.06)"><span style="color: #18181b;font-weight: 700;font-size: 12.5px">Paper · Momentum</span><span style="color: #B4552D;font: 600 12px 'IBM Plex Mono',monospace">-0,3%</span></div>
-        </div>
-        <div style="position: absolute;right: 20px;top: 46px;width: 44%;border-radius: 14px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 18px 40px -18px rgba(15,23,42,.3);padding: 14px;animation: qsFloatB 6.4s ease-in-out infinite">
-          <div style="display: flex;align-items: center;gap: 9px"><span style="display: grid;place-items: center;height: 26px;width: 26px;border-radius: 8px;background: #FBF3E0;color: #C68A22;flex: none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64A9 9 0 1 1 5.64 6.64"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg></span><p style="margin: 0;font-weight: 700;font-size: 12.5px;color: #18181b">Kill-switch armato</p></div>
-          <p style="margin: 8px 0 0;font: 500 10.5px 'IBM Plex Mono',monospace;color: #a1a1aa">strategia → classe → conto</p>
-        </div>
-        <div style="position: absolute;right: 40px;bottom: 26px;border-radius: 12px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 14px 30px -16px rgba(15,23,42,.3);padding: 11px 14px;animation: qsFloatB 5.8s ease-in-out infinite;animation-delay: .5s">
-          <p style="margin: 0;font: 600 10.5px 'IBM Plex Mono',monospace;color: #52525b">correlazione media · <b style="color: #3f3f46">0,18</b></p>
-        </div>
-        <span style="position: absolute;left: -12px;top: -14px;z-index: 3;display: inline-flex;align-items: center;gap: 6px;padding: 8px 13px;border-radius: 999px;background: #18181b;color: #fff;font: 700 12px Mulish,sans-serif;box-shadow: 0 14px 30px -12px rgba(15,23,42,.55);white-space: nowrap"><span style="width: 6px;height: 6px;border-radius: 999px;background: #d4d4d8"></span>Live 24/7</span>
-        <span style="position: absolute;right: -10px;bottom: -14px;z-index: 3;display: inline-flex;align-items: center;gap: 6px;padding: 8px 13px;border-radius: 999px;background: #18181b;color: #fff;font: 700 12px Mulish,sans-serif;box-shadow: 0 14px 30px -12px rgba(15,23,42,.55);white-space: nowrap"><span style="width: 6px;height: 6px;border-radius: 999px;background: #d4d4d8"></span>Vol-target 10%</span></div></div>
+      <div><div style="position: relative;border-radius: 22px;background: #f4f4f5;border: 1px solid rgba(15,23,42,.05);padding: 20px;overflow: visible"><div style="border-radius: 14px;overflow: hidden;background: #0e0e10;border: 1px solid rgba(15,23,42,.1);box-shadow: 0 26px 60px -24px rgba(15,23,42,.45)"><div style="aspect-ratio: 1920/1038;overflow: hidden;position: relative"><img src="/screens-ref/20260723_23300601.png" alt="Runner — configura ed esegui live sul tuo broker" style="position: absolute;left: 0;bottom: 0;width: 100%"></div></div>
+  <div style="position: absolute;right: -16px;bottom: 26px;width: 46%;z-index: 2;border-radius: 14px;overflow: hidden;background: #0e0e10;border: 1px solid rgba(255,255,255,.14);box-shadow: 0 28px 60px -20px rgba(15,23,42,.5);transform: perspective(950px) rotateY(-9deg) rotateX(3deg);animation: qsFloatB 6.4s ease-in-out infinite">
+<div style="aspect-ratio: 16/9;background: url('uploads/Screen dashboard/20260723_23320423.png') no-repeat;background-size: 150%;background-position: 50% 55%"></div><div style="display: flex;align-items: center;gap: 6px;padding: 8px 12px;border-top: 1px solid rgba(255,255,255,.08);background: #18181b"><span style="width: 6px;height: 6px;border-radius: 999px;background: #34d399;animation: qsBlink 1.4s ease-in-out infinite"></span><p style="margin: 0;font: 600 10px 'IBM Plex Mono',monospace;color: #a1a1aa">esecuzione live · EUR/USD</p></div></div>
+  <span style="position: absolute;left: -12px;top: -14px;z-index: 3;display: inline-flex;align-items: center;gap: 6px;padding: 8px 13px;border-radius: 999px;background: #18181b;color: #fff;font: 700 12px Mulish,sans-serif;box-shadow: 0 14px 30px -12px rgba(15,23,42,.55);white-space: nowrap"><span style="width: 6px;height: 6px;border-radius: 999px;background: #d4d4d8"></span>Live 24/7</span>
+  <span style="position: absolute;right: -10px;bottom: -14px;z-index: 3;display: inline-flex;align-items: center;gap: 6px;padding: 8px 13px;border-radius: 999px;background: #18181b;color: #fff;font: 700 12px Mulish,sans-serif;box-shadow: 0 14px 30px -12px rgba(15,23,42,.55);white-space: nowrap"><span style="width: 6px;height: 6px;border-radius: 999px;background: #d4d4d8"></span>Vol-target 10%</span></div></div>
     </div>
   </div>
 </section>
@@ -462,20 +397,20 @@
           <path d="M 140 380 A 380 380 0 0 1 900 380" fill="none" stroke="#e4e4e7" stroke-width="1.5"></path>
           <path d="M 220 380 A 300 300 0 0 1 820 380" fill="none" stroke="#eeeef0" stroke-width="1.5"></path>
         </svg>
-        <div data-arc="outer" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><span style="display: inline-flex;align-items: center;gap: 6px;height: 30px;padding: 0 12px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.05);box-shadow: 0 12px 26px -12px rgba(24,24,27,.4);font: 700 12px Mulish,sans-serif;color: #18181b;white-space: nowrap"><span style="display: inline-flex;color: #52525b"><img src="/logo.svg" alt="" width="13" height="13" style="height: 13px;width: 13px;display: block;object-fit: contain"></span>12 nuovi segnali</span></div>
-        <div data-arc="outer" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><img src="https://i.pravatar.cc/120?img=13" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -12px rgba(24,24,27,.4)" alt=""></div>
+        <div data-arc="outer" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><span style="display: inline-flex;align-items: center;gap: 6px;height: 30px;padding: 0 12px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.05);box-shadow: 0 12px 26px -12px rgba(24,24,27,.4);font: 700 12px Mulish,sans-serif;color: #18181b;white-space: nowrap"><span style="display: inline-flex;color: #52525b"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20c0-8 2.5-12 9.5-16"></path><path d="M10.5 20c0-6 2.2-9 7-11"></path><path d="M14 20c0-4 1.6-6 5-7.2"></path></svg></span>12 nuovi segnali</span></div>
+        <div data-arc="outer" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><img src="/avatars/a13.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -12px rgba(24,24,27,.4)" alt=""></div>
         <div data-arc="outer" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><span style="display: inline-flex;align-items: center;gap: 6px;height: 30px;padding: 0 12px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.05);box-shadow: 0 12px 26px -12px rgba(24,24,27,.4);font: 700 12px Mulish,sans-serif;color: #18181b;white-space: nowrap"><span style="display: inline-flex;color: #16a34a"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span>Backtest OK</span></div>
-        <div data-arc="outer" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><img src="https://i.pravatar.cc/120?img=45" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -12px rgba(24,24,27,.4)" alt=""></div>
-        <div data-arc="outer" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><span style="display: inline-flex;align-items: center;gap: 6px;height: 30px;padding: 0 12px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.05);box-shadow: 0 12px 26px -12px rgba(24,24,27,.4);font: 700 12px Mulish,sans-serif;color: #18181b;white-space: nowrap"><span style="display: inline-flex;color: #52525b"><img src="/logo.svg" alt="" width="13" height="13" style="height: 13px;width: 13px;display: block;object-fit: contain"></span>Sharpe 1.6</span></div>
-        <div data-arc="outer" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><img src="https://i.pravatar.cc/120?img=33" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -12px rgba(24,24,27,.4)" alt=""></div>
+        <div data-arc="outer" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><img src="/avatars/a45.png" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -12px rgba(24,24,27,.4)" alt=""></div>
+        <div data-arc="outer" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><span style="display: inline-flex;align-items: center;gap: 6px;height: 30px;padding: 0 12px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.05);box-shadow: 0 12px 26px -12px rgba(24,24,27,.4);font: 700 12px Mulish,sans-serif;color: #18181b;white-space: nowrap"><span style="display: inline-flex;color: #52525b"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20c0-8 2.5-12 9.5-16"></path><path d="M10.5 20c0-6 2.2-9 7-11"></path><path d="M14 20c0-4 1.6-6 5-7.2"></path></svg></span>Sharpe 1.6</span></div>
+        <div data-arc="outer" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><img src="/avatars/a33.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -12px rgba(24,24,27,.4)" alt=""></div>
         <div data-arc="outer" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><span style="display: inline-flex;align-items: center;gap: 6px;height: 30px;padding: 0 12px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.05);box-shadow: 0 12px 26px -12px rgba(24,24,27,.4);font: 700 12px Mulish,sans-serif;color: #18181b;white-space: nowrap"><span style="display: inline-flex;color: #16a34a"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7M12 19V5"></path></svg></span>+2,1% oggi</span></div>
-        <div data-arc="outer" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><img src="https://i.pravatar.cc/120?img=52" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -12px rgba(24,24,27,.4)" alt=""></div>
-        <div data-arc="inner" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><img src="https://i.pravatar.cc/120?img=24" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -12px rgba(24,24,27,.4)" alt=""></div>
+        <div data-arc="outer" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><img src="/avatars/a52.png" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -12px rgba(24,24,27,.4)" alt=""></div>
+        <div data-arc="inner" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><img src="/avatars/a24.png" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -12px rgba(24,24,27,.4)" alt=""></div>
         <div data-arc="inner" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><span style="display: grid;place-items: center;height: 32px;width: 32px;border-radius: 10px;background: #fff;border: 1px solid rgba(24,24,27,.06);box-shadow: 0 10px 22px -10px rgba(24,24,27,.35)"><span style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 15px;color: #3f3f46">₿</span></span></div>
         <div data-arc="inner" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><span style="display: inline-flex;align-items: center;gap: 6px;height: 30px;padding: 0 12px;border-radius: 999px;background: #fff;border: 1px solid rgba(24,24,27,.05);box-shadow: 0 12px 26px -12px rgba(24,24,27,.4);font: 700 12px Mulish,sans-serif;color: #18181b;white-space: nowrap"><span style="display: inline-flex;color: #C68A22"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7 7 .5-5.3 4.4 1.7 6.8L12 17l-6.1 3.7 1.7-6.8L2 9.5 9 9z"></path></svg></span>Watchlist</span></div>
         <div data-arc="inner" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><span style="display: grid;place-items: center;height: 32px;width: 32px;border-radius: 999px;background: #16a34a;color: #fff;box-shadow: 0 10px 24px -10px rgba(22,163,74,.6)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-4-4"></path></svg></span></div>
         <div data-arc="inner" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><span style="display: grid;place-items: center;height: 32px;width: 32px;border-radius: 10px;background: #fff;border: 1px solid rgba(24,24,27,.06);box-shadow: 0 10px 22px -10px rgba(24,24,27,.35)"><span style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 15px;color: #C68A22">€</span></span></div>
-        <div data-arc="inner" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><img src="https://i.pravatar.cc/120?img=31" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -12px rgba(24,24,27,.4)" alt=""></div>
+        <div data-arc="inner" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><img src="/avatars/a31.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -12px rgba(24,24,27,.4)" alt=""></div>
         <div data-arc="inner" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><span style="display: grid;place-items: center;height: 32px;width: 32px;border-radius: 10px;background: #fff;border: 1px solid rgba(24,24,27,.06);box-shadow: 0 10px 22px -10px rgba(24,24,27,.35)"><span style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 15px;color: #3f3f46">$</span></span></div>
         <div data-arc="inner" style="position: absolute;left: 0;top: 0;z-index: 3;opacity: 0"><span style="display: grid;place-items: center;height: 32px;width: 32px;border-radius: 10px;background: #fff;border: 1px solid rgba(24,24,27,.06);box-shadow: 0 10px 22px -10px rgba(24,24,27,.35)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v3M9 15v3"></path><rect x="7" y="6" width="4" height="9" rx="1"></rect><path d="M17 6v2M17 15v3"></path><rect x="15" y="8" width="4" height="7" rx="1"></rect></svg></span></div>
         <div data-arc-mid="" style="position: absolute;left: 50%;top: 200px;transform: translateX(-50%);width: 520px;max-width: 88%;text-align: center;z-index: 5">
@@ -493,7 +428,7 @@
         <button data-diff-item="0" style="all: unset;box-sizing: border-box;cursor: pointer;display: inline-flex;align-items: center;gap: 7px;height: 34px;padding: 0 14px;border-radius: 10px;background: #fff;border: 1px solid rgba(24,24,27,.08);box-shadow: 0 1px 2px rgba(24,24,27,.04);font-weight: 700;font-size: 12.5px;color: #3f3f46;white-space: nowrap;transition: .25s"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>Post &amp; thread</button>
         <button data-diff-item="1" style="all: unset;box-sizing: border-box;cursor: pointer;display: inline-flex;align-items: center;gap: 7px;height: 34px;padding: 0 14px;border-radius: 10px;background: #fff;border: 1px solid rgba(24,24,27,.08);box-shadow: 0 1px 2px rgba(24,24,27,.04);font-weight: 700;font-size: 12.5px;color: #3f3f46;white-space: nowrap;transition: .25s"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C68A22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>Contest</button>
         <button data-diff-item="2" style="all: unset;box-sizing: border-box;cursor: pointer;display: inline-flex;align-items: center;gap: 7px;height: 34px;padding: 0 14px;border-radius: 10px;background: #fff;border: 1px solid rgba(24,24,27,.08);box-shadow: 0 1px 2px rgba(24,24,27,.04);font-weight: 700;font-size: 12.5px;color: #3f3f46;white-space: nowrap;transition: .25s"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.3 7 12 12l8.7-5"></path><path d="M12 22V12"></path><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path></svg>Marketplace</button>
-        <button data-diff-item="3" style="all: unset;box-sizing: border-box;cursor: pointer;display: inline-flex;align-items: center;gap: 7px;height: 34px;padding: 0 14px;border-radius: 10px;background: #fff;border: 1px solid rgba(24,24,27,.08);box-shadow: 0 1px 2px rgba(24,24,27,.04);font-weight: 700;font-size: 12.5px;color: #3f3f46;white-space: nowrap;transition: .25s"><img src="/logo.svg" alt="" width="14" height="14" style="height: 14px;width: 14px;display: block;object-fit: contain">Fondo &amp; revenue</button>
+        <button data-diff-item="3" style="all: unset;box-sizing: border-box;cursor: pointer;display: inline-flex;align-items: center;gap: 7px;height: 34px;padding: 0 14px;border-radius: 10px;background: #fff;border: 1px solid rgba(24,24,27,.08);box-shadow: 0 1px 2px rgba(24,24,27,.04);font-weight: 700;font-size: 12.5px;color: #3f3f46;white-space: nowrap;transition: .25s"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#52525b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20c0-8 2.5-12 9.5-16"></path><path d="M11 20c0-6 2.2-9 6.5-11"></path></svg>Fondo &amp; revenue</button>
       </div>
         <div style="margin-top: 16px">
             <div style="min-height: 340px">
@@ -503,10 +438,10 @@
         <p style="color: #6b7280;font-size: 13.5px;line-height: 1.6;margin: 9px 0 0">Post, thread e chat dove condividere idee, backtest e codice. Il confronto vero che, da soli, al retail manca.</p>
         
         <div style="position: relative;height: 172px;border-radius: 14px;overflow: hidden;margin-top: 18px"><div style="position: absolute;inset: 0;background-image: radial-gradient(rgba(15,23,42,.05) 1px,transparent 1px);background-size: 14px 14px"></div>
-        <div style="position: absolute;left: 8%;top: 50%;transform: translateY(-50%);border-radius: 12px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 12px 26px -14px rgba(15,23,42,.3);padding: 11px;text-align: center"><div style="display: flex;gap: 4px;justify-content: center"><img src="https://i.pravatar.cc/40?img=13" style="height: 22px;width: 22px;border-radius: 6px;object-fit: cover" alt=""><img src="https://i.pravatar.cc/40?img=45" style="height: 22px;width: 22px;border-radius: 6px;object-fit: cover" alt=""></div><div style="display: flex;gap: 4px;justify-content: center;margin-top: 4px"><img src="https://i.pravatar.cc/40?img=52" style="height: 22px;width: 22px;border-radius: 6px;object-fit: cover" alt=""><img src="https://i.pravatar.cc/40?img=24" style="height: 22px;width: 22px;border-radius: 6px;object-fit: cover" alt=""></div><p style="margin: 7px 0 0;font: 600 9.5px 'IBM Plex Mono',monospace;color: #6b7280">IDEE</p></div>
+        <div style="position: absolute;left: 8%;top: 50%;transform: translateY(-50%);border-radius: 12px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 12px 26px -14px rgba(15,23,42,.3);padding: 11px;text-align: center"><div style="display: flex;gap: 4px;justify-content: center"><img src="/avatars/a13.png" style="height: 22px;width: 22px;border-radius: 6px;object-fit: cover" alt=""><img src="/avatars/a45.png" style="height: 22px;width: 22px;border-radius: 6px;object-fit: cover" alt=""></div><div style="display: flex;gap: 4px;justify-content: center;margin-top: 4px"><img src="/avatars/a52.png" style="height: 22px;width: 22px;border-radius: 6px;object-fit: cover" alt=""><img src="/avatars/a24.png" style="height: 22px;width: 22px;border-radius: 6px;object-fit: cover" alt=""></div><p style="margin: 7px 0 0;font: 600 9.5px 'IBM Plex Mono',monospace;color: #6b7280">IDEE</p></div>
         <svg style="position: absolute;inset: 0;width: 100%;height: 100%" viewBox="0 0 460 172" preserveAspectRatio="none" fill="none"><path d="M120 86 L200 86" stroke="#d4d4d8" stroke-width="2.4" stroke-dasharray="1 8" stroke-linecap="round"></path><path d="M260 86 L340 86" stroke="#d4d4d8" stroke-width="2.4" stroke-dasharray="1 8" stroke-linecap="round"></path></svg>
         <span style="position: absolute;left: 50%;top: 50%;transform: translate(-50%,-50%);display: grid;place-items: center;height: 46px;width: 46px;border-radius: 999px;background: #18181b;color: #fff;box-shadow: 0 14px 30px -10px rgba(24,24,27,.6)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></span>
-        <div style="position: absolute;right: 8%;top: 50%;transform: translateY(-50%);border-radius: 12px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 12px 26px -14px rgba(15,23,42,.3);padding: 11px;text-align: center"><img src="https://i.pravatar.cc/56?img=31" style="height: 34px;width: 34px;border-radius: 999px;object-fit: cover;border: 2px solid #f4f4f5" alt=""><p style="margin: 7px 0 0;font: 600 9.5px 'IBM Plex Mono',monospace;color: #3f3f46">FEEDBACK ✓</p></div></div>
+        <div style="position: absolute;right: 8%;top: 50%;transform: translateY(-50%);border-radius: 12px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 12px 26px -14px rgba(15,23,42,.3);padding: 11px;text-align: center"><img src="/avatars/a31.png" style="height: 34px;width: 34px;border-radius: 999px;object-fit: cover;border: 2px solid #f4f4f5" alt=""><p style="margin: 7px 0 0;font: 600 9.5px 'IBM Plex Mono',monospace;color: #3f3f46">FEEDBACK ✓</p></div></div>
       </div>
       </div>
       <div data-diff-panel="1" style="display: none">
@@ -543,12 +478,12 @@
         <a href="/obiettivo-fondo" style="display: inline-flex;align-items: center;gap: 7px;margin-top: 10px;font-weight: 700;font-size: 13px;color: #18181b">L’obiettivo del fondo <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
         <div style="position: relative;height: 172px;border-radius: 14px;overflow: hidden;margin-top: 18px"><div style="position: absolute;inset: 0;background-image: radial-gradient(rgba(15,23,42,.05) 1px,transparent 1px);background-size: 14px 14px"></div>
         <svg style="position: absolute;inset: 0;width: 100%;height: 100%" viewBox="0 0 460 172" preserveAspectRatio="none" fill="none"><path d="M96 60 L160 86" stroke="#d4d4d8" stroke-width="2.4" stroke-dasharray="1 8" stroke-linecap="round"></path><path d="M96 118 L160 96" stroke="#d4d4d8" stroke-width="2.4" stroke-dasharray="1 8" stroke-linecap="round"></path><path d="M364 60 L300 86" stroke="#d4d4d8" stroke-width="2.4" stroke-dasharray="1 8" stroke-linecap="round"></path><path d="M364 118 L300 96" stroke="#d4d4d8" stroke-width="2.4" stroke-dasharray="1 8" stroke-linecap="round"></path></svg>
-        <img src="https://i.pravatar.cc/56?img=15" style="position: absolute;left: 16%;top: 35%;transform: translate(-50%,-50%);height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;box-shadow: 0 8px 18px -8px rgba(15,23,42,.4)" alt="">
-        <img src="https://i.pravatar.cc/56?img=47" style="position: absolute;left: 16%;top: 70%;transform: translate(-50%,-50%);height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;box-shadow: 0 8px 18px -8px rgba(15,23,42,.4)" alt="">
-        <img src="https://i.pravatar.cc/56?img=60" style="position: absolute;right: 16%;top: 35%;transform: translate(50%,-50%);height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;box-shadow: 0 8px 18px -8px rgba(15,23,42,.4)" alt="">
-        <img src="https://i.pravatar.cc/56?img=44" style="position: absolute;right: 16%;top: 70%;transform: translate(50%,-50%);height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;box-shadow: 0 8px 18px -8px rgba(15,23,42,.4)" alt="">
+        <img src="/avatars/a15.png" style="position: absolute;left: 16%;top: 35%;transform: translate(-50%,-50%);height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;box-shadow: 0 8px 18px -8px rgba(15,23,42,.4)" alt="">
+        <img src="/avatars/a47.png" style="position: absolute;left: 16%;top: 70%;transform: translate(-50%,-50%);height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;box-shadow: 0 8px 18px -8px rgba(15,23,42,.4)" alt="">
+        <img src="/avatars/a60.png" style="position: absolute;right: 16%;top: 35%;transform: translate(50%,-50%);height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;box-shadow: 0 8px 18px -8px rgba(15,23,42,.4)" alt="">
+        <img src="/avatars/a44.png" style="position: absolute;right: 16%;top: 70%;transform: translate(50%,-50%);height: 30px;width: 30px;border-radius: 999px;object-fit: cover;border: 2px solid #fff;box-shadow: 0 8px 18px -8px rgba(15,23,42,.4)" alt="">
         <div style="position: absolute;left: 50%;top: 50%;transform: translate(-50%,-50%);width: 52%;border-radius: 12px;background: #fff;border: 1px solid rgba(15,23,42,.08);box-shadow: 0 16px 34px -16px rgba(15,23,42,.35);padding: 12px 14px">
-          <div style="display: flex;align-items: center;gap: 7px"><span style="display: grid;place-items: center;height: 22px;width: 22px;border-radius: 7px;background: linear-gradient(135deg,#5B57D9,#18181b);color: #fff"><img src="/logo.svg" alt="" width="12" height="12" style="height: 12px;width: 12px;display: block;object-fit: contain;filter: brightness(0) invert(1)"></span><span style="font: 700 12px Mulish,sans-serif;color: #18181b">Revenue share</span><span style="margin-left: auto;font: 500 9px 'IBM Plex Mono',monospace;color: #a1a1aa">mensile</span></div>
+          <div style="display: flex;align-items: center;gap: 7px"><span style="display: grid;place-items: center;height: 22px;width: 22px;border-radius: 7px;background: linear-gradient(135deg,#5B57D9,#18181b);color: #fff"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20c0-8 2.5-12 9.5-16"></path><path d="M10.5 20c0-6 2.2-9 7-11"></path><path d="M14 20c0-4 1.6-6 5-7.2"></path></svg></span><span style="font: 700 12px Mulish,sans-serif;color: #18181b">Revenue share</span><span style="margin-left: auto;font: 500 9px 'IBM Plex Mono',monospace;color: #a1a1aa">mensile</span></div>
           <p style="margin: 8px 0 0;font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 21px;color: #18181b">€ 1.240</p>
           <div style="margin-top: 8px;height: 26px;border-radius: 8px;background: #f4f4f5;border: 1px solid rgba(63,63,70,.25);display: grid;place-items: center;font: 700 11px Mulish,sans-serif;color: #3f3f46">strategia #A2 · 3ª in classifica</div>
         </div></div>
@@ -561,7 +496,7 @@
         <div style="zoom: .84">
         <div data-reveal="" style="text-align: center;max-width: 760px;margin: 0 auto;opacity: 0;transform: translateY(28px);transition: opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)">
     <span style="display: inline-flex;align-items: center;gap: 6px;border-radius: 999px;padding: 5px 12px;font: 600 11.5px/1 'IBM Plex Mono',monospace;letter-spacing: .12em;text-transform: uppercase;white-space: nowrap;background: #EEEDFB;color: #5B57D9">VOCI DALLA COMMUNITY</span>
-    <h2 style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 34px;line-height: 1.14;letter-spacing: -.01em;margin: 14px 0 0;color: #18181b">Scopri chi usa <span style="background: linear-gradient(100deg,#18181b,#3f3f46 45%,#3f3f46);-webkit-background-clip: text;background-clip: text;color: transparent">Lyra</span> ogni giorno</h2>
+    <h2 style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 34px;line-height: 1.14;letter-spacing: -.01em;margin: 14px 0 0;color: #18181b">Scopri chi usa <span style="background: linear-gradient(100deg,#18181b,#3f3f46 45%,#3f3f46);-webkit-background-clip: text;background-clip: text;color: transparent">Lyra Capital</span> ogni giorno</h2>
   </div>
   <div style="margin-top: 34px;display: flex;flex-direction: column;align-items: center;gap: 26px">
     <div style="position: relative;min-height: 154px;max-width: 760px;width: 100%">
@@ -575,11 +510,11 @@
     </div>
     <p data-profmeta="" style="font: 600 12px 'IBM Plex Mono',monospace;letter-spacing: .14em;text-transform: uppercase;color: #a1a1aa;margin: 0">MARCO ROSSI · TRADER RETAIL</p>
     <div style="display: flex;align-items: center;justify-content: center;gap: 10px;flex-wrap: wrap">
-      <button data-prof="0" data-meta="MARCO ROSSI · TRADER RETAIL" style="all: unset;box-sizing: border-box;cursor: pointer;display: inline-flex;align-items: center;border-radius: 999px;padding: 4px 16px 4px 4px;transition: background .4s,padding .4s,box-shadow .4s;background: #18181b;box-shadow: 0 10px 24px -10px rgba(15,23,42,.5)"><img src="https://i.pravatar.cc/64?img=12" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;box-shadow: 0 0 0 2px #18181b" alt=""><span data-prof-name="" style="overflow: hidden;max-width: 190px;opacity: 1;margin-left: 10px;white-space: nowrap;transition: max-width .4s,opacity .4s,margin .4s;font-weight: 700;font-size: 13.5px;color: #fff">Marco Rossi</span></button>
-      <button data-prof="1" data-meta="GIULIA BIANCHI · SVILUPPATRICE" style="all: unset;box-sizing: border-box;cursor: pointer;display: inline-flex;align-items: center;border-radius: 999px;padding: 3px;transition: background .4s,padding .4s,box-shadow .4s;background: transparent;box-shadow: none"><img src="https://i.pravatar.cc/64?img=45" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;box-shadow: 0 0 0 2px rgba(15,23,42,.1)" alt=""><span data-prof-name="" style="overflow: hidden;max-width: 0px;opacity: 0;margin-left: 0px;white-space: nowrap;transition: max-width .4s,opacity .4s,margin .4s;font-weight: 700;font-size: 13.5px;color: #fff">Giulia Bianchi</span></button>
-      <button data-prof="2" data-meta="LUCA VERDI · QUANT" style="all: unset;box-sizing: border-box;cursor: pointer;display: inline-flex;align-items: center;border-radius: 999px;padding: 3px;transition: background .4s,padding .4s,box-shadow .4s;background: transparent;box-shadow: none"><img src="https://i.pravatar.cc/64?img=33" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;box-shadow: 0 0 0 2px rgba(15,23,42,.1)" alt=""><span data-prof-name="" style="overflow: hidden;max-width: 0px;opacity: 0;margin-left: 0px;white-space: nowrap;transition: max-width .4s,opacity .4s,margin .4s;font-weight: 700;font-size: 13.5px;color: #fff">Luca Verdi</span></button>
-      <button data-prof="3" data-meta="SARA CONTI · TRADER PART-TIME" style="all: unset;box-sizing: border-box;cursor: pointer;display: inline-flex;align-items: center;border-radius: 999px;padding: 3px;transition: background .4s,padding .4s,box-shadow .4s;background: transparent;box-shadow: none"><img src="https://i.pravatar.cc/64?img=47" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;box-shadow: 0 0 0 2px rgba(15,23,42,.1)" alt=""><span data-prof-name="" style="overflow: hidden;max-width: 0px;opacity: 0;margin-left: 0px;white-space: nowrap;transition: max-width .4s,opacity .4s,margin .4s;font-weight: 700;font-size: 13.5px;color: #fff">Sara Conti</span></button>
-      <button data-prof="4" data-meta="ANDREA MORO · GESTORE" style="all: unset;box-sizing: border-box;cursor: pointer;display: inline-flex;align-items: center;border-radius: 999px;padding: 3px;transition: background .4s,padding .4s,box-shadow .4s;background: transparent;box-shadow: none"><img src="https://i.pravatar.cc/64?img=52" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;box-shadow: 0 0 0 2px rgba(15,23,42,.1)" alt=""><span data-prof-name="" style="overflow: hidden;max-width: 0px;opacity: 0;margin-left: 0px;white-space: nowrap;transition: max-width .4s,opacity .4s,margin .4s;font-weight: 700;font-size: 13.5px;color: #fff">Andrea Moro</span></button>
+      <button data-prof="0" data-meta="MARCO ROSSI · TRADER RETAIL" style="all: unset;box-sizing: border-box;cursor: pointer;display: inline-flex;align-items: center;border-radius: 999px;padding: 4px 16px 4px 4px;transition: background .4s,padding .4s,box-shadow .4s;background: #18181b;box-shadow: 0 10px 24px -10px rgba(15,23,42,.5)"><img src="/avatars/a12.png" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;box-shadow: 0 0 0 2px #18181b" alt=""><span data-prof-name="" style="overflow: hidden;max-width: 190px;opacity: 1;margin-left: 10px;white-space: nowrap;transition: max-width .4s,opacity .4s,margin .4s;font-weight: 700;font-size: 13.5px;color: #fff">Marco Rossi</span></button>
+      <button data-prof="1" data-meta="GIULIA BIANCHI · SVILUPPATRICE" style="all: unset;box-sizing: border-box;cursor: pointer;display: inline-flex;align-items: center;border-radius: 999px;padding: 3px;transition: background .4s,padding .4s,box-shadow .4s;background: transparent;box-shadow: none"><img src="/avatars/a45.png" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;box-shadow: 0 0 0 2px rgba(15,23,42,.1)" alt=""><span data-prof-name="" style="overflow: hidden;max-width: 0px;opacity: 0;margin-left: 0px;white-space: nowrap;transition: max-width .4s,opacity .4s,margin .4s;font-weight: 700;font-size: 13.5px;color: #fff">Giulia Bianchi</span></button>
+      <button data-prof="2" data-meta="LUCA VERDI · QUANT" style="all: unset;box-sizing: border-box;cursor: pointer;display: inline-flex;align-items: center;border-radius: 999px;padding: 3px;transition: background .4s,padding .4s,box-shadow .4s;background: transparent;box-shadow: none"><img src="/avatars/a33.png" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;box-shadow: 0 0 0 2px rgba(15,23,42,.1)" alt=""><span data-prof-name="" style="overflow: hidden;max-width: 0px;opacity: 0;margin-left: 0px;white-space: nowrap;transition: max-width .4s,opacity .4s,margin .4s;font-weight: 700;font-size: 13.5px;color: #fff">Luca Verdi</span></button>
+      <button data-prof="3" data-meta="SARA CONTI · TRADER PART-TIME" style="all: unset;box-sizing: border-box;cursor: pointer;display: inline-flex;align-items: center;border-radius: 999px;padding: 3px;transition: background .4s,padding .4s,box-shadow .4s;background: transparent;box-shadow: none"><img src="/avatars/a47.png" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;box-shadow: 0 0 0 2px rgba(15,23,42,.1)" alt=""><span data-prof-name="" style="overflow: hidden;max-width: 0px;opacity: 0;margin-left: 0px;white-space: nowrap;transition: max-width .4s,opacity .4s,margin .4s;font-weight: 700;font-size: 13.5px;color: #fff">Sara Conti</span></button>
+      <button data-prof="4" data-meta="ANDREA MORO · GESTORE" style="all: unset;box-sizing: border-box;cursor: pointer;display: inline-flex;align-items: center;border-radius: 999px;padding: 3px;transition: background .4s,padding .4s,box-shadow .4s;background: transparent;box-shadow: none"><img src="/avatars/a52.png" style="height: 36px;width: 36px;border-radius: 999px;object-fit: cover;box-shadow: 0 0 0 2px rgba(15,23,42,.1)" alt=""><span data-prof-name="" style="overflow: hidden;max-width: 0px;opacity: 0;margin-left: 0px;white-space: nowrap;transition: max-width .4s,opacity .4s,margin .4s;font-weight: 700;font-size: 13.5px;color: #fff">Andrea Moro</span></button>
     </div>
   </div>
         </div>
@@ -684,7 +619,7 @@
       <span style="display: inline-flex;align-items: center;gap: 6px;border-radius: 999px;padding: 5px 12px;font: 600 11.5px/1 'IBM Plex Mono',monospace;letter-spacing: .12em;text-transform: uppercase;white-space: nowrap;background: #EEEDFB;color: #5B57D9">IL TEAM</span>
       <h2 style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 30px;line-height: 1.14;letter-spacing: -.015em;margin: 14px 0 0;color: #18181b">Quattro fondatori, un metodo</h2>
       <p style="color: #6b7280;font-size: 14.5px;line-height: 1.6;margin: 12px 0 0;max-width: 420px">Quant research, engineering, prodotto e community: costruiamo in pubblico, con lo stesso rigore che vendiamo.</p>
-      <div style="display: flex;margin: 22px 0 0;padding-left: 2px"><img src="https://i.pravatar.cc/96?img=12" style="height: 52px;width: 52px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -14px rgba(24,24,27,.4);margin-right: -10px;position: relative" alt=""><img src="https://i.pravatar.cc/96?img=45" style="height: 52px;width: 52px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -14px rgba(24,24,27,.4);margin-right: -10px;position: relative" alt=""><img src="https://i.pravatar.cc/96?img=33" style="height: 52px;width: 52px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -14px rgba(24,24,27,.4);margin-right: -10px;position: relative" alt=""><img src="https://i.pravatar.cc/96?img=52" style="height: 52px;width: 52px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -14px rgba(24,24,27,.4);margin-right: -10px;position: relative" alt=""></div>
+      <div style="display: flex;margin: 22px 0 0;padding-left: 2px"><img src="/avatars/a12.png" style="height: 52px;width: 52px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -14px rgba(24,24,27,.4);margin-right: -10px;position: relative" alt=""><img src="/avatars/a45.png" style="height: 52px;width: 52px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -14px rgba(24,24,27,.4);margin-right: -10px;position: relative" alt=""><img src="/avatars/a33.png" style="height: 52px;width: 52px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -14px rgba(24,24,27,.4);margin-right: -10px;position: relative" alt=""><img src="/avatars/a52.png" style="height: 52px;width: 52px;border-radius: 999px;object-fit: cover;border: 3px solid #fff;box-shadow: 0 0 0 3px rgba(24,24,27,.06),0 14px 30px -14px rgba(24,24,27,.4);margin-right: -10px;position: relative" alt=""></div>
       <a href="/team" style="display: inline-flex;align-items: center;gap: 8px;margin-top: 22px;height: 42px;padding: 0 20px;border-radius: 999px;border: 1px solid rgba(24,24,27,.14);background: #fff;font: 700 13.5px Mulish,sans-serif;color: #18181b">Conosci il team <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
     </div>
     <div data-reveal="" data-reveal-dir="right" data-reveal-d="80" style="opacity: 0;transform: translateX(40px);transition: opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)">
@@ -705,9 +640,9 @@
     <p style="color: #6b7280;font-size: 15px;line-height: 1.6;margin: 14px 0 0">Le esperienze di chi costruisce, valida e automatizza con Lyra.</p>
   </div>
   <div style="margin-top: 40px;display: grid;grid-template-columns: repeat(3,1fr);gap: 16px;height: 560px;overflow: hidden;-webkit-mask-image: linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent);mask-image: linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent)">
-      <div style="display: flex;flex-direction: column;gap: 16px;animation: qsVUp 34s linear infinite" style-hover="animation-play-state:paused"><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Ho costruito la mia prima strategia a blocchi in un pomeriggio. Zero codice, e ha superato il walk-forward.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=12" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Marco Rossi</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader retail</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Dall'idea al live in un flusso unico. Basta dieci tab e fogli Excel scollegati.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=15" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Davide Greco</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Ho esportato tutto in Python quando ho voluto. Nessun lock-in, codice pulito.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=60" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Riccardo Testa</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Developer</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Arrivato terzo in un contest, la mia strategia è entrata nel fondo. Reddito reale.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=14" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Paolo De Santis</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Ho costruito la mia prima strategia a blocchi in un pomeriggio. Zero codice, e ha superato il walk-forward.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=12" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Marco Rossi</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader retail</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Dall'idea al live in un flusso unico. Basta dieci tab e fogli Excel scollegati.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=15" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Davide Greco</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Ho esportato tutto in Python quando ho voluto. Nessun lock-in, codice pulito.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=60" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Riccardo Testa</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Developer</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Arrivato terzo in un contest, la mia strategia è entrata nel fondo. Reddito reale.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=14" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Paolo De Santis</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div></div>
-      <div style="display: flex;flex-direction: column;gap: 16px;animation: qsVUp 44s linear infinite" style-hover="animation-play-state:paused"><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Backtest point-in-time, niente survivorship bias. Finalmente numeri di cui mi fido davvero.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=47" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Sara Conti</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader part-time</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Il copilota AI ha trovato un look-ahead nel mio backtest che non avevo visto. Mi ha salvato mesi.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=45" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Giulia Bianchi</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Sviluppatrice</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Walk-forward e Monte Carlo integrati: misuro la robustezza, non la fortuna.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=44" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Francesca Russo</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Quant</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">La community mi ha dato quel confronto che da solo non trovavo: idee, backtest e feedback veri.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=24" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Chiara Galli</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Backtest point-in-time, niente survivorship bias. Finalmente numeri di cui mi fido davvero.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=47" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Sara Conti</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader part-time</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Il copilota AI ha trovato un look-ahead nel mio backtest che non avevo visto. Mi ha salvato mesi.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=45" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Giulia Bianchi</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Sviluppatrice</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Walk-forward e Monte Carlo integrati: misuro la robustezza, non la fortuna.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=44" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Francesca Russo</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Quant</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">La community mi ha dato quel confronto che da solo non trovavo: idee, backtest e feedback veri.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=24" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Chiara Galli</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div></div>
-      <div style="display: flex;flex-direction: column;gap: 16px;animation: qsVUp 39s linear infinite" style-hover="animation-play-state:paused"><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Kill-switch a tre livelli: dormo tranquillo anche con posizioni aperte overnight.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=31" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Elena Ferrari</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Lo scanner ha trovato la mia strategia di trend su tre asset a cui non avevo pensato.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=33" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Luca Verdi</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Quant</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Multi-broker e decorrelato: gestisco IBKR, Alpaca e Binance da un'unica dashboard.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=52" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Andrea Moro</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Gestore</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Dati puliti dai provider top: la qualità si vede nei backtest.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=51" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Alessandro Conti</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Kill-switch a tre livelli: dormo tranquillo anche con posizioni aperte overnight.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=31" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Elena Ferrari</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Lo scanner ha trovato la mia strategia di trend su tre asset a cui non avevo pensato.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=33" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Luca Verdi</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Quant</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Multi-broker e decorrelato: gestisco IBKR, Alpaca e Binance da un'unica dashboard.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=52" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Andrea Moro</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Gestore</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Dati puliti dai provider top: la qualità si vede nei backtest.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="https://i.pravatar.cc/64?img=51" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Alessandro Conti</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div></div>
+      <div style="display: flex;flex-direction: column;gap: 16px;animation: qsVUp 34s linear infinite" style-hover="animation-play-state:paused"><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Ho costruito la mia prima strategia a blocchi in un pomeriggio. Zero codice, e ha superato il walk-forward.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a12.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Marco Rossi</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader retail</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Dall'idea al live in un flusso unico. Basta dieci tab e fogli Excel scollegati.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a15.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Davide Greco</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Ho esportato tutto in Python quando ho voluto. Nessun lock-in, codice pulito.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a60.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Riccardo Testa</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Developer</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Arrivato terzo in un contest, la mia strategia è entrata nel fondo. Reddito reale.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a14.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Paolo De Santis</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Ho costruito la mia prima strategia a blocchi in un pomeriggio. Zero codice, e ha superato il walk-forward.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a12.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Marco Rossi</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader retail</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Dall'idea al live in un flusso unico. Basta dieci tab e fogli Excel scollegati.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a15.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Davide Greco</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Ho esportato tutto in Python quando ho voluto. Nessun lock-in, codice pulito.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a60.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Riccardo Testa</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Developer</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Arrivato terzo in un contest, la mia strategia è entrata nel fondo. Reddito reale.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a14.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Paolo De Santis</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div></div>
+      <div style="display: flex;flex-direction: column;gap: 16px;animation: qsVUp 44s linear infinite" style-hover="animation-play-state:paused"><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Backtest point-in-time, niente survivorship bias. Finalmente numeri di cui mi fido davvero.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a47.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Sara Conti</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader part-time</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Il copilota AI ha trovato un look-ahead nel mio backtest che non avevo visto. Mi ha salvato mesi.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a45.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Giulia Bianchi</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Sviluppatrice</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Walk-forward e Monte Carlo integrati: misuro la robustezza, non la fortuna.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a44.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Francesca Russo</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Quant</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">La community mi ha dato quel confronto che da solo non trovavo: idee, backtest e feedback veri.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a24.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Chiara Galli</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Backtest point-in-time, niente survivorship bias. Finalmente numeri di cui mi fido davvero.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a47.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Sara Conti</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader part-time</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Il copilota AI ha trovato un look-ahead nel mio backtest che non avevo visto. Mi ha salvato mesi.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a45.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Giulia Bianchi</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Sviluppatrice</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Walk-forward e Monte Carlo integrati: misuro la robustezza, non la fortuna.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a44.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Francesca Russo</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Quant</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">La community mi ha dato quel confronto che da solo non trovavo: idee, backtest e feedback veri.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a24.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Chiara Galli</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div></div>
+      <div style="display: flex;flex-direction: column;gap: 16px;animation: qsVUp 39s linear infinite" style-hover="animation-play-state:paused"><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Kill-switch a tre livelli: dormo tranquillo anche con posizioni aperte overnight.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a31.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Elena Ferrari</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Lo scanner ha trovato la mia strategia di trend su tre asset a cui non avevo pensato.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a33.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Luca Verdi</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Quant</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Multi-broker e decorrelato: gestisco IBKR, Alpaca e Binance da un'unica dashboard.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a52.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Andrea Moro</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Gestore</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Dati puliti dai provider top: la qualità si vede nei backtest.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a51.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Alessandro Conti</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Kill-switch a tre livelli: dormo tranquillo anche con posizioni aperte overnight.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a31.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Elena Ferrari</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Lo scanner ha trovato la mia strategia di trend su tre asset a cui non avevo pensato.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a33.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Luca Verdi</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Quant</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Multi-broker e decorrelato: gestisco IBKR, Alpaca e Binance da un'unica dashboard.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a52.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Andrea Moro</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Gestore</p></div></div></div><div style="background: #fff;border: 1px solid rgba(15,23,42,.06);border-radius: 16px;box-shadow: 0 1px 2px rgba(15,23,42,.04),0 8px 24px -16px rgba(15,23,42,.14);padding: 20px"><p style="color: #3f3f46;font-size: 14px;line-height: 1.6;margin: 0">Dati puliti dai provider top: la qualità si vede nei backtest.</p><div style="display: flex;align-items: center;gap: 11px;margin-top: 16px"><img src="/avatars/a51.png" style="height: 38px;width: 38px;border-radius: 999px;object-fit: cover" alt=""><div><p style="margin: 0;font-weight: 700;font-size: 13.5px;color: #18181b">Alessandro Conti</p><p style="margin: 1px 0 0;font-size: 12px;color: #a1a1aa">Trader</p></div></div></div></div>
   </div>
 </section>
 
@@ -724,6 +659,10 @@
         <a href="#top" style="display: inline-flex;align-items: center;gap: 8px;height: 48px;padding: 0 22px;border-radius: 12px;cursor: pointer;white-space: nowrap;font: 700 15px Mulish,sans-serif;color: #e6ecf5;background: rgba(255,255,255,.08);border: 1px solid rgba(255,255,255,.16)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg> Unisciti al Discord</a>
       </div>
       <p style="color: #6E7E92;font-size: 12.5px;margin: 22px 0 0">Primo anno gratis · Nessuna carta richiesta · Local-first: le strategie restano tue</p>
+      <div style="margin: 46px auto -14px;max-width: 720px;perspective: 1200px">
+        <div style="border-radius: 16px;overflow: hidden;border: 1px solid rgba(255,255,255,.12);box-shadow: 0 40px 80px -30px rgba(0,0,0,.7);transform: rotateX(7deg);background: #0e0e10"><div style="aspect-ratio: 1920/1038;overflow: hidden;position: relative"><img src="/screens-ref/20260723_23325960.png" alt="Community Lyra — post, idee e collaborazioni" style="position: absolute;left: 0;bottom: 0;width: 100%"></div></div>
+        <p style="color: #6E7E92;font: 600 11px 'IBM Plex Mono',monospace;letter-spacing: .12em;text-transform: uppercase;margin: 18px 0 0">La community dentro la piattaforma</p>
+      </div>
     </div>
   </div>
 </section>
@@ -738,7 +677,7 @@
   <div data-beta-panel="" style="width: 100%;max-width: 440px;background: #fff;border-radius: 22px;box-shadow: 0 40px 80px -30px rgba(15,23,42,.6);padding: 28px;opacity: 0;transform: translateY(12px) scale(.98);transition: opacity .26s ease,transform .26s ease">
     <div data-beta-formbox="">
       <div style="display: flex;align-items: center;justify-content: space-between">
-        <span style="display: grid;place-items: center;height: 44px;width: 44px;border-radius: 13px;background: linear-gradient(135deg,#5B57D9,#18181b);color: #fff"><img src="/logo.svg" alt="" width="22" height="22" style="height: 22px;width: 22px;display: block;object-fit: contain;filter: brightness(0) invert(1)"></span>
+        <span style="display: grid;place-items: center;height: 44px;width: 44px;border-radius: 13px;background: linear-gradient(135deg,#5B57D9,#18181b);color: #fff"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20c0-8 2.5-12 9.5-16"></path><path d="M10.5 20c0-6 2.2-9 7-11"></path><path d="M14 20c0-4 1.6-6 5-7.2"></path></svg></span>
         <button data-beta-close="" style="all: unset;box-sizing: border-box;cursor: pointer;display: grid;place-items: center;height: 32px;width: 32px;border-radius: 9px;color: #a1a1aa;background: #f4f4f5"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
       </div>
       <h3 style="font-family: 'Space Grotesk',sans-serif;font-weight: 700;font-size: 22px;margin: 18px 0 0;color: #18181b">Entra nella beta</h3>
@@ -764,3 +703,476 @@
 </div>
 
 </div></div>
+
+</div>
+<script>
+// @ts-nocheck
+/* Auto-generated from the Lyra design components — do not edit by hand.
+   Re-run the generator if the source .dc.html changes. */
+
+function initBehaviors(rootEl){
+  if (!rootEl) return () => {};
+  class LyraBehaviors {
+    constructor(root){ this.root = root; this.props = {}; this._to = []; this._iv = []; }
+    _sT(fn, ms) { const id = setTimeout(fn, ms); this._to.push(id); return id; }
+    _sI(fn, ms) { const id = setInterval(fn, ms); this._iv.push(id); return id; }
+    _q(sel) { return (this.root || document).querySelectorAll(sel); }
+    _q1(sel) { return (this.root || document).querySelector(sel); }
+  
+    _initNeural() {
+      const canvas = this._q1('[data-neural]'); if (!canvas) return;
+      const ctx = canvas.getContext('2d'); if (!ctx) return;
+      const container = canvas.parentElement;
+      const palette = ['#3f3f46', '#52525b', '#18181b', '#71717a', '#a1a1aa'];
+      const speed = 0.9, trailOpacity = 0.1, particleCount = 460, fadeRgb = '243,243,244';
+      let width = container.clientWidth, height = container.clientHeight, particles = [];
+      const mouse = { x: -1000, y: -1000 };
+      class P {
+        constructor() { this.reset(); }
+        reset() { this.x = Math.random() * width; this.y = Math.random() * height; this.vx = 0; this.vy = 0; this.age = 0; this.life = Math.random() * 200 + 100; this.color = palette[(Math.random() * palette.length) | 0]; }
+        update() {
+          const a = (Math.cos(this.x * 0.005) + Math.sin(this.y * 0.005)) * Math.PI;
+          this.vx += Math.cos(a) * 0.2 * speed; this.vy += Math.sin(a) * 0.2 * speed;
+          const dx = mouse.x - this.x, dy = mouse.y - this.y, d = Math.hypot(dx, dy), r = 150;
+          if (d < r) { const f = (r - d) / r; this.vx -= dx * f * 0.05; this.vy -= dy * f * 0.05; }
+          this.x += this.vx; this.y += this.vy; this.vx *= 0.95; this.vy *= 0.95; this.age++;
+          if (this.age > this.life) this.reset();
+          if (this.x < 0) this.x = width; if (this.x > width) this.x = 0;
+          if (this.y < 0) this.y = height; if (this.y > height) this.y = 0;
+        }
+        draw() { ctx.fillStyle = this.color; ctx.globalAlpha = 0.7 * (1 - Math.abs(this.age / this.life - 0.5) * 2); ctx.fillRect(this.x, this.y, 1.6, 1.6); }
+      }
+      const init = () => {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = width * dpr; canvas.height = height * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        canvas.style.width = width + 'px'; canvas.style.height = height + 'px';
+        particles = []; for (let i = 0; i < particleCount; i++) particles.push(new P());
+      };
+      const animate = () => {
+        ctx.globalAlpha = 1; ctx.fillStyle = 'rgba(' + (this._fadeRgb || fadeRgb) + ',' + trailOpacity + ')'; ctx.fillRect(0, 0, width, height);
+        for (const p of particles) { p.update(); p.draw(); }
+        this._raf = requestAnimationFrame(animate);
+      };
+      const onResize = () => { width = container.clientWidth; height = container.clientHeight; init(); };
+      const onMove = (e) => { const r = canvas.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; };
+      const onLeave = () => { mouse.x = -1000; mouse.y = -1000; };
+      init(); animate();
+      window.addEventListener('resize', onResize); window.addEventListener('mousemove', onMove); window.addEventListener('mouseout', onLeave);
+      this._neuralCleanup = () => { window.removeEventListener('resize', onResize); window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseout', onLeave); };
+    }
+  
+    _initNav() {
+      const nav = this._q1('[data-nav]'); if (!nav) return;
+      let last = window.scrollY;
+      const onScroll = () => {
+        const y = window.scrollY, atTop = y < 12;
+        nav.style.boxShadow = atTop ? 'none' : '0 10px 30px -12px rgba(15,20,43,.18)';
+        nav.style.background = atTop ? 'rgba(255,255,255,.8)' : '#ffffff';
+        nav.style.transform = (y > last && y > 90) ? 'translateY(-100%)' : 'translateY(0)';
+        last = y;
+      };
+      window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+      const toggle = this._q1('[data-nav-toggle]'), menu = this._q1('[data-nav-menu]'), navIcon = this._q1('[data-nav-icon]');
+      const burger = '<path d="M3 6h18M3 12h18M3 18h18"></path>', closeIco = '<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>';
+      let navOpen = false;
+      const setNavOpen = (v) => { navOpen = v; if (menu) menu.style.display = v ? 'flex' : 'none'; if (toggle) toggle.setAttribute('aria-expanded', v ? 'true' : 'false'); if (navIcon) navIcon.innerHTML = v ? closeIco : burger; };
+      if (toggle && menu) {
+        toggle.addEventListener('click', (e) => { e.stopPropagation(); setNavOpen(!navOpen); });
+        [...menu.querySelectorAll('a,button')].forEach((el) => el.addEventListener('click', () => setNavOpen(false)));
+      }
+      const onNavRz = () => { if (window.innerWidth > 1024 && navOpen) setNavOpen(false); };
+      window.addEventListener('resize', onNavRz);
+      this._navCleanup = () => { window.removeEventListener('scroll', onScroll); window.removeEventListener('resize', onNavRz); };
+    }
+  
+    _initTypewriter() {
+      const el = this._q1('[data-tw]'); if (!el) return;
+      const words = ['fondo collettivo', 'reddito reale', 'tuo portafoglio quant'];
+      let wi = 0, ci = 0, del = false;
+      const tick = () => {
+        const w = words[wi];
+        if (!del) { el.textContent = w.slice(0, ci + 1); ci++; if (ci >= w.length) { del = true; this._sT(tick, 1800); return; } }
+        else { el.textContent = w.slice(0, ci - 1); ci--; if (ci <= 0) { del = false; wi = (wi + 1) % words.length; } }
+        this._sT(tick, del ? 45 : 85);
+      };
+      this._sT(tick, 400);
+    }
+  
+    _initRing() {
+      const cards = [...this._q('[data-ring]')]; if (!cards.length) return;
+      const COL = 356;
+      const POS = [
+        { x: 0, y: 96, s: 0.83, z: 10, o: 0.9 }, { x: 0, y: 50, s: 0.91, z: 20, o: 1 }, { x: 0, y: 0, s: 1, z: 30, o: 1 },
+        { x: COL, y: 96, s: 1, z: 30, o: 1 }, { x: COL, y: 50, s: 0.91, z: 20, o: 1 }, { x: COL, y: 0, s: 0.83, z: 10, o: 0.9 }
+      ];
+      const N = 6; let step = 0;
+      const place = () => cards.forEach((c, i) => { const p = POS[(i + step) % N]; c.style.transform = 'translate(' + p.x + 'px,' + p.y + 'px) scale(' + p.s + ')'; c.style.zIndex = p.z; c.style.opacity = p.o; });
+      place();
+      this._sI(() => { step = (step + 1) % N; place(); }, 2900);
+    }
+  
+    _initDiffMenu() {
+      const items = [...this._q('[data-diff-item]')], panels = [...this._q('[data-diff-panel]')];
+      if (!items.length || !panels.length) return;
+      const set = (i) => {
+        items.forEach((b) => {
+          const on = +b.getAttribute('data-diff-item') === i;
+          b.style.background = on ? '#18181b' : '#fff';
+          b.style.borderColor = on ? '#18181b' : 'rgba(24,24,27,.08)';
+          b.style.color = on ? '#fff' : '#3f3f46';
+          b.querySelectorAll('[data-di-t]').forEach((t) => { t.style.color = on ? '#fff' : '#18181b'; });
+          b.querySelectorAll('[data-di-s]').forEach((t) => { t.style.color = on ? '#a1a1aa' : '#6b7280'; });
+          b.querySelectorAll('[data-di-i]').forEach((t) => { t.style.background = on ? 'rgba(255,255,255,.14)' : '#f4f4f5'; t.style.color = on ? '#fff' : '#3f3f46'; });
+        });
+        panels.forEach((p) => {
+          const on = +p.getAttribute('data-diff-panel') === i;
+          p.style.display = on ? 'block' : 'none';
+          if (on) { p.style.animation = 'none'; void p.offsetHeight; p.style.animation = 'qsUp .45s both'; }
+        });
+      };
+      items.forEach((b) => b.addEventListener('click', () => set(+b.getAttribute('data-diff-item'))));
+      set(0);
+    }
+  
+    _initArc() {
+      const wrap = (this._q('[data-arc-wrap]') || [])[0]; if (!wrap) return;
+      const holder = wrap.parentElement;
+      if (holder) { const fit = () => { const sc = Math.max(0.6, Math.min(1, holder.clientWidth / 1040)); wrap.style.transform = 'scale(' + sc + ')'; holder.style.height = (400 * sc) + 'px'; }; fit(); requestAnimationFrame(fit); window.addEventListener('resize', fit); }
+      const outer = "M 140 380 A 380 380 0 0 1 900 380";
+      const inner = "M 220 380 A 300 300 0 0 1 820 380";
+      const setup = (arc, path, dur, ccw) => {
+        const list = [...wrap.querySelectorAll('[data-arc="' + arc + '"]')];
+        const n = list.length; if (!n) return;
+        list.forEach((el, i) => {
+          el.style.offsetPath = "path('" + path + "')";
+          el.style.offsetRotate = "0deg";
+          el.style.offsetAnchor = "50% 50%";
+          const kf = ccw
+            ? [{ offset: 0, offsetDistance: '100%', opacity: 0 }, { offset: 0.1, offsetDistance: '90%', opacity: 1 }, { offset: 0.9, offsetDistance: '10%', opacity: 1 }, { offset: 1, offsetDistance: '0%', opacity: 0 }]
+            : [{ offset: 0, offsetDistance: '0%', opacity: 0 }, { offset: 0.1, offsetDistance: '10%', opacity: 1 }, { offset: 0.9, offsetDistance: '90%', opacity: 1 }, { offset: 1, offsetDistance: '100%', opacity: 0 }];
+          try { el.animate(kf, { duration: dur, iterations: Infinity, easing: 'linear', delay: -(dur * i / n) }); } catch (e) { el.style.opacity = '1'; }
+        });
+      };
+      setup('outer', outer, 30000, false);
+      setup('inner', inner, 26000, true);
+    }
+  
+    _initStatFit() {
+      const holder = this._q1('[data-statbar-holder]'), bar = this._q1('[data-statbar]');
+      if (!holder || !bar) return;
+      const NAT = 1080;
+      const fit = () => { const sc = Math.min(0.8, holder.clientWidth / NAT); bar.style.transform = 'scale(' + sc + ')'; holder.style.height = (bar.offsetHeight * sc) + 'px'; };
+      fit(); requestAnimationFrame(fit); window.addEventListener('resize', fit);
+      this._statCleanup = () => window.removeEventListener('resize', fit);
+    }
+  
+    _initStepTrail() {
+      const trail = this._q1('[data-steps-trail]'); if (!trail) return;
+      const foot = '<svg viewBox="0 0 22 30" width="15" height="20" style="display:block"><path d="M11 9.5c3.4 0 5.4 3.2 5.4 8.4 0 5.6-2.8 11-5.9 11-2.7 0-4.4-2.8-4.4-7.2 0-1.9.3-3.4.3-5.2 0-3.9 1.4-7 4.6-7Z" fill="currentColor"></path><ellipse cx="4.6" cy="10.3" rx="1.5" ry="1.9" fill="currentColor"></ellipse><ellipse cx="7.7" cy="6.6" rx="1.6" ry="2.1" fill="currentColor"></ellipse><ellipse cx="11.2" cy="5.2" rx="1.7" ry="2.2" fill="currentColor"></ellipse><ellipse cx="14.6" cy="5.9" rx="1.5" ry="2" fill="currentColor"></ellipse><ellipse cx="17.4" cy="8.2" rx="1.3" ry="1.7" fill="currentColor"></ellipse></svg>';
+      const segs = 3, per = 3; let html = '';
+      for (let s = 0; s < segs; s++) {
+        const a = 12.5 + s * 25;
+        for (let j = 0; j < per; j++) {
+          const gi = s * per + j;
+          const t = (j + 1) / (per + 1);
+          const x = a + t * 25;
+          const wob = (gi % 2 ? 6 : -6) + Math.sin(t * Math.PI) * (s % 2 ? -3 : 3);
+          const topv = 'calc(50% ' + (wob >= 0 ? '+ ' : '- ') + Math.abs(wob).toFixed(1) + 'px)';
+          const mirror = gi % 2 ? ' scaleX(-1)' : '';
+          html += '<span data-seg="' + s + '" style="position:absolute;left:' + x.toFixed(1) + '%;top:' + topv + ';transform:translate(-50%,-50%) rotate(90deg)' + mirror + ';color:#27272a;opacity:.1;transition:opacity .45s ease,filter .45s ease;transition-delay:' + (j * 0.14).toFixed(2) + 's">' + foot + '</span>';
+        }
+      }
+      trail.innerHTML = html;
+      this._trailFeet = [...trail.children];
+      this._setTrail(this._curStep || 0);
+    }
+  
+    _setTrail(active) {
+      if (!this._trailFeet) return;
+      this._trailFeet.forEach((f) => {
+        const seg = +f.getAttribute('data-seg');
+        const lit = seg < active;
+        f.style.opacity = lit ? '1' : '.1';
+        f.style.filter = lit ? 'drop-shadow(0 0 4px rgba(88,80,230,.45))' : 'none';
+      });
+    }
+  
+    _initMobileLoops() {
+      const groups = [...this._q('[data-mloop]')];
+      if (!groups.length) return;
+      const build = (g) => {
+        if (g._mloopBuilt) return;
+        const items = [...g.children];
+        if (!items.length) return;
+        g._mloopDisplay = g.style.display;
+        const track = document.createElement('div');
+        track.setAttribute('data-mloop-track', '');
+        const spd = g.getAttribute('data-mloop-speed') || '36';
+        track.style.cssText = 'display:flex;flex-wrap:nowrap;align-items:stretch;width:max-content;animation:qsMarq ' + spd + 's linear infinite;will-change:transform';
+        track.addEventListener('mouseenter', () => { track.style.animationPlayState = 'paused'; });
+        track.addEventListener('mouseleave', () => { track.style.animationPlayState = 'running'; });
+        const setFinal = (root) => { root.querySelectorAll('[data-count]').forEach((cd) => { const v = cd.getAttribute('data-count'); if (v != null) cd.textContent = v + (cd.getAttribute('data-count-suffix') || ''); }); };
+        const prep = (el) => { el.style.flex = '0 0 auto'; el.style.marginRight = '14px'; el.style.opacity = '1'; el.style.transform = 'none'; };
+        items.forEach((it) => { if (this._cio) it.querySelectorAll('[data-count]').forEach((cd) => this._cio.unobserve(cd)); setFinal(it); prep(it); track.appendChild(it); });
+        items.forEach((it) => { const c = it.cloneNode(true); c.setAttribute('aria-hidden', 'true'); setFinal(c); prep(c); track.appendChild(c); });
+        g.appendChild(track);
+        g.style.overflow = 'hidden';
+        g.style.display = 'block';
+        g._mloopTrack = track; g._mloopItems = items; g._mloopBuilt = true;
+      };
+      const teardown = (g) => {
+        if (!g._mloopBuilt) return;
+        g._mloopItems.forEach((it) => { it.style.flex = ''; it.style.marginRight = ''; it.style.opacity = ''; it.style.transform = ''; g.appendChild(it); });
+        if (g._mloopTrack) g._mloopTrack.remove();
+        g.style.overflow = ''; g.style.display = g._mloopDisplay || '';
+        g._mloopBuilt = false;
+      };
+      const apply = () => { groups.forEach((g) => { (getComputedStyle(g).getPropertyValue('--mloop-on').trim() === '1') ? build(g) : teardown(g); }); };
+      apply();
+      const onR = () => { clearTimeout(this._mloopT); this._mloopT = setTimeout(apply, 160); };
+      window.addEventListener('resize', onR);
+      this._hsCleanups = this._hsCleanups || [];
+      this._hsCleanups.push(() => window.removeEventListener('resize', onR));
+    }
+  
+    _initTabArrows() {
+      const bar = this._q1('[data-tab-arrows]'); if (!bar) return;
+      const panels = [...this._q('[data-tabpanel]')];
+      const active = () => panels.find((p) => getComputedStyle(p).display !== 'none');
+      const go = (dir) => {
+        const sc = active(); if (!sc) return;
+        const items = [...sc.children], scLeft = sc.getBoundingClientRect().left;
+        let t = null;
+        if (dir === 'next') { for (let k = 0; k < items.length; k++) { const rel = items[k].getBoundingClientRect().left - scLeft; if (rel > 8) { t = sc.scrollLeft + rel; break; } } if (t == null) t = sc.scrollWidth; }
+        else { for (let k = items.length - 1; k >= 0; k--) { const rel = items[k].getBoundingClientRect().left - scLeft; if (rel < -8) { t = sc.scrollLeft + rel; break; } } if (t == null) t = 0; }
+        sc.scrollTo({ left: Math.max(0, t), behavior: 'smooth' });
+      };
+      const pb = bar.querySelector('[data-tab-arrow="prev"]'), nb = bar.querySelector('[data-tab-arrow="next"]');
+      if (pb) pb.addEventListener('click', () => go('prev'));
+      if (nb) nb.addEventListener('click', () => go('next'));
+    }
+  
+    _initHScroll() {
+      this._hsCleanups = this._hsCleanups || [];
+      [...this._q('[data-hscroll]')].forEach((sc) => {
+        if (sc.parentNode && sc.parentNode.getAttribute && sc.parentNode.getAttribute('data-hscroll-wrap') !== null) return;
+        const wrap = document.createElement('div');
+        wrap.setAttribute('data-hscroll-wrap', '');
+        wrap.style.position = 'relative';
+        sc.parentNode.insertBefore(wrap, sc);
+        wrap.appendChild(sc);
+        const bar = document.createElement('div');
+        bar.setAttribute('data-hscroll-bar', '');
+        bar.style.cssText = 'display:none;justify-content:flex-end;align-items:center;gap:8px;margin-top:14px';
+        const mkArrow = (dir) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('data-hscroll-arrow', dir);
+          b.setAttribute('aria-label', dir === 'prev' ? 'Precedente' : 'Successivo');
+          b.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="' + (dir === 'prev' ? 'm15 18-6-6 6-6' : 'm9 18 6-6-6-6') + '"></path></svg>';
+          b.style.cssText = 'flex:none;display:grid;place-items:center;height:34px;width:34px;border-radius:999px;border:1px solid rgba(15,23,42,.12);background:rgba(255,255,255,.85);color:#52525b;cursor:pointer;box-shadow:0 4px 12px -6px rgba(15,23,42,.3);transition:opacity .2s ease,background .2s ease,color .2s ease';
+          b.addEventListener('click', () => { const items = [...sc.children]; const scLeft = sc.getBoundingClientRect().left; let target = null; if (dir === 'next') { for (let k = 0; k < items.length; k++) { const rel = items[k].getBoundingClientRect().left - scLeft; if (rel > 8) { target = sc.scrollLeft + rel; break; } } if (target == null) target = sc.scrollWidth; } else { for (let k = items.length - 1; k >= 0; k--) { const rel = items[k].getBoundingClientRect().left - scLeft; if (rel < -8) { target = sc.scrollLeft + rel; break; } } if (target == null) target = 0; } sc.scrollTo({ left: Math.max(0, target), behavior: 'smooth' }); });
+          bar.appendChild(b);
+          return b;
+        };
+        const prev = mkArrow('prev'), next = mkArrow('next');
+        wrap.appendChild(bar);
+        const upd = () => {
+          const can = sc.scrollWidth > sc.clientWidth + 4;
+          bar.style.display = can ? 'flex' : 'none';
+          const max = sc.scrollWidth - sc.clientWidth - 2;
+          const showP = can && sc.scrollLeft > 4, showN = can && sc.scrollLeft < max;
+          prev.style.opacity = showP ? '1' : '.3'; prev.style.pointerEvents = showP ? 'auto' : 'none';
+          next.style.opacity = showN ? '1' : '.3'; next.style.pointerEvents = showN ? 'auto' : 'none';
+        };
+        sc.addEventListener('scroll', upd, { passive: true });
+        window.addEventListener('resize', upd);
+        let down = false, sx = 0, sl = 0, moved = false;
+        sc.addEventListener('pointerdown', (e) => { if (e.button !== 0) return; down = true; moved = false; sx = e.clientX; sl = sc.scrollLeft; sc.style.scrollBehavior = 'auto'; });
+        sc.addEventListener('pointermove', (e) => { if (!down) return; const dx = e.clientX - sx; if (Math.abs(dx) > 4) { moved = true; sc.style.cursor = 'grabbing'; } sc.scrollLeft = sl - dx; });
+        const end = () => { down = false; sc.style.cursor = ''; sc.style.scrollBehavior = ''; };
+        sc.addEventListener('pointerup', end); sc.addEventListener('pointerleave', end); sc.addEventListener('pointercancel', end);
+        sc.addEventListener('click', (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+        this._hsCleanups.push(() => window.removeEventListener('resize', upd));
+        requestAnimationFrame(upd); this._sT(upd, 350);
+      });
+    }
+  
+    _initReveal() {
+      const els = [...this._q('[data-reveal]')]; if (!els.length) return;
+      const io = new IntersectionObserver((ents) => {
+        ents.forEach((e) => {
+          if (e.isIntersecting) {
+            const d = parseInt(e.target.getAttribute('data-reveal-d') || '0', 10);
+            e.target.style.transitionDelay = (d / 1000) + 's';
+            e.target.style.opacity = '1'; e.target.style.transform = 'none';
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      els.forEach((el) => io.observe(el));
+      this._io = io;
+    }
+  
+    _initCount() {
+      const els = [...this._q('[data-count]')]; if (!els.length) return;
+      const run = (el) => {
+        const to = parseFloat(el.getAttribute('data-count')), suf = el.getAttribute('data-count-suffix') || '';
+        const dur = parseInt(el.getAttribute('data-count-dur') || '1400', 10), dec = parseInt(el.getAttribute('data-count-dec') || '0', 10);
+        const t0 = performance.now();
+        const fmt = (v) => v.toLocaleString('it-IT', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+        const frame = (t) => { const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(to * e) + suf; if (p < 1) requestAnimationFrame(frame); };
+        requestAnimationFrame(frame);
+      };
+      const io = new IntersectionObserver((ents) => { ents.forEach((e) => { if (e.isIntersecting) { run(e.target); io.unobserve(e.target); } }); }, { threshold: 0.5 });
+      els.forEach((el) => { el.textContent = '0' + (el.getAttribute('data-count-suffix') || ''); io.observe(el); });
+      this._cio = io;
+    }
+  
+    _initTabs() {
+      const wrap = this._q1('[data-tabs]'); if (!wrap) return;
+      const btns = [...this._q('[data-tab]')], panels = [...this._q('[data-tabpanel]')];
+      const set = (i) => {
+        btns.forEach((b) => { const on = +b.getAttribute('data-tab') === i; b.style.color = on ? '#18181b' : '#a1a1aa'; b.style.background = on ? '#fff' : 'transparent'; b.style.boxShadow = on ? '0 1px 2px rgba(15,23,42,.04),0 8px 24px -12px rgba(15,23,42,.12)' : 'none'; });
+        panels.forEach((pn) => {
+          const on = +pn.getAttribute('data-tabpanel') === i;
+          pn.style.display = on ? 'grid' : 'none';
+          if (on) [...pn.querySelectorAll('[data-tabcard]')].forEach((c, k) => { c.style.animation = 'none'; void c.offsetHeight; c.style.animation = 'qsUp .5s both'; c.style.animationDelay = (k * 0.12) + 's'; });
+        });
+      };
+      btns.forEach((b) => b.addEventListener('click', () => set(+b.getAttribute('data-tab'))));
+      set(0);
+    }
+  
+    _initSteps() {
+      const stepBtns = [...this._q('[data-step]')]; if (!stepBtns.length) return;
+      const descs = [...this._q('[data-stepdesc]')], viss = [...this._q('[data-stepvis]')], dots = [...this._q('[data-stepdot]')];
+      const liveP = this._q1('[data-stepdesc-live] p');
+      let cur = 0, auto;
+      const set = (i) => {
+        cur = i;
+        this._curStep = i; this._setTrail(i);
+        if (liveP) { const ad = descs.find(d => +d.getAttribute('data-stepdesc') === i); const p = ad && ad.querySelector('p'); liveP.textContent = p ? p.textContent : ''; }
+        stepBtns.forEach((b) => { const on = +b.getAttribute('data-step') === i; const t = b.querySelector('[data-step-title]'); if (t) t.style.color = on ? '#18181b' : '#3f3f46'; });
+        dots.forEach((d) => { const on = +d.getAttribute('data-stepdot') === i; d.style.background = on ? 'var(--primary,#18181b)' : '#e4e4e7'; d.style.color = on ? '#fff' : '#a1a1aa'; });
+        descs.forEach((dd) => { const on = +dd.getAttribute('data-stepdesc') === i; dd.style.maxHeight = on ? '180px' : '0px'; dd.style.opacity = on ? '1' : '0'; dd.style.marginTop = on ? '8px' : '0px'; });
+        viss.forEach((v) => { const on = +v.getAttribute('data-stepvis') === i; v.style.opacity = on ? '1' : '0'; v.style.transform = on ? 'scale(1)' : 'scale(1.04)'; v.style.pointerEvents = on ? '' : 'none'; });
+      };
+      const start = () => { auto = this._sI(() => set((cur + 1) % stepBtns.length), 5000); };
+      stepBtns.forEach((b) => b.addEventListener('click', () => { clearInterval(auto); set(+b.getAttribute('data-step')); start(); }));
+      set(0); start();
+    }
+  
+    _initProfiles() {
+      const btns = [...this._q('[data-prof]')]; if (!btns.length) return;
+      const quotes = [...this._q('[data-profquote]')];
+      const meta = this._q1('[data-profmeta]');
+      let cur = 0, paused = false, auto;
+      const set = (i) => {
+        cur = i;
+        btns.forEach((b) => {
+          const on = +b.getAttribute('data-prof') === i;
+          b.style.background = on ? '#18181b' : 'transparent';
+          b.style.padding = on ? '4px 16px 4px 4px' : '3px';
+          b.style.boxShadow = on ? '0 10px 24px -10px rgba(15,23,42,.5)' : 'none';
+          const nm = b.querySelector('[data-prof-name]');
+          if (nm) { nm.style.maxWidth = on ? '190px' : '0px'; nm.style.opacity = on ? '1' : '0'; nm.style.marginLeft = on ? '10px' : '0px'; }
+          const av = b.querySelector('img');
+          if (av) av.style.boxShadow = on ? '0 0 0 2px #18181b' : '0 0 0 2px rgba(15,23,42,.1)';
+        });
+        quotes.forEach((qd) => { const on = +qd.getAttribute('data-profquote') === i; qd.style.opacity = on ? '1' : '0'; qd.style.transform = on ? 'none' : 'translateY(8px)'; qd.style.pointerEvents = on ? '' : 'none'; });
+        if (meta && btns[i]) meta.textContent = btns[i].getAttribute('data-meta') || '';
+      };
+      const start = () => { auto = this._sI(() => { if (!paused) set((cur + 1) % btns.length); }, 4200); };
+      btns.forEach((b) => {
+        b.addEventListener('click', () => { clearInterval(auto); set(+b.getAttribute('data-prof')); start(); });
+        b.addEventListener('mouseenter', () => { paused = true; });
+        b.addEventListener('mouseleave', () => { paused = false; });
+      });
+      set(0); start();
+    }
+  
+    _initGlow() {
+      const cards = [...this._q('[data-glow]')]; if (!cards.length) return;
+      cards.forEach((card) => {
+        const spot = card.querySelector('[data-glow-spot]');
+        card.addEventListener('mousemove', (e) => { const r = card.getBoundingClientRect(); card.style.setProperty('--gx', (e.clientX - r.left) + 'px'); card.style.setProperty('--gy', (e.clientY - r.top) + 'px'); if (spot) spot.style.opacity = '1'; });
+        card.addEventListener('mouseleave', () => { if (spot) spot.style.opacity = '0'; });
+      });
+    }
+  
+    _initDataBorders() {
+      const cards = [...this._q('[data-databorder]')]; if (!cards.length) return;
+      const base = 'rgba(15,23,42,.08)';
+      cards.forEach((card) => {
+        card.addEventListener('mousemove', (e) => {
+          const r = card.getBoundingClientRect();
+          const x = e.clientX - r.left, y = e.clientY - r.top;
+          card.style.background = 'radial-gradient(220px circle at ' + x + 'px ' + y + 'px, #3f3f46, #52525b 42%, ' + base + ' 76%)';
+          card.style.boxShadow = '0 0 34px -8px rgba(63,63,70,.45)';
+        });
+        card.addEventListener('mouseleave', () => { card.style.background = base; card.style.boxShadow = 'none'; });
+      });
+    }
+  
+    _initModal() {
+      const openers = [...this._q('[data-beta-open]')], modal = this._q1('[data-beta-modal]'); if (!modal) return;
+      const closers = [...this._q('[data-beta-close]')], form = this._q1('[data-beta-form]'), success = this._q1('[data-beta-success]'), formBox = this._q1('[data-beta-formbox]'), panel = modal.querySelector('[data-beta-panel]');
+      const show = () => { modal.style.display = 'flex'; requestAnimationFrame(() => { modal.style.opacity = '1'; if (panel) { panel.style.opacity = '1'; panel.style.transform = 'translateY(0) scale(1)'; } }); };
+      const hide = () => { modal.style.opacity = '0'; if (panel) { panel.style.transform = 'translateY(12px) scale(.98)'; } this._sT(() => { modal.style.display = 'none'; if (success && formBox) { success.style.display = 'none'; formBox.style.display = ''; } }, 260); };
+      openers.forEach((b) => b.addEventListener('click', show));
+      closers.forEach((b) => b.addEventListener('click', hide));
+      modal.addEventListener('click', (e) => { if (e.target === modal) hide(); });
+      if (form) form.addEventListener('submit', (e) => { e.preventDefault(); if (formBox) formBox.style.display = 'none'; if (success) success.style.display = ''; });
+    }
+  
+    _initPseudoStyles(){
+      const nodes = [...this._q('[style-hover],[style-active],[style-focus]')];
+      nodes.forEach((el) => {
+        const hov = el.getAttribute('style-hover');
+        const foc = el.getAttribute('style-focus');
+        const act = el.getAttribute('style-active');
+        let snap = null;
+        const enter = (extra) => { if (snap == null) snap = el.getAttribute('style') || ''; el.setAttribute('style', snap + ';' + extra); };
+        const leave = () => { if (snap != null) { el.setAttribute('style', snap); snap = null; } };
+        if (hov) { el.addEventListener('mouseenter', () => enter(hov)); el.addEventListener('mouseleave', leave); }
+        if (foc) { el.addEventListener('focus', () => enter(foc)); el.addEventListener('blur', leave); }
+        if (act) { el.addEventListener('mousedown', () => enter(act)); el.addEventListener('mouseup', leave); window.addEventListener('mouseup', leave); }
+      });
+    }
+  
+    
+    _initMap() {
+      const holder = this._q1('[data-map-holder]'), inner = this._q1('[data-map]');
+      if (!holder || !inner) return;
+      const W = 1160, H = 1050;
+      const fit = () => { const s = Math.min(1, (holder.clientWidth - 24) / W); inner.style.transform = 'scale(' + s + ')'; holder.style.height = (H * s) + 'px'; };
+      fit();
+      window.addEventListener('resize', fit);
+      this._mapCleanup = () => window.removeEventListener('resize', fit);
+    }
+  }
+
+  const b = new LyraBehaviors(rootEl);
+  try { b._initPseudoStyles(); } catch (e) {}
+  const inits = ['_initNeural','_initNav','_initTypewriter','_initRing','_initReveal','_initCount','_initTabs','_initSteps','_initProfiles','_initGlow','_initDataBorders','_initModal','_initArc','_initDiffMenu','_initStatFit','_initHScroll','_initMobileLoops','_initTabArrows','_initStepTrail','_initMap'];
+  inits.forEach((m) => { try { if (typeof b[m] === 'function') b[m](); } catch (e) {} });
+
+  return () => {
+    try {
+      (b._to || []).forEach(clearTimeout);
+      (b._iv || []).forEach(clearInterval);
+      if (b._raf) cancelAnimationFrame(b._raf);
+      if (b._io) b._io.disconnect();
+      if (b._cio) b._cio.disconnect();
+      if (b._neuralCleanup) b._neuralCleanup();
+      if (b._navCleanup) b._navCleanup();
+      if (b._statCleanup) b._statCleanup();
+      (b._hsCleanups || []).forEach((fn) => { try { fn(); } catch (e) {} });
+    } catch (e) {}
+  };
+}
+
+try{ initBehaviors(document.getElementById('lyra-root')); }catch(e){}
+</script>
