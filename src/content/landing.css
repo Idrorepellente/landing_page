@@ -169,3 +169,26 @@ html:not([data-theme="dark"]) footer [style*="rgba(150,180,190,.12)"]{
   border-color:rgba(15,23,42,.1) !important; }
 html:not([data-theme="dark"]) footer [data-logo-box]{
   background:#fff !important; border-color:rgba(15,23,42,.1) !important; }
+
+/* ---------- Card decorative flottanti della hero ----------
+   Erano ancorate con coordinate in PIXEL FISSI (es. left:891px) calcolate sul
+   contenitore a 1152px: sotto quella larghezza uscivano dal riquadro o
+   finivano sopra il testo. Qui l'ancoraggio diventa relativo al bordo destro e
+   si riduce progressivamente, sparendo quando non c'e' piu' spazio. */
+[data-float-card]{ pointer-events:none; }
+[data-float-card="outer"]{
+  left:auto !important; right:2%; top:56% !important;
+  width:clamp(150px, 20vw, 235px) !important;
+  height:auto !important; aspect-ratio:235/151; }
+[data-float-card="inner"]{
+  left:auto !important; right:-4%; top:-14% !important;
+  width:clamp(120px, 17vw, 197px) !important;
+  height:auto !important; aspect-ratio:197/252; }
+
+@media (max-width:1100px){
+  [data-float-card="outer"]{ right:0; top:62% !important; }
+}
+/* sotto questa soglia la hero passa a colonna singola: le card si sovrappongono */
+@media (max-width:900px){
+  [data-float-card]{ display:none !important; }
+}

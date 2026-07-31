@@ -186,3 +186,80 @@ html:not([data-theme="dark"]) footer [style*="rgba(150,180,190,.12)"]{
   border-color:rgba(15,23,42,.1) !important; }
 html:not([data-theme="dark"]) footer [data-logo-box]{
   background:#fff !important; border-color:rgba(15,23,42,.1) !important; }
+
+/* ================= SUPERFICI SCURE: seguono il tema =================
+   Le pagine diverse dalla home hanno card con colori SCURI FISSI negli stili
+   inline. Non si possono agganciare per valore: quando il JS di data-reveal
+   scrive opacity/transform, il browser RI-SERIALIZZA l'intero attributo style
+   convertendo gli esadecimali in rgb(...) — per questo i selettori [style*="#..."]
+   fallivano. Qui i contenitori sono marcati con data-dark-surface nell'HTML e le
+   regole valgono in TEMA CHIARO. La home non e' marcata: resta invariata. */
+html:not([data-theme="dark"]) [data-dark-surface]{
+  background:#fff !important;
+  border-color:rgba(15,23,42,.08) !important;
+  box-shadow:0 1px 2px rgba(24,24,27,.04), 0 10px 28px -18px rgba(24,24,27,.2) !important; }
+html:not([data-theme="dark"]) [data-dark-surface="accent"]{
+  background:#E4F5F2 !important; border-color:rgba(14,147,132,.28) !important; }
+
+/* testi chiari -> scuri */
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: #fff"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: #E9EFF1"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: #F1F5FB"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: #e7e7ea"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: #e6ecf5"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: rgb(255, 255, 255)"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: rgba(255,255,255,.85)"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: rgba(255,255,255,.9)"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: rgba(255, 255, 255, 0.85)"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: rgba(255, 255, 255, 0.9)"]{
+  color:#18181b !important; }
+html:not([data-theme="dark"]) [data-dark-surface] h1,
+html:not([data-theme="dark"]) [data-dark-surface] h2,
+html:not([data-theme="dark"]) [data-dark-surface] h3{ color:#18181b !important; }
+
+/* testi secondari (grigi chiari) -> grigio scuro */
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: #a1a1aa"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: #d4d4d8"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: #e4e4e7"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: #71717a"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: #6E7E92"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: #f0d59a"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: rgb(161, 161, 170)"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: rgb(113, 113, 122)"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="color: rgb(212, 212, 216)"]{
+  color:#52525b !important; }
+
+/* superfici e bordi traslucidi chiari -> traslucidi scuri */
+html:not([data-theme="dark"]) [data-dark-surface] [style*="background: rgba(255,255,255,"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="background: rgba(255, 255, 255,"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="background: rgba(82,82,91,"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="background: rgba(70,214,192,"]{
+  background:rgba(15,23,42,.06) !important; color:#18181b !important; }
+html:not([data-theme="dark"]) [data-dark-surface] [style*="rgba(255,255,255,.08)"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="rgba(255,255,255,.12)"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="rgba(255,255,255,.16)"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="rgba(255,255,255,.2)"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="rgba(150,180,190,"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="rgba(150, 180, 190,"]{
+  border-color:rgba(15,23,42,.1) !important; }
+
+/* pulsante bianco dentro una card ora chiara -> pulsante scuro */
+html:not([data-theme="dark"]) [data-dark-surface] a[style*="background: #fff"],
+html:not([data-theme="dark"]) [data-dark-surface] button[style*="background: #fff"],
+html:not([data-theme="dark"]) [data-dark-surface] a[style*="background: rgb(255, 255, 255)"],
+html:not([data-theme="dark"]) [data-dark-surface] button[style*="background: rgb(255, 255, 255)"]{
+  background:#18181b !important; color:#fff !important; border-color:#18181b !important; }
+html:not([data-theme="dark"]) [data-dark-surface] a[style*="background: #fff"] *,
+html:not([data-theme="dark"]) [data-dark-surface] button[style*="background: #fff"] *{
+  color:#fff !important; }
+/* ...tranne le schede-link interne, che restano bianche su fondo chiaro */
+html:not([data-theme="dark"]) [data-dark-surface] a[style*="border-radius: 14px"][style*="background: #fff"]{
+  background:#fff !important; color:#18181b !important;
+  border:1px solid rgba(15,23,42,.1) !important; }
+html:not([data-theme="dark"]) [data-dark-surface] a[style*="border-radius: 14px"][style*="background: #fff"] *{
+  color:inherit !important; }
+
+/* reticoli decorativi: erano chiari su fondo scuro */
+html:not([data-theme="dark"]) [data-dark-surface] [style*="background-image: linear-gradient(rgba(150,180,190"],
+html:not([data-theme="dark"]) [data-dark-surface] [style*="background-image: radial-gradient(rgba(255,255,255"]{
+  opacity:.25 !important; filter:invert(1) !important; }

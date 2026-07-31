@@ -70,10 +70,23 @@ export function initBehaviors(rootEl){
       const toggle = this._q1('[data-nav-toggle]'), menu = this._q1('[data-nav-menu]'), navIcon = this._q1('[data-nav-icon]');
       const burger = '<path d="M3 6h18M3 12h18M3 18h18"></path>', closeIco = '<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>';
       let navOpen = false;
-      const setNavOpen = (v) => { navOpen = v; if (menu) menu.style.display = v ? 'flex' : 'none'; if (toggle) toggle.setAttribute('aria-expanded', v ? 'true' : 'false'); if (navIcon) navIcon.innerHTML = v ? closeIco : burger; };
+      const setNavOpen = (v) => {
+        navOpen = v;
+        if (menu) {
+          menu.style.display = v ? 'flex' : 'none';
+          if (!v) [...menu.querySelectorAll('a,button')].forEach((el) => {
+            if (typeof el._lyLeave === 'function') el._lyLeave();
+          });
+        }
+        if (toggle) toggle.setAttribute('aria-expanded', v ? 'true' : 'false');
+        if (navIcon) navIcon.innerHTML = v ? closeIco : burger;
+      };
       if (toggle && menu) {
         toggle.addEventListener('click', (e) => { e.stopPropagation(); setNavOpen(!navOpen); });
-        [...menu.querySelectorAll('a,button')].forEach((el) => el.addEventListener('click', () => setNavOpen(false)));
+        [...menu.querySelectorAll('a,button')].forEach((el) => el.addEventListener('click', () => {
+          if (typeof el._lyLeave === 'function') el._lyLeave();   // il menu si nasconde: niente mouseleave
+          setNavOpen(false);
+        }));
       }
       const onNavRz = () => { if (window.innerWidth > 1024 && navOpen) setNavOpen(false); };
       window.addEventListener('resize', onNavRz);
@@ -456,18 +469,41 @@ export function initBehaviors(rootEl){
     }
   
     _initPseudoStyles(){
+      // Stili di hover/focus/active applicati via attributo (style-hover, ...).
+      //
+      // Lo stile BASE viene memorizzato UNA sola volta in un data-attribute,
+      // non in una variabile di chiusura: se initBehaviors viene eseguito piu'
+      // volte (rimontaggio del componente, navigazione client-side), il secondo
+      // listener catturerebbe lo stile GIA' in hover e, all'uscita del mouse,
+      // ripristinerebbe proprio quello — l'effetto restava appiccicato.
+      // Il flag _lyHover impedisce inoltre di legare due volte lo stesso nodo.
       const nodes = [...this._q('[style-hover],[style-active],[style-focus]')];
+      const cleanups = [];
       nodes.forEach((el) => {
+        if (el._lyHover) return;
+        el._lyHover = true;
         const hov = el.getAttribute('style-hover');
         const foc = el.getAttribute('style-focus');
         const act = el.getAttribute('style-active');
-        let snap = null;
-        const enter = (extra) => { if (snap == null) snap = el.getAttribute('style') || ''; el.setAttribute('style', snap + ';' + extra); };
-        const leave = () => { if (snap != null) { el.setAttribute('style', snap); snap = null; } };
-        if (hov) { el.addEventListener('mouseenter', () => enter(hov)); el.addEventListener('mouseleave', leave); }
-        if (foc) { el.addEventListener('focus', () => enter(foc)); el.addEventListener('blur', leave); }
-        if (act) { el.addEventListener('mousedown', () => enter(act)); el.addEventListener('mouseup', leave); window.addEventListener('mouseup', leave); }
+        if (el.dataset.lyBaseStyle == null) el.dataset.lyBaseStyle = el.getAttribute('style') || '';
+        const base = () => el.dataset.lyBaseStyle || '';
+        const enter = (extra) => { el.setAttribute('style', base() + ';' + extra); };
+        const leave = () => { el.setAttribute('style', base()); };
+        el._lyLeave = leave;                       // usato anche alla chiusura del menu
+        const on = (ev, fn) => { el.addEventListener(ev, fn); cleanups.push(() => el.removeEventListener(ev, fn)); };
+        if (hov) { on('mouseenter', () => enter(hov)); on('mouseleave', leave); }
+        if (foc) { on('focus', () => enter(foc)); on('blur', leave); }
+        if (act) {
+          on('mousedown', () => enter(act)); on('mouseup', leave);
+          const winUp = () => leave();
+          window.addEventListener('mouseup', winUp);
+          cleanups.push(() => window.removeEventListener('mouseup', winUp));
+        }
+        // se il nodo sparisce mentre il puntatore e' sopra (menu che si chiude)
+        // il mouseleave non arriva: si ripulisce comunque
+        cleanups.push(() => { el._lyHover = false; leave(); });
       });
+      this._psCleanups = cleanups;
     }
   
     
@@ -498,6 +534,7 @@ export function initBehaviors(rootEl){
       if (b._navCleanup) b._navCleanup();
       if (b._statCleanup) b._statCleanup();
       (b._hsCleanups || []).forEach((fn) => { try { fn(); } catch (e) {} });
+      (b._psCleanups || []).forEach((fn) => { try { fn(); } catch (e) {} });
     } catch (e) {}
   };
 }
