@@ -149,3 +149,23 @@ body[data-theme="dark"]{background:#0e0e10;color:#e7e7ea}
 [data-theme="dark"] [data-logo-box]{ background:#fff !important; }
 [data-theme="dark"] header[data-nav] [data-logo-box]{ border-color:rgba(15,23,42,.1) !important; }
 [data-theme="dark"] footer [data-logo-box]{ border-color:rgba(255,255,255,.14) !important; }
+
+/* ---------- FOOTER: segue il tema ----------
+   Il footer nasce scuro (background inline #0e0e10) e restava scuro anche in
+   tema chiaro. Qui viene ribaltato quando il tema NON e' scuro: fondo chiaro,
+   testi scuri, separatori tenui. In tema scuro non si tocca nulla. */
+html:not([data-theme="dark"]) footer[style*="background: #0e0e10"]{
+  background:#f3f3f4 !important; color:#52525b !important;
+  border-top:1px solid rgba(15,23,42,.08); }
+html:not([data-theme="dark"]) footer [style*="color: #fff"]{ color:#18181b !important; }
+html:not([data-theme="dark"]) footer [style*="color: #d4d4d8"]{ color:#3f3f46 !important; }
+html:not([data-theme="dark"]) footer [style*="color: #a1a1aa"]{ color:#52525b !important; }
+html:not([data-theme="dark"]) footer [style*="color: #71717a"]{ color:#71717a !important; }
+html:not([data-theme="dark"]) footer [style*="background: rgba(255,255,255,.06)"]{
+  background:rgba(15,23,42,.05) !important; }
+html:not([data-theme="dark"]) footer [style*="border: 1px solid rgba(255,255,255,.14)"]{
+  border-color:rgba(15,23,42,.12) !important; }
+html:not([data-theme="dark"]) footer [style*="rgba(150,180,190,.12)"]{
+  border-color:rgba(15,23,42,.1) !important; }
+html:not([data-theme="dark"]) footer [data-logo-box]{
+  background:#fff !important; border-color:rgba(15,23,42,.1) !important; }
