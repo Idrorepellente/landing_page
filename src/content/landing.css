@@ -140,3 +140,12 @@ body[data-theme="dark"]{background:#0e0e10;color:#e7e7ea}
 [data-motore-wrap] [data-motore-menu]{opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .18s ease,transform .18s ease,visibility .18s}
 [data-motore-wrap]:hover [data-motore-menu],[data-motore-wrap]:focus-within [data-motore-menu]{opacity:1;visibility:visible;transform:translateY(0)}
 [data-motore-wrap]:hover [data-motore-caret],[data-motore-wrap]:focus-within [data-motore-caret]{transform:rotate(180deg)}
+
+/* ---------- Riquadro del LOGO ----------
+   Le regole scure sopra colpiscono qualunque superficie bianca serializzata
+   (background: rgb(255,255,255)), quindi anche il riquadro del marchio, che
+   diventava nero e "mangiava" il logo (il tracciato e' scuro). Qui resta
+   bianco in ogni tema: e' parte del marchio, non una superficie dell'interfaccia. */
+[data-theme="dark"] [data-logo-box]{ background:#fff !important; }
+[data-theme="dark"] header[data-nav] [data-logo-box]{ border-color:rgba(15,23,42,.1) !important; }
+[data-theme="dark"] footer [data-logo-box]{ border-color:rgba(255,255,255,.14) !important; }

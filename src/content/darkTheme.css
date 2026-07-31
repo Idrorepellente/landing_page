@@ -157,3 +157,12 @@ body[data-theme="dark"]{background:#0e0e10;color:#ededf0}
 
 /* Fix dark: hover voci (style-hover appende "background:#f4f4f5" senza spazio) */
 [data-theme="dark"] [style*="background:#f4f4f5"]{background:#2a2a2e!important}
+
+/* ---------- Riquadro del LOGO ----------
+   Le regole scure sopra colpiscono qualunque superficie bianca serializzata
+   (background: rgb(255,255,255)), quindi anche il riquadro del marchio, che
+   diventava nero e "mangiava" il logo (il tracciato e' scuro). Qui resta
+   bianco in ogni tema: e' parte del marchio, non una superficie dell'interfaccia. */
+[data-theme="dark"] [data-logo-box]{ background:#fff !important; }
+[data-theme="dark"] header[data-nav] [data-logo-box]{ border-color:rgba(15,23,42,.1) !important; }
+[data-theme="dark"] footer [data-logo-box]{ border-color:rgba(255,255,255,.14) !important; }
