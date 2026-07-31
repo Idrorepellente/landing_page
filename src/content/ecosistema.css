@@ -8,3 +8,51 @@ a:hover{color:#4744C4}
 @keyframes qsUp{0%{opacity:0;transform:translateY(24px)}100%{opacity:1;transform:none}}
 @keyframes qsBlink{0%,100%{opacity:1}50%{opacity:0}}
 @keyframes qsFlowX{0%{transform:translateX(-30%);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateX(520%);opacity:0}}
+
+/* ---------- Superfici scure "cablate": seguono il tema ----------
+   Questa pagina e' stata scritta con colori SCURI FISSI sulle card: in tema
+   scuro convergono tutte allo stesso valore e la pagina risulta uniforme, ma in
+   tema CHIARO restavano scure accanto alle card #fff. Qui tornano chiare quando
+   il tema non e' scuro. Regole LOCALI alla pagina: la home resta intatta.
+   Restano volutamente scuri i PULSANTI (CTA) e i pannelli con gradiente. */
+html:not([data-theme="dark"]) article[style*="background: #1c1c1f"],
+html:not([data-theme="dark"]) div[style*="background: #1c1c1f"],
+html:not([data-theme="dark"]) section[style*="background: #1c1c1f"]{
+  background:#fff !important; border-color:rgba(15,23,42,.08) !important; }
+html:not([data-theme="dark"]) div[style*="background: #141416"],
+html:not([data-theme="dark"]) article[style*="background: #141416"]{
+  background:#f4f4f5 !important; border-color:rgba(15,23,42,.08) !important; }
+html:not([data-theme="dark"]) div[style*="background: #0e0e10"],
+html:not([data-theme="dark"]) article[style*="background: #0e0e10"]{
+  background:#f3f3f4 !important; border-color:rgba(15,23,42,.08) !important; }
+/* card accento (verde) della sezione innovazione */
+html:not([data-theme="dark"]) article[style*="#0F211E"]{
+  background:#E4F5F2 !important; border-color:rgba(15,23,42,.08) !important; }
+
+/* Contenuti dentro quelle superfici: erano pensati per fondo scuro. */
+html:not([data-theme="dark"]) article[style*="background: #1c1c1f"] [style*="color: #fff"],
+html:not([data-theme="dark"]) article[style*="#0F211E"] [style*="color: #fff"],
+html:not([data-theme="dark"]) div[style*="background: #141416"] [style*="color: #fff"],
+html:not([data-theme="dark"]) div[style*="background: #0e0e10"] [style*="color: #fff"],
+html:not([data-theme="dark"]) article[style*="background: #1c1c1f"] [style*="color: #E9EFF1"],
+html:not([data-theme="dark"]) article[style*="#0F211E"] [style*="color: #E9EFF1"],
+html:not([data-theme="dark"]) div[style*="background: #141416"] [style*="color: #E9EFF1"],
+html:not([data-theme="dark"]) div[style*="background: #0e0e10"] [style*="color: #E9EFF1"]{
+  color:#18181b !important; }
+html:not([data-theme="dark"]) article[style*="background: #1c1c1f"] [style*="color: #a1a1aa"],
+html:not([data-theme="dark"]) article[style*="background: #1c1c1f"] [style*="color: #d4d4d8"],
+html:not([data-theme="dark"]) article[style*="background: #1c1c1f"] [style*="color: #e4e4e7"],
+html:not([data-theme="dark"]) article[style*="#0F211E"] [style*="color: #a1a1aa"],
+html:not([data-theme="dark"]) article[style*="#0F211E"] [style*="color: #e4e4e7"],
+html:not([data-theme="dark"]) div[style*="background: #141416"] [style*="color: #a1a1aa"],
+html:not([data-theme="dark"]) div[style*="background: #141416"] [style*="color: #d4d4d8"],
+html:not([data-theme="dark"]) div[style*="background: #0e0e10"] [style*="color: #a1a1aa"],
+html:not([data-theme="dark"]) div[style*="background: #0e0e10"] [style*="color: #d4d4d8"],
+html:not([data-theme="dark"]) div[style*="background: #0e0e10"] [style*="color: #e4e4e7"]{
+  color:#52525b !important; }
+html:not([data-theme="dark"]) article[style*="background: #1c1c1f"] [style*="rgba(255,255,255,.06)"],
+html:not([data-theme="dark"]) article[style*="background: #1c1c1f"] [style*="rgba(255,255,255,.08)"],
+html:not([data-theme="dark"]) article[style*="#0F211E"] [style*="rgba(255,255,255,.06)"],
+html:not([data-theme="dark"]) div[style*="background: #141416"] [style*="rgba(255,255,255,.06)"],
+html:not([data-theme="dark"]) div[style*="background: #0e0e10"] [style*="rgba(255,255,255,.06)"]{
+  background:rgba(15,23,42,.05) !important; border-color:rgba(15,23,42,.1) !important; }
