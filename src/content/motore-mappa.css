@@ -7,3 +7,17 @@ a:hover{color:#4744C4}
 ::selection{background:rgba(20,184,166,.22)}
 @keyframes qsUp{0%{opacity:0;transform:translateY(24px)}100%{opacity:1;transform:none}}
 @keyframes qsDash{to{stroke-dashoffset:-32}}
+
+/* ---------- Navigazione responsive ----------
+   Sotto i 1025px i link in linea lasciano il posto al pulsante hamburger, che
+   apre il menu a tendina nell'header. Regole presenti nelle altre pagine ma
+   mancanti qui: senza, il pulsante restava nascosto (display:none inline) e la
+   navigazione spariva del tutto alle risoluzioni ridotte. */
+@media (min-width:1025px){ [data-nav-menu]{ display:none !important; } }
+@media (max-width:1024px){
+  [data-nav-links],[data-nav-desklink]{ display:none !important; }
+  [data-nav-toggle]{ display:grid !important; }
+}
+@media (max-width:560px){
+  [data-nav-menu]{ right:12px !important; left:12px !important; min-width:0 !important; }
+}
