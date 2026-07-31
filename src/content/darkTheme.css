@@ -258,8 +258,3 @@ html:not([data-theme="dark"]) [data-dark-surface] a[style*="border-radius: 14px"
   border:1px solid rgba(15,23,42,.1) !important; }
 html:not([data-theme="dark"]) [data-dark-surface] a[style*="border-radius: 14px"][style*="background: #fff"] *{
   color:inherit !important; }
-
-/* reticoli decorativi: erano chiari su fondo scuro */
-html:not([data-theme="dark"]) [data-dark-surface] [style*="background-image: linear-gradient(rgba(150,180,190"],
-html:not([data-theme="dark"]) [data-dark-surface] [style*="background-image: radial-gradient(rgba(255,255,255"]{
-  opacity:.25 !important; filter:invert(1) !important; }
