@@ -1,0 +1,100 @@
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { getPool } from '@/lib/pg';
+import { tokenFromRequest, isAdmin } from '@/lib/appToken';
+import manifest from '@/lib/appQueries.json';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+/**
+ * Canale dati dell'app desktop.
+ *
+ * L'app NON invia più SQL: chiede una query per nome, scegliendola da un elenco
+ * che il sito conosce in anticipo (`appQueries.json`, generato dal codice
+ * dell'app). Tutto il resto viene rifiutato, quindi non è possibile leggere
+ * tabelle non previste né alterare il database, nemmeno con un token valido.
+ *
+ * Per le query legate a un utente il manifest indica quale parametro
+ * rappresenta l'identità: quel valore viene SOSTITUITO con l'id ricavato dal
+ * token, così chiedere i dati di un altro non serve a nulla.
+ */
+
+type OpDef = { sql: string; userParam: number | null; source?: string };
+const OPS = (manifest as any).ops as Record<string, OpDef>;
+
+// %s (stile psycopg) -> $1, $2 … (node-postgres)
+function toPgPlaceholders(sql: string): string {
+  let i = 0;
+  return sql.replace(/%s/g, () => '$' + ++i);
+}
+
+const WRITE = /^\s*(INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|TRUNCATE)/i;
+
+export async function POST(req: NextRequest) {
+  const auth = tokenFromRequest(req);
+  if (!auth) {
+    return NextResponse.json(
+      { error: 'token assente o scaduto: esegui di nuovo l\'accesso' },
+      { status: 401 },
+    );
+  }
+
+  let body: any;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'bad json' }, { status: 400 });
+  }
+
+  const op = String(body?.op || '');
+  const def = OPS[op];
+  if (!def) {
+    // niente dettagli: un elenco degli op validi aiuterebbe solo chi sonda
+    return NextResponse.json({ error: 'operazione non consentita' }, { status: 403 });
+  }
+
+  const params: any[] = Array.isArray(body?.params) ? [...body.params] : [];
+  const expected = (def.sql.match(/%s/g) || []).length;
+  if (params.length !== expected) {
+    return NextResponse.json(
+      { error: `parametri attesi ${expected}, ricevuti ${params.length}` },
+      { status: 400 },
+    );
+  }
+
+  // identità: imposta dal server, mai dal client
+  if (def.userParam !== null && def.userParam !== undefined) {
+    params[def.userParam] = auth.uid;
+  }
+
+  // Le operazioni di struttura (CREATE/ALTER) restano al sito: l'app non deve
+  // poter modificare lo schema del database di produzione.
+  if (/^\s*(CREATE|ALTER|DROP|TRUNCATE)/i.test(def.sql)) {
+    return NextResponse.json({ ok: true, rows: [], skipped: 'ddl' });
+  }
+
+  try {
+    const res = await getPool().query(toPgPlaceholders(def.sql), params);
+    return NextResponse.json({
+      ok: true,
+      rows: res.rows,
+      rowCount: res.rowCount,
+      write: WRITE.test(def.sql) || undefined,
+    });
+  } catch (e: any) {
+    return NextResponse.json({ ok: false, error: String(e?.message || e) }, { status: 500 });
+  }
+}
+
+/** Diagnostica: dice se il token è valido, senza rivelare altro. */
+export async function GET(req: NextRequest) {
+  const auth = tokenFromRequest(req);
+  if (!auth) return NextResponse.json({ ok: false }, { status: 401 });
+  return NextResponse.json({
+    ok: true,
+    email: auth.email,
+    admin: isAdmin(auth.email),
+    ops: Object.keys(OPS).length,
+  });
+}

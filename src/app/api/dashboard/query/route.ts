@@ -9,6 +9,13 @@ export const dynamic = 'force-dynamic';
 // Esegue una query parametrizzata sul DB centrale per conto della dashboard.
 // I segreti del DB restano sul sito; la dashboard non ha piu' DATABASE_URL.
 export async function POST(req: NextRequest) {
+  // Endpoint LEGACY: esegue SQL arbitrario, quindi non va esposto ai client.
+  // L'app desktop non lo usa più (passa da /api/app/db, con elenco chiuso di
+  // query e identità presa dal token). Resta solo per manutenzione da macchine
+  // fidate e si disattiva con DASHBOARD_QUERY_DISABLED=1.
+  if (process.env.DASHBOARD_QUERY_DISABLED === '1') {
+    return NextResponse.json({ error: 'endpoint disattivato' }, { status: 410 });
+  }
   if (!checkSecret(req)) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }

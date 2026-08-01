@@ -1,0 +1,240 @@
+{
+  "ops": {
+    "0862b092e0dd3b277cf484695a2e3d0a": {
+      "source": "auth.py",
+      "sql": "CREATE TABLE IF NOT EXISTS \"LoginEvent\" ( id BIGSERIAL PRIMARY KEY, \"userId\" TEXT, email TEXT, \"at\" TIMESTAMPTZ NOT NULL DEFAULT NOW(), ip TEXT, \"userAgent\" TEXT)",
+      "userParam": null
+    },
+    "097d8d597dff0b6af68fb48dbe811033": {
+      "source": "web_db.py",
+      "sql": "SELECT context FROM app_agent_chats WHERE id=%s AND \"userId\"=%s",
+      "userParam": 1
+    },
+    "1019f612a7d1df0ab3530f2a3df8c2a4": {
+      "source": "web_db.py",
+      "sql": "SELECT * FROM beta_signups LIMIT %s",
+      "userParam": null
+    },
+    "125e9bf30c2ad62c7974e90acfb5f14d": {
+      "source": "web_db.py",
+      "sql": "SELECT a.id, a.kind::text AS kind, a.name, a.slug, a.description, a.summary, a.code, a.language, a.tags, a.likes, a.\"createdAt\", a.\"publishedAt\", COALESCE(a.\"priceCents\",0) AS price_cents, COALESCE(a.currency,'EUR') AS currency, COALESCE(a.\"isForSale\", FALSE) AS for_sale, COALESCE(a.downloads,0) AS downloads, a.\"coverEmoji\" AS cover, a.metrics, a.bundle, a.\"ownerId\", a.version, a.subtitle, COALESCE(a.\"pricePeriod\",'once') AS price_period, a.details, a.files, a.rating, COALESCE(u.\"displayName\", u.username, u.email) AS owner, u.username AS owner_username FROM \"Artifact\" a JOIN \"User\" u ON u.id = a.\"ownerId\" WHERE a.id = %s AND a.\"isPublic\" = TRUE AND a.\"publishedAt\" IS NOT NULL LIMIT 1",
+      "userParam": null
+    },
+    "13ff11d964c91e0906f009a7dccbb8dc": {
+      "source": "web_db.py",
+      "sql": "INSERT INTO app_agent_chats(id, \"userId\", title, context) VALUES (%s,%s,%s,%s)",
+      "userParam": 1
+    },
+    "1796c1b96d476fc7f7e1401c3df95e5e": {
+      "source": "web_db.py",
+      "sql": "INSERT INTO \"Artifact\"(id, \"ownerId\", kind, name, slug, description, summary, code, language, tags, \"isPublic\", \"priceCents\", currency, \"isForSale\", \"coverEmoji\", metrics, bundle, version, subtitle, \"pricePeriod\", details, files, likes, downloads, \"createdAt\", \"publishedAt\") VALUES (%s, %s, %s::\"",
+      "userParam": null
+    },
+    "179b538097e2836e091cd406b8122f77": {
+      "source": "web_db.py",
+      "sql": "SELECT t.typname FROM pg_type t JOIN pg_attribute a ON a.atttypid = t.oid JOIN pg_class c ON c.oid = a.attrelid WHERE c.relname = 'Artifact' AND a.attname = 'kind' LIMIT 1",
+      "userParam": null
+    },
+    "17adb5479e536826f68959b6247b3633": {
+      "source": "web_db.py",
+      "sql": "DELETE FROM app_agent_messages WHERE \"chatId\"=%s",
+      "userParam": null
+    },
+    "2b22d75eafc72e0bbfc757c0d927ff22": {
+      "source": "web_db.py",
+      "sql": "SELECT 1 AS x FROM \"Purchase\" WHERE \"artifactId\" = %s AND \"buyerId\" = %s AND status IN ('paid','free') LIMIT 1",
+      "userParam": null
+    },
+    "35cd80ede8eb4093c7fcd4bc3ad3ef44": {
+      "source": "web_db.py",
+      "sql": "SELECT c.id, c.body, c.likes, c.\"createdAt\", c.\"userId\", COALESCE(u.username, u.\"displayName\", u.email) AS author, (a.\"ownerId\" = c.\"userId\") AS is_author FROM \"ArtifactComment\" c JOIN \"User\" u ON u.id = c.\"userId\" JOIN \"Artifact\" a ON a.id = c.\"artifactId\" WHERE c.\"artifactId\" = %s ORDER BY c.\"createdAt\" DESC LIMIT %s",
+      "userParam": null
+    },
+    "36800150acb8363dce8944ac89be4cfb": {
+      "source": "web_db.py",
+      "sql": "SELECT COUNT(*) AS n, COUNT(*) FILTER (WHERE COALESCE(\"isForSale\",FALSE) = FALSE) AS free, COUNT(DISTINCT \"ownerId\") AS authors FROM \"Artifact\" WHERE \"isPublic\" = TRUE AND \"publishedAt\" IS NOT NULL",
+      "userParam": null
+    },
+    "3c5bf3cffb56113eda2274be016d8326": {
+      "source": "web_db.py",
+      "sql": "SELECT id, subject, message, rating, \"createdAt\" FROM \"Feedback\" WHERE \"userId\" = %s ORDER BY \"createdAt\" DESC LIMIT %s",
+      "userParam": 0
+    },
+    "3ecc8d20654d329a9142f39173a420e9": {
+      "source": "web_db.py",
+      "sql": "CREATE TABLE IF NOT EXISTS app_agent_chats (id text PRIMARY KEY, \"userId\" text NOT NULL, title text NOT NULL, context text, \"createdAt\" timestamptz NOT NULL DEFAULT now(), \"updatedAt\" timestamptz NOT NULL DEFAULT now())",
+      "userParam": null
+    },
+    "40f675baa0e094b61ae46590e395291b": {
+      "source": "web_db.py",
+      "sql": "SELECT a.kind::text AS kind, a.name, a.\"isPublic\" AS is_public, COALESCE(u.\"displayName\", u.username, u.email) AS owner FROM \"Artifact\" a JOIN \"User\" u ON u.id = a.\"ownerId\" WHERE u.email = %s OR u.username = %s OR u.\"displayName\" = %s ORDER BY a.name ASC",
+      "userParam": null
+    },
+    "41a225dcc1cdb076c98838dc930b833c": {
+      "source": "web_db.py",
+      "sql": "SELECT m.id, m.body, m.\"createdAt\", m.\"senderId\", COALESCE(u.\"displayName\", u.username, u.email) AS sender FROM \"Message\" m JOIN \"User\" u ON u.id = m.\"senderId\" WHERE m.\"conversationId\" = %s ORDER BY m.\"createdAt\" ASC",
+      "userParam": null
+    },
+    "48ceb27baf59878309ffbfab7e0b2ae9": {
+      "source": "web_db.py",
+      "sql": "INSERT INTO \"Message\"(id, body, \"conversationId\", \"senderId\", \"createdAt\") VALUES (%s, %s, %s, %s, now())",
+      "userParam": null
+    },
+    "4a11a0112bc1cf5d42058b4c352cdcd2": {
+      "source": "auth.py",
+      "sql": "SELECT 1 AS x FROM \"User\" WHERE email = %s OR username = %s LIMIT 1",
+      "userParam": null
+    },
+    "512a423d80cc93c49045fc7d26e8599c": {
+      "source": "web_db.py",
+      "sql": "SELECT id FROM app_agent_chats WHERE id=%s AND \"userId\"=%s",
+      "userParam": 1
+    },
+    "591a50872a5f1b29204f7e7b7147741c": {
+      "source": "web_db.py",
+      "sql": "INSERT INTO app_feedback(id, \"userId\", category, message) VALUES (%s,%s,%s,%s)",
+      "userParam": 1
+    },
+    "5981df1f144ff5fc3f637e7c4fe3b1c7": {
+      "source": "web_db.py",
+      "sql": "SELECT a.id, a.kind::text AS kind, a.name, a.\"isPublic\", COALESCE(a.\"priceCents\",0) AS price_cents, COALESCE(a.currency,'EUR') AS currency, COALESCE(a.downloads,0) AS downloads, a.likes, a.\"publishedAt\", (SELECT COUNT(*) FROM \"Purchase\" p WHERE p.\"artifactId\" = a.id AND p.status IN ('paid','free')) AS sales FROM \"Artifact\" a WHERE a.\"ownerId\" = %s ORDER BY COALESCE(a.\"publishedAt\", a.\"createdAt\") DESC LIMIT %s",
+      "userParam": null
+    },
+    "5d797f11d63d23eac704057b8913efd2": {
+      "source": "web_db.py",
+      "sql": "SELECT COUNT(*) AS n FROM beta_signups",
+      "userParam": null
+    },
+    "68bfe78b93d27500ee65a464ff2ff1d2": {
+      "source": "web_db.py",
+      "sql": "ALTER TABLE app_agent_chats ADD COLUMN IF NOT EXISTS context text",
+      "userParam": null
+    },
+    "6d43c8d82b45022a045696443ee86626": {
+      "source": "web_db.py",
+      "sql": "UPDATE app_agent_chats SET \"updatedAt\"=now() WHERE id=%s",
+      "userParam": null
+    },
+    "76a1a1ad390fb865ff48914949b71215": {
+      "source": "web_db.py",
+      "sql": "DELETE FROM \"Runner\" WHERE id = %s AND \"ownerId\" = %s",
+      "userParam": null
+    },
+    "7800079006a44a39158ca4a7bce6aa44": {
+      "source": "web_db.py",
+      "sql": "SELECT 'kind:' || e.enumlabel AS item FROM pg_enum e JOIN pg_type t ON t.oid = e.enumtypid WHERE t.typname = %s UNION ALL SELECT 'col:' || column_name FROM information_schema.columns WHERE table_name = 'Artifact' UNION ALL SELECT 'tbl:' || table_name FROM information_schema.tables WHERE table_name IN ('Purchase','ArtifactComment')",
+      "userParam": null
+    },
+    "7a48347a32dbe295161cd2ff4b904eed": {
+      "source": "web_db.py",
+      "sql": "SELECT id, role, content, \"createdAt\" FROM app_agent_messages WHERE \"chatId\"=%s ORDER BY \"createdAt\" ASC LIMIT 400",
+      "userParam": null
+    },
+    "7cd86a258ff26f706c300fd65c9f5f40": {
+      "source": "web_db.py",
+      "sql": "UPDATE \"Artifact\" SET downloads = COALESCE(downloads,0) + 1 WHERE id = %s",
+      "userParam": null
+    },
+    "7f1048f9a10bb16a6f8b30b70fef488c": {
+      "source": "web_db.py",
+      "sql": "UPDATE app_agent_chats SET title=%s, \"updatedAt\"=now() WHERE id=%s",
+      "userParam": null
+    },
+    "89439cc88747545fb451727cc2af55f5": {
+      "source": "web_db.py",
+      "sql": "UPDATE \"User\" SET \"displayName\" = %s, bio = %s WHERE id = %s",
+      "userParam": null
+    },
+    "90f84d81d88219aa5d52697c264a5785": {
+      "source": "web_db.py",
+      "sql": "SELECT id, name, status, config, \"createdAt\", \"updatedAt\" FROM \"Runner\" WHERE id = %s AND \"ownerId\" = %s LIMIT 1",
+      "userParam": null
+    },
+    "949ab43a9c3bb2724f5983c2406687df": {
+      "source": "web_db.py",
+      "sql": "SELECT u.id, u.email, u.username, u.\"displayName\", u.bio, u.name, u.\"createdAt\", (SELECT COUNT(*) FROM \"Artifact\" WHERE \"ownerId\" = u.id) AS artifacts, (SELECT COUNT(*) FROM \"Runner\" WHERE \"ownerId\" = u.id) AS runners FROM \"User\" u WHERE u.id = %s LIMIT 1",
+      "userParam": null
+    },
+    "a164bce8ad6f144ad7915a37274ceb86": {
+      "source": "web_db.py",
+      "sql": "SELECT id, title, context, \"createdAt\", \"updatedAt\" FROM app_agent_chats WHERE \"userId\"=%s ORDER BY \"updatedAt\" DESC LIMIT 500",
+      "userParam": 0
+    },
+    "a1acc3c186fd53e3ee8e84ffae753ce5": {
+      "source": "web_db.py",
+      "sql": "SELECT p.id, p.status, p.\"amountCents\" AS amount_cents, p.currency, p.provider, p.\"createdAt\", a.id AS artifact_id, a.name, a.kind::text AS kind, COALESCE(u.\"displayName\", u.username, u.email) AS owner FROM \"Purchase\" p JOIN \"Artifact\" a ON a.id = p.\"artifactId\" JOIN \"User\" u ON u.id = a.\"ownerId\" WHERE p.\"buyerId\" = %s ORDER BY p.\"createdAt\" DESC LIMIT %s",
+      "userParam": null
+    },
+    "a2d2a4d522959ef5c54ba9ef330ef1ff": {
+      "source": "web_db.py",
+      "sql": "INSERT INTO app_agent_messages(id, \"chatId\", role, content) VALUES (%s,%s,%s,%s)",
+      "userParam": null
+    },
+    "a3ae98dd1383d2e652f4c813d523110c": {
+      "source": "web_db.py",
+      "sql": "UPDATE app_agent_chats SET context=%s WHERE id=%s",
+      "userParam": null
+    },
+    "b35658a6eb355458278e0226b669aca1": {
+      "source": "auth.py",
+      "sql": "SELECT u.id, u.email, u.username, u.\"displayName\", u.\"createdAt\", MAX(l.\"at\") AS last_login, COUNT(l.id) AS logins FROM \"User\" u LEFT JOIN \"LoginEvent\" l ON l.\"userId\" = u.id GROUP BY u.id, u.email, u.username, u.\"displayName\", u.\"createdAt\" ORDER BY MAX(l.\"at\") DESC NULLS LAST, u.\"createdAt\" DESC LIMIT %s",
+      "userParam": null
+    },
+    "b68c4fd92afec3d9d44dc321131f0414": {
+      "source": "auth.py",
+      "sql": "CREATE INDEX IF NOT EXISTS \"LoginEvent_at_idx\" ON \"LoginEvent\" (\"at\" DESC)",
+      "userParam": null
+    },
+    "bd7479fb413094683e698cd5919465b3": {
+      "source": "web_db.py",
+      "sql": "SELECT a.id, a.kind::text AS kind, a.name, a.slug, a.description, a.code, a.language, a.tags, a.likes, a.\"createdAt\", COALESCE(u.\"displayName\", u.username, u.email) AS owner FROM \"Artifact\" a JOIN \"User\" u ON u.id = a.\"ownerId\" WHERE a.id = %s AND a.\"isPublic\" = TRUE LIMIT 1",
+      "userParam": null
+    },
+    "bfb8669443024091f2e9de344b3eeb32": {
+      "source": "web_db.py",
+      "sql": "INSERT INTO \"Feedback\"(id, subject, message, rating, \"userId\", \"createdAt\") VALUES (%s, %s, %s, %s, %s, now())",
+      "userParam": 4
+    },
+    "c605889e2d1f4f52504a9d5ab4650c1e": {
+      "source": "web_db.py",
+      "sql": "INSERT INTO \"Purchase\"(id, \"artifactId\", \"buyerId\", \"sellerId\", \"amountCents\", currency, status, provider, \"providerRef\", \"paidAt\") VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,",
+      "userParam": null
+    },
+    "cd16cbda32452912cca1d6d410c3b67e": {
+      "source": "web_db.py",
+      "sql": "CREATE TABLE IF NOT EXISTS app_agent_messages (id text PRIMARY KEY, \"chatId\" text NOT NULL, role text NOT NULL, content text NOT NULL, \"createdAt\" timestamptz NOT NULL DEFAULT now())",
+      "userParam": null
+    },
+    "ddb01b4f16980cc60b4ccf7f416a5aa8": {
+      "source": "auth.py",
+      "sql": "INSERT INTO \"LoginEvent\"(\"userId\", email, ip, \"userAgent\") VALUES (%s, %s, %s, %s)",
+      "userParam": 0
+    },
+    "e1b6d8922eed3ccb5891f72fe6753a97": {
+      "source": "web_db.py",
+      "sql": "SELECT 1 AS ok FROM \"ConversationParticipant\" WHERE \"conversationId\" = %s AND \"userId\" = %s LIMIT 1",
+      "userParam": 1
+    },
+    "e6d9aa2f9510d8c9048f9c3b22340b9f": {
+      "source": "web_db.py",
+      "sql": "DELETE FROM app_agent_chats WHERE id=%s",
+      "userParam": null
+    },
+    "e7e27b58dca40f39015140c0e12cf231": {
+      "source": "web_db.py",
+      "sql": "INSERT INTO \"ArtifactComment\"(id, \"artifactId\", \"userId\", body) VALUES (%s,%s,%s,%s)",
+      "userParam": 2
+    },
+    "f612effb0b6acad4b5f82bce773489ad": {
+      "source": "web_db.py",
+      "sql": "SELECT id, name, status, \"createdAt\", \"updatedAt\" FROM \"Runner\" WHERE \"ownerId\" = %s ORDER BY \"updatedAt\" DESC",
+      "userParam": null
+    },
+    "ffffa48d616f1cd1e470f8ffa3ff98b7": {
+      "source": "web_db.py",
+      "sql": "CREATE TABLE IF NOT EXISTS app_feedback (id text PRIMARY KEY, \"userId\" text, category text NOT NULL, message text NOT NULL, \"createdAt\" timestamptz NOT NULL DEFAULT now())",
+      "userParam": null
+    }
+  },
+  "version": 1
+}
