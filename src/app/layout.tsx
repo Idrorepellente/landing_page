@@ -3,6 +3,17 @@ import './globals.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.lyra-capital.it'),
+  // Icone dichiarate esplicitamente: non ci si affida al solo rilevamento dei
+  // file in app/. L'.ico serve i browser che chiedono /favicon.ico da soli e
+  // che tengono quel file in cache molto a lungo; l'SVG e' la versione buona
+  // per gli schermi ad alta densita' e si adatta al tema chiaro/scuro.
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/apple-icon.png',
+  },
   title: 'Lyra — Il workbench quantitativo',
   description: 'Costruisci strategie senza codice, validale con backtest riproducibili e mandale live sul tuo broker. Validation-first, local-first.',
   keywords: ['trading quantitativo', 'trading algoritmico', 'backtest', 'walk-forward', 'strategie di trading', 'no-code trading', 'ensemble', 'quant', 'automazione trading', 'validazione strategie', 'Lyra'],
