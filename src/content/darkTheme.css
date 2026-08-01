@@ -278,3 +278,14 @@ html:not([data-theme="dark"]) [data-dark-surface] a[style*="border-radius: 14px"
   background:linear-gradient(180deg,#f3f3f4,#EAEEF7 30%,#EAEEF7 70%,#f3f3f4) !important; }
 [data-theme="dark"] [data-band-soft]{
   background:linear-gradient(180deg,#0e0e10,#1c1c1f 30%,#1c1c1f 70%,#0e0e10) !important; }
+
+/* ---------- Marchio (SVG, senza riquadro) ----------
+   Il tracciato e' blu #1800ac: perfettamente leggibile sui fondi chiari, ma
+   praticamente invisibile su quelli scuri (1,4:1 di contrasto). Dove il fondo
+   e' scuro il logo viene reso bianco con un filtro, invece di appoggiarlo su un
+   riquadro: cosi' resta senza sfondo, come deve essere. */
+.lyra-logo{ display:block; object-fit:contain; }
+footer .lyra-logo,
+[data-dark-surface] .lyra-logo{ filter:brightness(0) invert(1); }
+[data-theme="dark"] header[data-nav] .lyra-logo,
+[data-theme="dark"] [data-nav-menu] .lyra-logo{ filter:brightness(0) invert(1); }
