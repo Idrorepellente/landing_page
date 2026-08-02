@@ -90,6 +90,11 @@
       "sql": "SELECT 1 AS x FROM \"User\" WHERE email = %s OR username = %s LIMIT 1",
       "userParam": null
     },
+    "4bebe43191bd0d0ca6e43fa15166c88a": {
+      "source": "web_db.py",
+      "sql": "SELECT id FROM \"Artifact\" WHERE \"ownerId\" = %s AND kind::text = %s AND lower(name) = lower(%s) AND \"publishedAt\" IS NOT NULL LIMIT 1",
+      "userParam": null
+    },
     "512a423d80cc93c49045fc7d26e8599c": {
       "source": "web_db.py",
       "sql": "SELECT id FROM app_agent_chats WHERE id=%s AND \"userId\"=%s",
@@ -118,6 +123,11 @@
     "68bfe78b93d27500ee65a464ff2ff1d2": {
       "source": "web_db.py",
       "sql": "ALTER TABLE app_agent_chats ADD COLUMN IF NOT EXISTS context text",
+      "userParam": null
+    },
+    "6c91c440694131d85c24b3d9e81e428c": {
+      "source": "web_db.py",
+      "sql": "UPDATE \"Artifact\" SET \"isPublic\" = FALSE, \"publishedAt\" = NULL, \"updatedAt\" = NOW() WHERE id = %s AND \"ownerId\" = %s",
       "userParam": null
     },
     "6d43c8d82b45022a045696443ee86626": {
@@ -210,6 +220,11 @@
       "sql": "SELECT c.id AS id, (SELECT COALESCE(u2.\"displayName\", u2.username, u2.email) FROM \"ConversationParticipant\" cp2 JOIN \"User\" u2 ON u2.id = cp2.\"userId\" WHERE cp2.\"conversationId\" = c.id AND cp2.\"userId\" <> %s LIMIT 1) AS other, (SELECT m.body FROM \"Message\" m WHERE m.\"conversationId\" = c.id ORDER BY m.\"createdAt\" DESC LIMIT 1) AS last_body, (SELECT m.\"createdAt\" FROM \"Message\" m WHERE m.\"conversationId\" = c.id ORDER BY m.\"createdAt\" DESC LIMIT 1) AS last_at FROM \"Conversation\" c JOIN \"ConversationParticipant\" cp ON cp.\"conversationId\" = c.id AND cp.\"userId\" = %s ORDER BY last_at DESC NULLS LAST",
       "userParam": 1
     },
+    "b06eddd7744be1416dcf1cae9c1b7a2b": {
+      "source": "web_db.py",
+      "sql": "SELECT COUNT(*) AS n FROM \"Purchase\" WHERE \"artifactId\" = %s AND status IN ('paid','free')",
+      "userParam": null
+    },
     "b35658a6eb355458278e0226b669aca1": {
       "source": "auth.py",
       "sql": "SELECT u.id, u.email, u.username, u.\"displayName\", u.\"createdAt\", MAX(l.\"at\") AS last_login, COUNT(l.id) AS logins FROM \"User\" u LEFT JOIN \"LoginEvent\" l ON l.\"userId\" = u.id GROUP BY u.id, u.email, u.username, u.\"displayName\", u.\"createdAt\" ORDER BY MAX(l.\"at\") DESC NULLS LAST, u.\"createdAt\" DESC LIMIT %s",
@@ -223,6 +238,11 @@
     "b9964900a484fe52f413a7915e4d2c62": {
       "source": "web_db.py",
       "sql": "SELECT COUNT(*) AS n FROM \"Artifact\" WHERE \"isPublic\" = TRUE AND \"publishedAt\" IS NOT NULL",
+      "userParam": null
+    },
+    "bc91c299bb6a17cd69eadc6479ad1f4b": {
+      "source": "web_db.py",
+      "sql": "SELECT id FROM \"Artifact\" WHERE id = %s AND \"ownerId\" = %s LIMIT 1",
       "userParam": null
     },
     "bd7479fb413094683e698cd5919465b3": {
@@ -263,6 +283,11 @@
     "e9d366307c5e676ba808e0ddb4ccc4a8": {
       "source": "web_db.py",
       "sql": "SELECT id, name, kind::text AS kind, \"isPublic\", \"publishedAt\" FROM \"Artifact\" ORDER BY \"createdAt\" DESC LIMIT 5",
+      "userParam": null
+    },
+    "f3cf70f89da3befa525c89087223b929": {
+      "source": "web_db.py",
+      "sql": "DELETE FROM \"Artifact\" WHERE id = %s AND \"ownerId\" = %s",
       "userParam": null
     },
     "f612effb0b6acad4b5f82bce773489ad": {
