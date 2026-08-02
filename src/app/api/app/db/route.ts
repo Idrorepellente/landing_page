@@ -81,8 +81,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'operazione non consentita' }, { status: 403 });
   }
 
+  const sql = toPgPlaceholders(def.sql);
   try {
-    const res = await getPool().query(toPgPlaceholders(def.sql), params);
+    const res = await getPool().query(sql, params);
     return NextResponse.json({
       ok: true,
       rows: res.rows,
@@ -90,7 +91,37 @@ export async function POST(req: NextRequest) {
       write: WRITE.test(def.sql) || undefined,
     });
   } catch (e: any) {
-    return NextResponse.json({ ok: false, error: String(e?.message || e) }, { status: 500 });
+    const msg = String(e?.message || e);
+
+    // La colonna "kind" di Artifact e' un tipo enumerato. L'app invia il valore
+    // come testo: di norma Postgres lo converte da se', ma quando il parametro
+    // arriva gia' tipizzato come text la conversione non e' automatica e
+    // l'inserimento viene rifiutato. In quel caso si riprova una volta sola,
+    // dichiarando esplicitamente il tipo della colonna.
+    const enumIssue = /enum|type .*kind|column "kind"/i.test(msg);
+    if (enumIssue && /INSERT INTO "Artifact"/i.test(def.sql)) {
+      try {
+        const t = await getPool().query(
+          `SELECT t.typname AS name FROM pg_type t
+             JOIN pg_attribute a ON a.atttypid = t.oid
+             JOIN pg_class c ON c.oid = a.attrelid
+            WHERE c.relname = 'Artifact' AND a.attname = 'kind' LIMIT 1`);
+        const en = t.rows[0]?.name;
+        if (en) {
+          // il terzo parametro e' "kind": $3 -> $3::"<tipo>"
+          const casted = sql.replace(/\$3(?![0-9])/, `$3::"${en}"`);
+          const res2 = await getPool().query(casted, params);
+          return NextResponse.json({ ok: true, rows: res2.rows,
+                                     rowCount: res2.rowCount, write: true,
+                                     nota: 'tipo di kind dichiarato esplicitamente' });
+        }
+      } catch (e2: any) {
+        return NextResponse.json(
+          { ok: false, error: `${msg} | secondo tentativo: ${String(e2?.message || e2)}` },
+          { status: 500 });
+      }
+    }
+    return NextResponse.json({ ok: false, error: msg }, { status: 500 });
   }
 }
 
