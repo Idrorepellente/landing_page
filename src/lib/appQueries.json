@@ -140,6 +140,11 @@
       "sql": "SELECT id, role, content, \"createdAt\" FROM app_agent_messages WHERE \"chatId\"=%s ORDER BY \"createdAt\" ASC LIMIT 400",
       "userParam": null
     },
+    "7be22534288a3e434b0bcf96bc63cbd2": {
+      "source": "web_db.py",
+      "sql": "SELECT COUNT(*) AS n FROM \"Artifact\"",
+      "userParam": null
+    },
     "7cd86a258ff26f706c300fd65c9f5f40": {
       "source": "web_db.py",
       "sql": "UPDATE \"Artifact\" SET downloads = COALESCE(downloads,0) + 1 WHERE id = %s",
@@ -205,6 +210,11 @@
       "sql": "CREATE INDEX IF NOT EXISTS \"LoginEvent_at_idx\" ON \"LoginEvent\" (\"at\" DESC)",
       "userParam": null
     },
+    "b9964900a484fe52f413a7915e4d2c62": {
+      "source": "web_db.py",
+      "sql": "SELECT COUNT(*) AS n FROM \"Artifact\" WHERE \"isPublic\" = TRUE AND \"publishedAt\" IS NOT NULL",
+      "userParam": null
+    },
     "bd7479fb413094683e698cd5919465b3": {
       "source": "web_db.py",
       "sql": "SELECT a.id, a.kind::text AS kind, a.name, a.slug, a.description, a.code, a.language, a.tags, a.likes, a.\"createdAt\", COALESCE(u.\"displayName\", u.username, u.email) AS owner FROM \"Artifact\" a JOIN \"User\" u ON u.id = a.\"ownerId\" WHERE a.id = %s AND a.\"isPublic\" = TRUE LIMIT 1",
@@ -239,6 +249,11 @@
       "source": "web_db.py",
       "sql": "INSERT INTO \"ArtifactComment\"(id, \"artifactId\", \"userId\", body) VALUES (%s,%s,%s,%s)",
       "userParam": 2
+    },
+    "e9d366307c5e676ba808e0ddb4ccc4a8": {
+      "source": "web_db.py",
+      "sql": "SELECT id, name, kind::text AS kind, \"isPublic\", \"publishedAt\" FROM \"Artifact\" ORDER BY \"createdAt\" DESC LIMIT 5",
+      "userParam": null
     },
     "f21c929ea464c6726c6cc5267640125e": {
       "source": "web_db.py",
