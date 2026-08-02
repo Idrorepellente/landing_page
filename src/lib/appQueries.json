@@ -40,6 +40,11 @@
       "sql": "DELETE FROM app_agent_messages WHERE \"chatId\"=%s",
       "userParam": null
     },
+    "1a23303dbc31aa9edfa83425ae7de64b": {
+      "source": "web_db.py",
+      "sql": "SELECT f.id, f.category, f.message, f.\"createdAt\", u.email, u.username FROM app_feedback f LEFT JOIN \"User\" u ON u.id = f.\"userId\" ORDER BY f.\"createdAt\" DESC LIMIT %s",
+      "userParam": null
+    },
     "2b22d75eafc72e0bbfc757c0d927ff22": {
       "source": "web_db.py",
       "sql": "SELECT 1 AS x FROM \"Purchase\" WHERE \"artifactId\" = %s AND \"buyerId\" = %s AND status IN ('paid','free') LIMIT 1",

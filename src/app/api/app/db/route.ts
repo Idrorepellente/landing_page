@@ -68,10 +68,17 @@ export async function POST(req: NextRequest) {
     params[def.userParam] = auth.uid;
   }
 
-  // Le operazioni di struttura (CREATE/ALTER) restano al sito: l'app non deve
-  // poter modificare lo schema del database di produzione.
-  if (/^\s*(CREATE|ALTER|DROP|TRUNCATE)/i.test(def.sql)) {
-    return NextResponse.json({ ok: true, rows: [], skipped: 'ddl' });
+  // Struttura del database. Le sole istruzioni ammesse sono i CREATE TABLE IF
+  // NOT EXISTS gia' presenti nell'elenco: fanno parte del codice dell'app, che
+  // crea le proprie tabelle al primo utilizzo. Saltarli lasciava l'app senza
+  // tabelle (i feedback, per esempio, non si salvavano). Tutto il resto —
+  // DROP, TRUNCATE, ALTER — resta vietato anche se finisse nell'elenco.
+  if (/^\s*(DROP|TRUNCATE|ALTER)/i.test(def.sql)) {
+    return NextResponse.json({ error: 'operazione non consentita' }, { status: 403 });
+  }
+  if (/^\s*CREATE/i.test(def.sql)
+      && !/^\s*CREATE\s+(TABLE|INDEX)\s+IF\s+NOT\s+EXISTS/i.test(def.sql)) {
+    return NextResponse.json({ error: 'operazione non consentita' }, { status: 403 });
   }
 
   try {
