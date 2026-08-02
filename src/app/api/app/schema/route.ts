@@ -139,6 +139,21 @@ export async function GET() {
       `SELECT column_name FROM information_schema.columns
         WHERE table_name = 'Artifact'`);
     const have = new Set(r.rows.map((x: any) => String(x.column_name)));
+
+    // Colonne obbligatorie senza valore predefinito: sono quelle che fanno
+    // fallire un inserimento con "violates not-null constraint". Prisma ne
+    // riempie alcune a livello applicativo (updatedAt), quindi nel database
+    // non hanno un DEFAULT e vanno valorizzate esplicitamente.
+    const nn = await pool.query(
+      `SELECT table_name, column_name FROM information_schema.columns
+        WHERE table_name IN ('Artifact','Feedback','Message','Purchase','ArtifactComment')
+          AND is_nullable = 'NO' AND column_default IS NULL
+        ORDER BY table_name, column_name`);
+    const obbligatorie: Record<string, string[]> = {};
+    for (const row of nn.rows) {
+      const t = String(row.table_name);
+      (obbligatorie[t] ||= []).push(String(row.column_name));
+    }
     const missing = COLUMNS
       .map(([n]) => n.replace(/"/g, ''))
       .filter((n) => !have.has(n));
@@ -147,6 +162,7 @@ export async function GET() {
       endpoint: 'attivo',
       schemaAllineato: missing.length === 0,
       colonneMancanti: missing,
+      colonneObbligatorieSenzaDefault: obbligatorie,
     });
   } catch (e: any) {
     return NextResponse.json({ ok: false, endpoint: 'attivo',

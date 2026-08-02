@@ -30,11 +30,6 @@
       "sql": "INSERT INTO app_agent_chats(id, \"userId\", title, context) VALUES (%s,%s,%s,%s)",
       "userParam": 1
     },
-    "1796c1b96d476fc7f7e1401c3df95e5e": {
-      "source": "web_db.py",
-      "sql": "INSERT INTO \"Artifact\"(id, \"ownerId\", kind, name, slug, description, summary, code, language, tags, \"isPublic\", \"priceCents\", currency, \"isForSale\", \"coverEmoji\", metrics, bundle, version, subtitle, \"pricePeriod\", details, files, likes, downloads, \"createdAt\", \"publishedAt\") VALUES (%s, %s, %s::\"",
-      "userParam": null
-    },
     "179b538097e2836e091cd406b8122f77": {
       "source": "web_db.py",
       "sql": "SELECT t.typname FROM pg_type t JOIN pg_attribute a ON a.atttypid = t.oid JOIN pg_class c ON c.oid = a.attrelid WHERE c.relname = 'Artifact' AND a.attname = 'kind' LIMIT 1",
@@ -130,6 +125,11 @@
       "sql": "UPDATE app_agent_chats SET \"updatedAt\"=now() WHERE id=%s",
       "userParam": null
     },
+    "6e3c59a04d63809ffa90e587e382ed6f": {
+      "source": "web_db.py",
+      "sql": "INSERT INTO \"Artifact\"(id, \"ownerId\", kind, name, slug, description, summary, code, language, tags, \"isPublic\", \"priceCents\", currency, \"isForSale\", \"coverEmoji\", metrics, bundle, version, subtitle, \"pricePeriod\", details, files, likes, downloads, \"createdAt\", \"publishedAt\", \"updatedAt\") VALUES (%s, %s, %s::\"",
+      "userParam": null
+    },
     "76a1a1ad390fb865ff48914949b71215": {
       "source": "web_db.py",
       "sql": "DELETE FROM \"Runner\" WHERE id = %s AND \"ownerId\" = %s",
@@ -200,6 +200,11 @@
       "sql": "UPDATE app_agent_chats SET context=%s WHERE id=%s",
       "userParam": null
     },
+    "ad6a24a074e93e24993c9db073b6d512": {
+      "source": "web_db.py",
+      "sql": "INSERT INTO \"Artifact\"(id, \"ownerId\", kind, name, slug, description, summary, code, language, tags, \"isPublic\", \"priceCents\", currency, \"isForSale\", \"coverEmoji\", metrics, bundle, version, subtitle, \"pricePeriod\", details, files, likes, downloads, \"createdAt\", \"publishedAt\", \"updatedAt\") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 0, 0, NOW(), NOW(), NOW())",
+      "userParam": null
+    },
     "af8674941b30fb8b6b05abb878a9777e": {
       "source": "web_db.py",
       "sql": "SELECT c.id AS id, (SELECT COALESCE(u2.\"displayName\", u2.username, u2.email) FROM \"ConversationParticipant\" cp2 JOIN \"User\" u2 ON u2.id = cp2.\"userId\" WHERE cp2.\"conversationId\" = c.id AND cp2.\"userId\" <> %s LIMIT 1) AS other, (SELECT m.body FROM \"Message\" m WHERE m.\"conversationId\" = c.id ORDER BY m.\"createdAt\" DESC LIMIT 1) AS last_body, (SELECT m.\"createdAt\" FROM \"Message\" m WHERE m.\"conversationId\" = c.id ORDER BY m.\"createdAt\" DESC LIMIT 1) AS last_at FROM \"Conversation\" c JOIN \"ConversationParticipant\" cp ON cp.\"conversationId\" = c.id AND cp.\"userId\" = %s ORDER BY last_at DESC NULLS LAST",
@@ -258,11 +263,6 @@
     "e9d366307c5e676ba808e0ddb4ccc4a8": {
       "source": "web_db.py",
       "sql": "SELECT id, name, kind::text AS kind, \"isPublic\", \"publishedAt\" FROM \"Artifact\" ORDER BY \"createdAt\" DESC LIMIT 5",
-      "userParam": null
-    },
-    "f401f63df2ad8dfc28fb12ef49e5dc32": {
-      "source": "web_db.py",
-      "sql": "INSERT INTO \"Artifact\"(id, \"ownerId\", kind, name, slug, description, summary, code, language, tags, \"isPublic\", \"priceCents\", currency, \"isForSale\", \"coverEmoji\", metrics, bundle, version, subtitle, \"pricePeriod\", details, files, likes, downloads, \"createdAt\", \"publishedAt\") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 0, 0, NOW(), NOW())",
       "userParam": null
     },
     "f612effb0b6acad4b5f82bce773489ad": {
