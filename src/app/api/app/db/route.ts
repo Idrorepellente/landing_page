@@ -103,5 +103,35 @@ export async function GET(req: NextRequest) {
     email: auth.email,
     admin: isAdmin(auth.email),
     ops: Object.keys(OPS).length,
+    version: (manifest as any).version ?? null,
+  });
+}
+
+/**
+ * Verifica di allineamento.
+ *
+ * L'app invia le impronte delle query che intende usare e riceve l'elenco di
+ * quelle che il sito non conosce. Serve a distinguere subito "il sito e'
+ * indietro di un aggiornamento" da un guasto vero: sono situazioni con gli
+ * stessi sintomi ma rimedi opposti. Non espone nulla — chi chiede possiede gia'
+ * le impronte, e non si restituisce mai il testo delle query.
+ */
+export async function PUT(req: NextRequest) {
+  if (!tokenFromRequest(req)) {
+    return NextResponse.json({ ok: false }, { status: 401 });
+  }
+  let body: any;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'bad json' }, { status: 400 });
+  }
+  const wanted: string[] = Array.isArray(body?.ops) ? body.ops.map(String) : [];
+  const missing = wanted.filter((h) => !OPS[h]);
+  return NextResponse.json({
+    ok: missing.length === 0,
+    richieste: wanted.length,
+    sconosciute: missing.length,
+    ops: Object.keys(OPS).length,
   });
 }
