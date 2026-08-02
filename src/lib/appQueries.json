@@ -15,11 +15,6 @@
       "sql": "SELECT * FROM beta_signups LIMIT %s",
       "userParam": null
     },
-    "125e9bf30c2ad62c7974e90acfb5f14d": {
-      "source": "web_db.py",
-      "sql": "SELECT a.id, a.kind::text AS kind, a.name, a.slug, a.description, a.summary, a.code, a.language, a.tags, a.likes, a.\"createdAt\", a.\"publishedAt\", COALESCE(a.\"priceCents\",0) AS price_cents, COALESCE(a.currency,'EUR') AS currency, COALESCE(a.\"isForSale\", FALSE) AS for_sale, COALESCE(a.downloads,0) AS downloads, a.\"coverEmoji\" AS cover, a.metrics, a.bundle, a.\"ownerId\", a.version, a.subtitle, COALESCE(a.\"pricePeriod\",'once') AS price_period, a.details, a.files, a.rating, COALESCE(u.\"displayName\", u.username, u.email) AS owner, u.username AS owner_username FROM \"Artifact\" a JOIN \"User\" u ON u.id = a.\"ownerId\" WHERE a.id = %s AND a.\"isPublic\" = TRUE AND a.\"publishedAt\" IS NOT NULL LIMIT 1",
-      "userParam": null
-    },
     "13ff11d964c91e0906f009a7dccbb8dc": {
       "source": "web_db.py",
       "sql": "INSERT INTO app_agent_chats(id, \"userId\", title, context) VALUES (%s,%s,%s,%s)",
@@ -49,6 +44,11 @@
       "source": "web_db.py",
       "sql": "SELECT 1 AS x FROM \"Purchase\" WHERE \"artifactId\" = %s AND \"buyerId\" = %s AND status IN ('paid','free') LIMIT 1",
       "userParam": null
+    },
+    "3325c4d43a5db3d1eb973092de7db719": {
+      "source": "web_db.py",
+      "sql": "SELECT c.id AS id, (SELECT COALESCE(u2.\\\"displayName\\\", u2.username, u2.email) FROM \"ConversationParticipant\" cp2 JOIN \"User\" u2 ON u2.id = cp2.\"userId\" WHERE cp2.\"conversationId\" = c.id AND cp2.\"userId\" <> %s LIMIT 1) AS other, (SELECT m.body FROM \"Message\" m WHERE m.\"conversationId\" = c.id ORDER BY m.\"createdAt\" DESC LIMIT 1) AS last_body, (SELECT m.\"createdAt\" FROM \"Message\" m WHERE m.\"conversationId\" = c.id ORDER BY m.\"createdAt\" DESC LIMIT 1) AS last_at FROM \"Conversation\" c JOIN \"ConversationParticipant\" cp ON cp.\"conversationId\" = c.id AND cp.\"userId\" = %s ORDER BY last_at DESC NULLS LAST",
+      "userParam": 1
     },
     "35cd80ede8eb4093c7fcd4bc3ad3ef44": {
       "source": "web_db.py",
@@ -100,14 +100,19 @@
       "sql": "INSERT INTO app_feedback(id, \"userId\", category, message) VALUES (%s,%s,%s,%s)",
       "userParam": 1
     },
-    "5981df1f144ff5fc3f637e7c4fe3b1c7": {
+    "5cc163d7ff8bdb3db7ed57c9d5481a19": {
       "source": "web_db.py",
-      "sql": "SELECT a.id, a.kind::text AS kind, a.name, a.\"isPublic\", COALESCE(a.\"priceCents\",0) AS price_cents, COALESCE(a.currency,'EUR') AS currency, COALESCE(a.downloads,0) AS downloads, a.likes, a.\"publishedAt\", (SELECT COUNT(*) FROM \"Purchase\" p WHERE p.\"artifactId\" = a.id AND p.status IN ('paid','free')) AS sales FROM \"Artifact\" a WHERE a.\"ownerId\" = %s ORDER BY COALESCE(a.\"publishedAt\", a.\"createdAt\") DESC LIMIT %s",
+      "sql": "SELECT a.id, a.kind::text AS kind, a.name, a.slug, a.description, a.language, a.tags, a.likes, a.\"createdAt\", COALESCE(u.\"displayName\", u.username, u.email) AS owner FROM \"Artifact\" a JOIN \"User\" u ON u.id = a.\"ownerId\" WHERE",
       "userParam": null
     },
     "5d797f11d63d23eac704057b8913efd2": {
       "source": "web_db.py",
       "sql": "SELECT COUNT(*) AS n FROM beta_signups",
+      "userParam": null
+    },
+    "6288e80923f7bea807c0f491a4f27627": {
+      "source": "web_db.py",
+      "sql": "SELECT a.id, a.kind::text AS kind, a.name, a.slug, a.description, a.summary, a.language, a.tags, a.likes, a.\"createdAt\", a.\"publishedAt\", COALESCE(a.\"priceCents\",0) AS price_cents, COALESCE(a.currency,\\'EUR\\') AS currency, COALESCE(a.\"isForSale\", FALSE) AS for_sale, COALESCE(a.downloads,0) AS downloads, a.\"coverEmoji\" AS cover, a.metrics, a.bundle, a.\"ownerId\", a.subtitle, a.version, COALESCE(a.\"pricePeriod\",\\'once\\') AS price_period, a.rating, COALESCE(u.\"displayName\", u.username, u.email) AS owner FROM \"Artifact\" a JOIN \"User\" u ON u.id = a.\"ownerId\" WHERE",
       "userParam": null
     },
     "68bfe78b93d27500ee65a464ff2ff1d2": {
@@ -150,6 +155,11 @@
       "sql": "UPDATE \"User\" SET \"displayName\" = %s, bio = %s WHERE id = %s",
       "userParam": null
     },
+    "8defceec72b1a147a05c4fd2c60e2b3f": {
+      "source": "web_db.py",
+      "sql": "INSERT INTO \"Purchase\"(id, \"artifactId\", \"buyerId\", \"sellerId\", \"amountCents\", currency, status, provider, \"providerRef\", \"paidAt\") VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,CASE WHEN %s THEN NOW() ELSE NULL END)",
+      "userParam": null
+    },
     "90f84d81d88219aa5d52697c264a5785": {
       "source": "web_db.py",
       "sql": "SELECT id, name, status, config, \"createdAt\", \"updatedAt\" FROM \"Runner\" WHERE id = %s AND \"ownerId\" = %s LIMIT 1",
@@ -180,6 +190,11 @@
       "sql": "UPDATE app_agent_chats SET context=%s WHERE id=%s",
       "userParam": null
     },
+    "aa351e4129a6425acf36dfc59418d802": {
+      "source": "web_db.py",
+      "sql": "SELECT a.id, a.kind::text AS kind, a.name, a.\"isPublic\", COALESCE(a.\"priceCents\",0) AS price_cents, COALESCE(a.currency,\\'EUR\\') AS currency, COALESCE(a.downloads,0) AS downloads, a.likes, a.\"publishedAt\", (SELECT COUNT(*) FROM \"Purchase\" p WHERE p.\"artifactId\" = a.id AND p.status IN ('paid','free')) AS sales FROM \"Artifact\" a WHERE a.\"ownerId\" = %s ORDER BY COALESCE(a.\"publishedAt\", a.\"createdAt\") DESC LIMIT %s",
+      "userParam": null
+    },
     "b35658a6eb355458278e0226b669aca1": {
       "source": "auth.py",
       "sql": "SELECT u.id, u.email, u.username, u.\"displayName\", u.\"createdAt\", MAX(l.\"at\") AS last_login, COUNT(l.id) AS logins FROM \"User\" u LEFT JOIN \"LoginEvent\" l ON l.\"userId\" = u.id GROUP BY u.id, u.email, u.username, u.\"displayName\", u.\"createdAt\" ORDER BY MAX(l.\"at\") DESC NULLS LAST, u.\"createdAt\" DESC LIMIT %s",
@@ -199,11 +214,6 @@
       "source": "web_db.py",
       "sql": "INSERT INTO \"Feedback\"(id, subject, message, rating, \"userId\", \"createdAt\") VALUES (%s, %s, %s, %s, %s, now())",
       "userParam": 4
-    },
-    "c605889e2d1f4f52504a9d5ab4650c1e": {
-      "source": "web_db.py",
-      "sql": "INSERT INTO \"Purchase\"(id, \"artifactId\", \"buyerId\", \"sellerId\", \"amountCents\", currency, status, provider, \"providerRef\", \"paidAt\") VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,",
-      "userParam": null
     },
     "cd16cbda32452912cca1d6d410c3b67e": {
       "source": "web_db.py",
@@ -229,6 +239,16 @@
       "source": "web_db.py",
       "sql": "INSERT INTO \"ArtifactComment\"(id, \"artifactId\", \"userId\", body) VALUES (%s,%s,%s,%s)",
       "userParam": 2
+    },
+    "f21c929ea464c6726c6cc5267640125e": {
+      "source": "web_db.py",
+      "sql": "SELECT a.id, a.kind::text AS kind, a.name, a.slug, a.description, a.summary, a.code, a.language, a.tags, a.likes, a.\"createdAt\", a.\"publishedAt\", COALESCE(a.\"priceCents\",0) AS price_cents, COALESCE(a.currency,\\'EUR\\') AS currency, COALESCE(a.\"isForSale\", FALSE) AS for_sale, COALESCE(a.downloads,0) AS downloads, a.\"coverEmoji\" AS cover, a.metrics, a.bundle, a.\"ownerId\", a.version, a.subtitle, COALESCE(a.\"pricePeriod\",\\'once\\') AS price_period, a.details, a.files, a.rating, COALESCE(u.\"displayName\", u.username, u.email) AS owner, u.username AS owner_username FROM \"Artifact\" a JOIN \"User\" u ON u.id = a.\"ownerId\" WHERE a.id = %s AND a.\"isPublic\" = TRUE AND a.\"publishedAt\" IS NOT NULL LIMIT 1",
+      "userParam": null
+    },
+    "f401f63df2ad8dfc28fb12ef49e5dc32": {
+      "source": "web_db.py",
+      "sql": "INSERT INTO \"Artifact\"(id, \"ownerId\", kind, name, slug, description, summary, code, language, tags, \"isPublic\", \"priceCents\", currency, \"isForSale\", \"coverEmoji\", metrics, bundle, version, subtitle, \"pricePeriod\", details, files, likes, downloads, \"createdAt\", \"publishedAt\") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 0, 0, NOW(), NOW())",
+      "userParam": null
     },
     "f612effb0b6acad4b5f82bce773489ad": {
       "source": "web_db.py",
