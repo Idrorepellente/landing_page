@@ -200,6 +200,8 @@ export async function POST(req: NextRequest) {
 
       const hash = await bcrypt.hash(password, 12);
       let uid: string;
+      let profile: { username: string | null; displayName: string | null } =
+        { username: null, displayName: null };
 
       if (purpose === 'register') {
         const dup = await pool.query('SELECT id FROM "User" WHERE lower(email) = $1 LIMIT 1', [email]);
@@ -210,20 +212,29 @@ export async function POST(req: NextRequest) {
         const username = String(p.username || '').trim() || email.split('@')[0];
         const displayName = String(p.displayName || '').trim() || username;
         uid = cuid();
+        profile = { username, displayName };
         await pool.query(
           'INSERT INTO "User"(id, email, username, "passwordHash", "displayName", "createdAt") VALUES ($1,$2,$3,$4,$5, now())',
           [uid, email, username, hash, displayName]);
       } else {
-        const u = await pool.query('SELECT id FROM "User" WHERE lower(email) = $1 LIMIT 1', [email]);
+        const u = await pool.query(
+          'SELECT id, username, "displayName" FROM "User" WHERE lower(email) = $1 LIMIT 1', [email]);
         if (!u.rows.length) {
           return NextResponse.json({ error: 'Utente non trovato.' }, { status: 404 });
         }
         uid = String(u.rows[0].id);
+        profile = { username: u.rows[0].username ?? null, displayName: u.rows[0].displayName ?? null };
         await pool.query('UPDATE "User" SET "passwordHash" = $1 WHERE id = $2', [hash, uid]);
       }
 
       await pool.query('DELETE FROM app_email_codes WHERE email = $1 AND purpose = $2', [email, purpose]);
-      return NextResponse.json({ ok: true, token: createToken(uid, email), user: { id: uid, email } });
+      // profilo completo: chi riceve la risposta deve poter mostrare il nome
+      // dell'utente, non ripiegare sull'indirizzo email
+      return NextResponse.json({
+        ok: true,
+        token: createToken(uid, email),
+        user: { id: uid, email, ...profile },
+      });
     }
 
     return NextResponse.json({ error: 'azione non riconosciuta' }, { status: 400 });
