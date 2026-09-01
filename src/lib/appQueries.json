@@ -181,6 +181,11 @@
       "sql": "SELECT COUNT(*) AS n FROM beta_signups",
       "userParam": null
     },
+    "5efde9650575d9845a29e5d5ee8594d7": {
+      "source": "web_db.py",
+      "sql": "SELECT status::text AS s FROM \"Purchase\" WHERE \"artifactId\" = %s AND \"buyerId\" = %s",
+      "userParam": null
+    },
     "5f989ec670982c8b698593602c86ffcb": {
       "legacy": true,
       "source": "web_db.py",
@@ -381,6 +386,11 @@
       "source": "web_db.py",
       "sql": "UPDATE \"PerformanceClaim\" SET status = 'reviewing'::claim_status WHERE id = %s",
       "userParam": null
+    },
+    "cd086748fe7b25dd311b024c78c24131": {
+      "source": "web_db.py",
+      "sql": "SELECT status::text AS s FROM \"License\" WHERE \"artifactId\" = %s AND \"userId\" = %s",
+      "userParam": 1
     },
     "cd16cbda32452912cca1d6d410c3b67e": {
       "source": "web_db.py",

@@ -24,15 +24,20 @@ function daEnv(nome: string): string[] {
     .filter((e) => e.includes('@'));
 }
 
-async function daTabella(): Promise<string[]> {
+async function daTabella(): Promise<{ attivi: string[]; revocati: string[] }> {
   try {
     const r = await getPool().query(
-      'SELECT email FROM "AdminEmail" ORDER BY "addedAt" DESC');
-    return r.rows.map((x: any) => String(x.email).toLowerCase());
+      'SELECT email, revocato FROM "AdminEmail" ORDER BY "addedAt" DESC');
+    return {
+      attivi: r.rows.filter((x: any) => !x.revocato)
+                    .map((x: any) => String(x.email).toLowerCase()),
+      revocati: r.rows.filter((x: any) => x.revocato)
+                      .map((x: any) => String(x.email).toLowerCase()),
+    };
   } catch {
     // La tabella puo' non esistere ancora: l'elenco delle variabili basta,
     // e il pannello dira' che serve eseguire lo schema.
-    return [];
+    return { attivi: [], revocati: [] };
   }
 }
 
@@ -44,15 +49,20 @@ export async function GET(req: NextRequest) {
   const env = daEnv('ADMIN_EMAILS');
   const tab = await daTabella();
 
-  // Un indirizzo puo' comparire in piu' origini: si contano una volta sola.
-  const admins = Array.from(new Set([...super_, ...env, ...tab]));
+  // La REVOCA vince sulla variabile d'ambiente, ma non sul super
+  // amministratore: quello resta comunque, altrimenti basterebbe una riga nel
+  // database per lasciare il sistema senza nessuno al comando.
+  const revocati = new Set(tab.revocati.filter((e) => !super_.includes(e)));
+  const admins = Array.from(new Set([...super_, ...env, ...tab.attivi]))
+    .filter((e) => !revocati.has(e));
 
   return NextResponse.json({
     ok: true,
     admins,
     super: super_,
-    da_env: env,
-    da_tabella: tab,
+    da_env: env.filter((e) => !revocati.has(e)),
+    da_tabella: tab.attivi,
+    revocati: Array.from(revocati),
     configured: admins.length > 0,
   });
 }
@@ -102,30 +112,27 @@ export async function POST(req: NextRequest) {
 
     const pool = getPool();
     if (azione === 'aggiungi') {
+      // `revocato = FALSE` esplicito: aggiungere qualcuno che era stato
+      // revocato deve rimetterlo davvero, non lasciarlo a meta'.
       await pool.query(
-        `INSERT INTO "AdminEmail"(email, "addedBy", nota)
-         VALUES ($1, $2, $3)
-         ON CONFLICT (email) DO UPDATE SET "addedBy" = EXCLUDED."addedBy"`,
+        `INSERT INTO "AdminEmail"(email, "addedBy", revocato, nota)
+         VALUES ($1, $2, FALSE, $3)
+         ON CONFLICT (email) DO UPDATE
+           SET "addedBy" = EXCLUDED."addedBy", revocato = FALSE`,
         [bersaglio, chiede, String(b?.nota || '').slice(0, 200) || null]);
       return NextResponse.json({ ok: true, email: bersaglio, azione });
     }
     if (azione === 'rimuovi') {
-      const r = await pool.query(
-        'DELETE FROM "AdminEmail" WHERE email = $1', [bersaglio]);
-      if (!r.rowCount) {
-        // Puo' venire da ADMIN_EMAILS: si dice, invece di fingere di averlo
-        // tolto e lasciare l'utente a chiedersi perche' e' ancora li'.
-        const env = daEnv('ADMIN_EMAILS');
-        if (env.includes(bersaglio)) {
-          return NextResponse.json({
-            error: 'Questo indirizzo viene da ADMIN_EMAILS, non dal pannello.',
-            detail: 'Per toglierlo modifica quella variabile sul sito e '
-                  + 'ridistribuisci.',
-          }, { status: 409 });
-        }
-        return NextResponse.json({ error: 'non era fra gli amministratori' },
-                                 { status: 404 });
-      }
+      // Si REVOCA, non si cancella soltanto. Cancellare basterebbe per chi e'
+      // stato aggiunto dal pannello, ma non per chi compare in ADMIN_EMAILS:
+      // quello tornerebbe al primo ricaricamento, perche' la variabile e'
+      // ancora li'. Una riga di revoca vince su entrambe le origini.
+      await pool.query(
+        `INSERT INTO "AdminEmail"(email, "addedBy", revocato, nota)
+         VALUES ($1, $2, TRUE, $3)
+         ON CONFLICT (email) DO UPDATE
+           SET revocato = TRUE, "addedBy" = EXCLUDED."addedBy"`,
+        [bersaglio, chiede, String(b?.nota || '').slice(0, 200) || null]);
       return NextResponse.json({ ok: true, email: bersaglio, azione });
     }
     return NextResponse.json({ error: 'azione sconosciuta: aggiungi o rimuovi' },
