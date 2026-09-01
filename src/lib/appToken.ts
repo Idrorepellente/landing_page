@@ -114,11 +114,38 @@ export function verificaPassaggio(token: string | null | undefined,
 }
 
 /** Elenco degli amministratori, definito solo lato server. */
+/** Solo le variabili d'ambiente. Sincrona, per i punti che non possono
+ *  aspettare una lettura dal database. */
 export function isAdmin(email: string | undefined): boolean {
   if (!email) return false;
-  const list = (process.env.ADMIN_EMAILS || '')
+  const list = [process.env.ADMIN_EMAILS, process.env.SUPER_ADMIN]
+    .join(',')
     .split(/[,;\s]+/)
     .map((e) => e.trim().toLowerCase())
     .filter(Boolean);
   return list.includes(email.trim().toLowerCase());
+}
+
+/**
+ * Amministratore secondo TUTTE le origini: le variabili e la tabella.
+ *
+ * Da quando gli amministratori si aggiungono dal pannello, guardare la sola
+ * `ADMIN_EMAILS` non basta piu': chi e' stato nominato li' veniva rifiutato
+ * dagli endpoint riservati, e svuotare quella variabile — cosa che il
+ * pannello incoraggia a fare — toglieva l'accesso a tutti in un colpo.
+ */
+export async function isAdminCompleto(email: string | undefined,
+                                      pool: any): Promise<boolean> {
+  if (!email) return false;
+  if (isAdmin(email)) return true;
+  try {
+    const r = await pool.query(
+      'SELECT 1 AS x FROM "AdminEmail" WHERE lower(email) = $1 LIMIT 1',
+      [email.trim().toLowerCase()]);
+    return !!r.rows[0];
+  } catch {
+    // La tabella puo' non esistere ancora: si ricade sulle variabili, che
+    // sono gia' state controllate sopra.
+    return false;
+  }
 }

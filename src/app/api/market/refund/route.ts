@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getPool } from '@/lib/pg';
-import { tokenFromRequest, isAdmin } from '@/lib/appToken';
+import { tokenFromRequest, isAdmin, isAdminCompleto } from '@/lib/appToken';
 import { stripeCall, configurato, ErroreStripe } from '@/lib/stripe';
 import { inviaEmail } from '@/lib/mailer';
 
@@ -69,7 +69,7 @@ type Corpo = {
 export async function POST(req: NextRequest) {
   const auth = tokenFromRequest(req);
   if (!auth) return NextResponse.json({ error: 'token assente o scaduto' }, { status: 401 });
-  if (!isAdmin(auth.email)) {
+  if (!await isAdminCompleto(auth.email, getPool())) {
     // Il rimborso muove denaro reale e toglie l'accesso a un artefatto: non
     // puo' dipendere da chi lo chiede, deve deciderlo chi amministra.
     return NextResponse.json({ error: 'riservato agli amministratori' }, { status: 403 });

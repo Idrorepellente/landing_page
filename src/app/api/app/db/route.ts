@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getPool } from '@/lib/pg';
-import { tokenFromRequest, isAdmin } from '@/lib/appToken';
+import { tokenFromRequest, isAdmin, isAdminCompleto } from '@/lib/appToken';
 import manifest from '@/lib/appQueries.json';
 
 export const runtime = 'nodejs';
@@ -132,7 +132,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     ok: true,
     email: auth.email,
-    admin: isAdmin(auth.email),
+    admin: await isAdminCompleto(auth.email, getPool()),
     ops: Object.keys(OPS).length,
     version: (manifest as any).version ?? null,
   });

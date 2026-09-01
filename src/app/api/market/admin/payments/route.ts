@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getPool } from '@/lib/pg';
-import { tokenFromRequest, isAdmin } from '@/lib/appToken';
+import { tokenFromRequest, isAdmin, isAdminCompleto } from '@/lib/appToken';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
 async function gestisciGET(req: NextRequest) {
   const auth = tokenFromRequest(req);
   if (!auth) return NextResponse.json({ error: 'token assente o scaduto' }, { status: 401 });
-  if (!isAdmin(auth.email)) {
+  if (!await isAdminCompleto(auth.email, getPool())) {
     return NextResponse.json({ error: 'riservato agli amministratori' }, { status: 403 });
   }
 
