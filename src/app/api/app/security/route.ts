@@ -1,0 +1,220 @@
+/**
+ * Sicurezza dell'account: password, indirizzo email, verifica in due passaggi.
+ *
+ * Tutte le operazioni qui dentro richiedono un token valido E, dove ha senso,
+ * la password attuale. Il motivo: una sessione aperta su un computer lasciato
+ * incustodito non deve bastare a prendere possesso dell'account. Cambiare
+ * password o indirizzo senza riconfermare chi sei renderebbe la sessione una
+ * chiave permanente.
+ */
+import { NextRequest, NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
+import { getPool } from '@/lib/pg';
+import { tokenFromRequest } from '@/lib/appToken';
+import { inviaEmail, postaConfigurata } from '@/lib/mailer';
+import { creaCodice, verificaCodice } from '@/lib/authcodes';
+import { nuovoSegreto, verifica as verificaTotp, urlOtpauth } from '@/lib/totp';
+
+export const runtime = 'nodejs';
+
+const MIN_PASSWORD = 10;
+
+async function utente(uid: string) {
+  const r = await getPool().query(
+    `SELECT id, email, "passwordHash", "twoFactorMode"::text AS "twoFactorMode",
+            "twoFactorSecret", "googleSub"
+       FROM "User" WHERE id = $1 LIMIT 1`, [uid]);
+  return r.rows[0] || null;
+}
+
+/** La password attuale, quando serve riconfermare l'identità. */
+async function passwordCorretta(u: any, password: string): Promise<boolean> {
+  // Chi è entrato con Google non ha una password da confermare: per lui la
+  // riprova d'identità è già avvenuta presso Google.
+  if (!u?.passwordHash || u.passwordHash.startsWith('$google$')) return true;
+  return bcrypt.compare(String(password || ''), String(u.passwordHash));
+}
+
+/* ─────────────────────────── stato ─────────────────────────── */
+
+export async function GET(req: NextRequest) {
+  const auth = tokenFromRequest(req);
+  if (!auth) return NextResponse.json({ error: 'token assente o scaduto' }, { status: 401 });
+  const u = await utente(auth.uid);
+  if (!u) return NextResponse.json({ error: 'utente non trovato' }, { status: 404 });
+
+  return NextResponse.json({
+    ok: true,
+    email: u.email,
+    twoFactor: u.twoFactorMode || 'none',
+    conGoogle: !!u.googleSub,
+    // se la posta non è configurata, il secondo fattore via email non è
+    // proponibile: meglio dirlo che offrire una scelta che non funziona
+    emailDisponibile: postaConfigurata(),
+  });
+}
+
+/* ─────────────────────────── azioni ─────────────────────────── */
+
+export async function POST(req: NextRequest) {
+  const auth = tokenFromRequest(req);
+  if (!auth) return NextResponse.json({ error: 'token assente o scaduto' }, { status: 401 });
+
+  let b: any = {};
+  try { b = await req.json(); } catch { /* corpo facoltativo */ }
+  const azione = String(b?.action || '');
+  const pool = getPool();
+  const u = await utente(auth.uid);
+  if (!u) return NextResponse.json({ error: 'utente non trovato' }, { status: 404 });
+
+  try {
+    // ---- cambio password ------------------------------------------------
+    if (azione === 'password') {
+      const nuova = String(b?.newPassword || '');
+      if (nuova.length < MIN_PASSWORD) {
+        return NextResponse.json({
+          error: `la nuova password deve avere almeno ${MIN_PASSWORD} caratteri`,
+        }, { status: 400 });
+      }
+      if (!(await passwordCorretta(u, b?.currentPassword))) {
+        return NextResponse.json({ error: 'password attuale errata' }, { status: 403 });
+      }
+      const hash = await bcrypt.hash(nuova, 12);
+      await pool.query('UPDATE "User" SET "passwordHash" = $2 WHERE id = $1',
+                       [u.id, hash]);
+      return NextResponse.json({ ok: true });
+    }
+
+    // ---- cambio email: passo 1, si manda il codice al NUOVO indirizzo ----
+    if (azione === 'email_start') {
+      const nuova = String(b?.newEmail || '').trim().toLowerCase();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(nuova)) {
+        return NextResponse.json({ error: 'indirizzo non valido' }, { status: 400 });
+      }
+      if (!(await passwordCorretta(u, b?.currentPassword))) {
+        return NextResponse.json({ error: 'password attuale errata' }, { status: 403 });
+      }
+      const gia = await pool.query(
+        'SELECT id FROM "User" WHERE lower(email) = $1 AND id <> $2 LIMIT 1',
+        [nuova, u.id]);
+      if (gia.rows[0]) {
+        return NextResponse.json({ error: 'indirizzo già in uso' }, { status: 409 });
+      }
+      if (!postaConfigurata()) {
+        return NextResponse.json({
+          error: 'la posta non è configurata sul sito: impossibile confermare',
+        }, { status: 503 });
+      }
+      // Il codice va al NUOVO indirizzo, non al vecchio: serve a dimostrare
+      // che quella casella esiste e che è tua. Un errore di battitura viene
+      // scoperto qui, non dopo aver perso l'accesso.
+      const codice = await creaCodice(u.id, 'email_change', 15, { email: nuova });
+      await inviaEmail(nuova, 'Conferma il nuovo indirizzo',
+        `Il codice per confermare questo indirizzo su Lyra è ${codice}.\n`
+        + 'Scade fra 15 minuti. Se non hai richiesto tu il cambio, ignora '
+        + 'questo messaggio: il tuo indirizzo attuale resta invariato.');
+      return NextResponse.json({ ok: true, sent: true });
+    }
+
+    // ---- cambio email: passo 2, si conferma -----------------------------
+    if (azione === 'email_confirm') {
+      const esito = await verificaCodice(u.id, 'email_change', String(b?.code || ''));
+      if (!esito.ok) {
+        return NextResponse.json({ error: esito.motivo }, { status: 403 });
+      }
+      const nuova = String((esito as any).payload?.email || '');
+      if (!nuova) {
+        return NextResponse.json({ error: 'richiesta non più valida' }, { status: 409 });
+      }
+      await pool.query(
+        'UPDATE "User" SET email = $2, "emailVerified" = NOW() WHERE id = $1',
+        [u.id, nuova]);
+      // avviso al vecchio indirizzo: se il cambio non l'hai chiesto tu, e'
+      // l'unico modo per accorgertene
+      await inviaEmail(u.email, 'Il tuo indirizzo Lyra è cambiato',
+        `L'indirizzo dell'account è stato cambiato in ${nuova}.\n`
+        + 'Se non sei stato tu, contatta subito il supporto.');
+      return NextResponse.json({ ok: true, email: nuova });
+    }
+
+    // ---- secondo fattore: preparazione ----------------------------------
+    if (azione === '2fa_setup') {
+      const modo = b?.mode === 'email' ? 'email' : 'totp';
+      if (modo === 'email') {
+        if (!postaConfigurata()) {
+          return NextResponse.json({
+            error: 'la posta non è configurata sul sito',
+          }, { status: 503 });
+        }
+        const codice = await creaCodice(u.id, 'login_2fa', 10);
+        await inviaEmail(u.email, 'Codice di verifica Lyra',
+          `Il tuo codice è ${codice}. Scade fra 10 minuti.`);
+        return NextResponse.json({ ok: true, mode: 'email', sent: true });
+      }
+      // Il segreto si conserva SUBITO ma la modalità resta 'none' finché
+      // l'utente non dimostra di saperlo usare: attivarla prima lo
+      // chiuderebbe fuori se l'app non fosse configurata bene.
+      const segreto = nuovoSegreto();
+      await pool.query('UPDATE "User" SET "twoFactorSecret" = $2 WHERE id = $1',
+                       [u.id, segreto]);
+      return NextResponse.json({
+        ok: true, mode: 'totp', secret: segreto,
+        otpauth: urlOtpauth(segreto, u.email),
+      });
+    }
+
+    // ---- secondo fattore: attivazione -----------------------------------
+    if (azione === '2fa_enable') {
+      const modo = b?.mode === 'email' ? 'email' : 'totp';
+      const codice = String(b?.code || '');
+      let valido = false;
+      if (modo === 'totp') {
+        valido = verificaTotp(String(u.twoFactorSecret || ''), codice);
+      } else {
+        valido = (await verificaCodice(u.id, 'login_2fa', codice)).ok;
+      }
+      if (!valido) {
+        return NextResponse.json({ error: 'codice non valido' }, { status: 403 });
+      }
+      await pool.query(
+        `UPDATE "User" SET "twoFactorMode" = $2::two_factor_mode,
+                           "twoFactorSince" = NOW() WHERE id = $1`,
+        [u.id, modo]);
+      await inviaEmail(u.email, 'Verifica in due passaggi attivata',
+        'La verifica in due passaggi è ora attiva sul tuo account Lyra.\n'
+        + 'Se non sei stato tu, contatta subito il supporto.');
+      return NextResponse.json({ ok: true, twoFactor: modo });
+    }
+
+    // ---- secondo fattore: disattivazione --------------------------------
+    if (azione === '2fa_disable') {
+      // Serve la password: disattivare la protezione è esattamente
+      // l'operazione che un intruso proverebbe per prima.
+      if (!(await passwordCorretta(u, b?.currentPassword))) {
+        return NextResponse.json({ error: 'password attuale errata' }, { status: 403 });
+      }
+      const conto = await pool.query(
+        'SELECT 1 FROM "SellerAccount" WHERE "userId" = $1 LIMIT 1', [u.id]);
+      if (conto.rows[0]) {
+        return NextResponse.json({
+          error: 'non puoi disattivarla finché hai un conto collegato',
+          detail: 'La verifica in due passaggi protegge il conto su cui '
+                + 'arrivano gli incassi. Per disattivarla, scollega prima il '
+                + 'conto dal profilo.',
+        }, { status: 409 });
+      }
+      await pool.query(
+        `UPDATE "User" SET "twoFactorMode" = 'none'::two_factor_mode,
+                           "twoFactorSecret" = NULL, "twoFactorSince" = NULL
+          WHERE id = $1`, [u.id]);
+      await inviaEmail(u.email, 'Verifica in due passaggi disattivata',
+        'La verifica in due passaggi è stata disattivata sul tuo account Lyra.\n'
+        + 'Se non sei stato tu, contatta subito il supporto.');
+      return NextResponse.json({ ok: true, twoFactor: 'none' });
+    }
+
+    return NextResponse.json({ error: 'azione sconosciuta' }, { status: 400 });
+  } catch (e: any) {
+    return NextResponse.json({ error: String(e?.message || e) }, { status: 500 });
+  }
+}
