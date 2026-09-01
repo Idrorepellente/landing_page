@@ -327,6 +327,7 @@
       "userParam": null
     },
     "aa6a1c85f8798f0aa0fb26ea55cf22d2": {
+      "legacy": true,
       "source": "web_db.py",
       "sql": "SELECT p.id, p.\"paidAt\", p.\"amountCents\", p.currency, a.\"declaredMetrics\", a.name, a.kind::text AS kind FROM \"Purchase\" p JOIN \"Artifact\" a ON a.id = p.\"artifactId\" WHERE p.\"artifactId\" = %s AND p.\"buyerId\" = %s",
       "userParam": null
@@ -435,6 +436,11 @@
     "e9d366307c5e676ba808e0ddb4ccc4a8": {
       "source": "web_db.py",
       "sql": "SELECT id, name, kind::text AS kind, \"isPublic\", \"publishedAt\" FROM \"Artifact\" ORDER BY \"createdAt\" DESC LIMIT 5",
+      "userParam": null
+    },
+    "ed5ae653c3ff8c822b89724b0ffd5164": {
+      "source": "web_db.py",
+      "sql": "SELECT p.id, p.\"paidAt\", p.\"amountCents\", p.currency, a.\"declaredMetrics\", a.name, a.kind::text AS kind FROM \"Purchase\" p JOIN \"Artifact\" a ON a.id = p.\"artifactId\" WHERE p.\"artifactId\" = %s AND p.\"buyerId\" = %s AND (p.status IN ('paid','free') OR EXISTS ( SELECT 1 FROM \"License\" l WHERE l.\"artifactId\" = p.\"artifactId\" AND l.\"userId\" = p.\"buyerId\" AND l.status::text = 'active')) ORDER BY (p.status IN ('paid','free')) DESC, p.\"paidAt\" DESC NULLS LAST LIMIT 1",
       "userParam": null
     },
     "f25e68212bf8e82394121917336f9461": {
