@@ -198,6 +198,7 @@
       "userParam": null
     },
     "644929c2a049f3fc0cea7445b15596b9": {
+      "legacy": true,
       "source": "web_db.py",
       "sql": "SELECT c.id, c.status::text AS status, a.name AS \"artifactName\", (SELECT COUNT(*) FROM \"ClaimMessage\" m WHERE m.\"claimId\" = c.id AND m.\"isAdmin\" = TRUE AND m.\"readByUser\" = FALSE) AS \"daLeggere\" FROM \"PerformanceClaim\" c LEFT JOIN \"Artifact\" a ON a.id = c.\"artifactId\" WHERE c.\"buyerId\" = %s AND c.status IN ('open','reviewing') ORDER BY c.\"createdAt\" DESC",
       "userParam": null
@@ -309,6 +310,11 @@
     "a1acc3c186fd53e3ee8e84ffae753ce5": {
       "source": "web_db.py",
       "sql": "SELECT p.id, p.status, p.\"amountCents\" AS amount_cents, p.currency, p.provider, p.\"createdAt\", a.id AS artifact_id, a.name, a.kind::text AS kind, COALESCE(u.\"displayName\", u.username, u.email) AS owner FROM \"Purchase\" p JOIN \"Artifact\" a ON a.id = p.\"artifactId\" JOIN \"User\" u ON u.id = a.\"ownerId\" WHERE p.\"buyerId\" = %s ORDER BY p.\"createdAt\" DESC LIMIT %s",
+      "userParam": null
+    },
+    "a2a26694d8041a18b68ac0675551b1ea": {
+      "source": "web_db.py",
+      "sql": "SELECT c.id, c.status::text AS status, a.name AS \"artifactName\" FROM \"PerformanceClaim\" c LEFT JOIN \"Artifact\" a ON a.id = c.\"artifactId\" WHERE c.\"buyerId\" = %s AND c.status IN ('open','reviewing') ORDER BY c.\"createdAt\" DESC",
       "userParam": null
     },
     "a2d2a4d522959ef5c54ba9ef330ef1ff": {
@@ -451,6 +457,11 @@
     "f3cf70f89da3befa525c89087223b929": {
       "source": "web_db.py",
       "sql": "DELETE FROM \"Artifact\" WHERE id = %s AND \"ownerId\" = %s",
+      "userParam": null
+    },
+    "f3f6f648d84bdf050c663ffaae9a3238": {
+      "source": "web_db.py",
+      "sql": "SELECT m.\"claimId\" AS id, COUNT(*) AS n FROM \"ClaimMessage\" m WHERE m.\"isAdmin\" = TRUE AND m.\"readByUser\" = FALSE GROUP BY m.\"claimId\"",
       "userParam": null
     },
     "f612effb0b6acad4b5f82bce773489ad": {
