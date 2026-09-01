@@ -18,6 +18,7 @@ export type AppTokenPayload = {
   uid: string;
   email: string;
   exp: number; // millisecondi epoch
+  scopo?: string; // 'accesso' oppure il passo per cui vale (es. '2fa')
 };
 
 function secret(): string {
@@ -48,8 +49,20 @@ export function isConfigured(): boolean {
   return secret().length >= 16;
 }
 
-export function createToken(uid: string, email: string, ttlMs: number = DEFAULT_TTL): string {
-  const payload: AppTokenPayload = { uid, email, exp: Date.now() + ttlMs };
+/**
+ * `scopo` distingue un token d'accesso da un token di PASSAGGIO.
+ *
+ * Il codice del secondo fattore viaggia con un `challenge`, che finora era un
+ * token identico a quello d'accesso: chi conosceva la password otteneva, per
+ * dieci minuti, una chiave funzionante verso i dati — cioe' esattamente cio'
+ * che il secondo fattore deve impedire.
+ *
+ * Un token con uno scopo diverso da 'accesso' non apre nulla: serve solo a
+ * completare il passo per cui e' stato emesso.
+ */
+export function createToken(uid: string, email: string, ttlMs: number = DEFAULT_TTL,
+                            scopo: string = 'accesso'): string {
+  const payload: AppTokenPayload = { uid, email, exp: Date.now() + ttlMs, scopo };
   const body = b64url(JSON.stringify(payload));
   const sig = b64url(crypto.createHmac('sha256', secret()).update(body).digest());
   return `${body}.${sig}`;
@@ -85,7 +98,19 @@ export function verifyToken(token: string | null | undefined): AppTokenPayload |
 export function tokenFromRequest(req: Request): AppTokenPayload | null {
   const auth = req.headers.get('authorization') || '';
   const bearer = auth.toLowerCase().startsWith('bearer ') ? auth.slice(7).trim() : '';
-  return verifyToken(bearer || req.headers.get('x-app-token'));
+  const p = verifyToken(bearer || req.headers.get('x-app-token'));
+  // Un token di PASSAGGIO non vale come token d'accesso. I token emessi prima
+  // di questa distinzione non hanno `scopo`: valgono, altrimenti si
+  // scollegherebbero tutti insieme senza motivo.
+  if (p && p.scopo && p.scopo !== 'accesso') return null;
+  return p;
+}
+
+/** Il token per un passo intermedio: verificato, ma solo per quel passo. */
+export function verificaPassaggio(token: string | null | undefined,
+                                  scopo: string): AppTokenPayload | null {
+  const p = verifyToken(token);
+  return p && p.scopo === scopo ? p : null;
 }
 
 /** Elenco degli amministratori, definito solo lato server. */

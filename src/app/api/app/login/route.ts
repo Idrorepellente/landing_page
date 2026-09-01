@@ -88,7 +88,8 @@ export async function POST(req: NextRequest) {
         // apre nulla: serve al secondo passo per sapere di chi si tratta,
         // senza rimandare la password in giro.
         // dieci minuti, in MILLISECONDI: `createToken` li vuole cosi'
-        challenge: createToken(String(user.id), String(user.email), 10 * 60 * 1000),
+        challenge: createToken(String(user.id), String(user.email),
+                               10 * 60 * 1000, '2fa'),
       }, { status: 200 });
     }
 

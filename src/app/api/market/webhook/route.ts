@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-async function pagamentoRiuscito(pool: any, sess: any) {
+export async function pagamentoRiuscito(pool: any, sess: any) {
   // I ritorni SILENZIOSI erano il problema: l'evento veniva accettato con
   // 200 OK e non succedeva nulla, senza lasciare traccia del perche'. Ora
   // ogni uscita dice il motivo, e il motivo si legge nel corpo della risposta

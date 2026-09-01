@@ -7,7 +7,7 @@
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { getPool } from '@/lib/pg';
-import { createToken, verifyToken, isConfigured } from '@/lib/appToken';
+import { createToken, verificaPassaggio, isConfigured } from '@/lib/appToken';
 import { verifica as verificaTotp } from '@/lib/totp';
 import { verificaCodice } from '@/lib/authcodes';
 
@@ -23,7 +23,9 @@ export async function POST(req: NextRequest) {
 
   // Il challenge NON e' un token d'accesso: e' scaduto in dieci minuti e
   // serve solo a dire di chi stiamo parlando senza rimandare la password.
-  const auth = verifyToken(String(b?.challenge || ''));
+  // Deve essere un token di PASSAGGIO per il secondo fattore, non uno
+  // d'accesso: cosi' un token rubato altrove non serve a saltare il passo.
+  const auth = verificaPassaggio(String(b?.challenge || ''), '2fa');
   if (!auth) {
     return NextResponse.json({ error: 'sessione di accesso scaduta: rifai il login' },
                              { status: 401 });

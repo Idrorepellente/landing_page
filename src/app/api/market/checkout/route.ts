@@ -112,10 +112,20 @@ async function gestisci(req: NextRequest) {
   // webhook, e finche' quello non arriva la licenza non esiste: al ritorno
   // dal browser l'utente vedeva di nuovo «Acquista» e poteva pagare due volte
   // la stessa cosa.
+  // Solo i pagamenti RECENTI bloccano. Una sessione abbandonata — scheda
+  // chiusa, carta rifiutata, ripensamento — lascia una riga 'pending' che
+  // altrimenti impedirebbe per sempre di riprovare: e' successo, e chi voleva
+  // comprare non poteva piu' farlo in nessun modo.
+  //
+  // Quindici minuti: le sessioni di Stripe scadono dopo, e prima di allora
+  // riaprire il pagamento e' rischioso perche' il primo potrebbe ancora
+  // concludersi.
   const inCorso = await pool.query(
     `SELECT id, status::text AS status, "createdAt"
        FROM "Purchase"
-      WHERE "artifactId"=$1 AND "buyerId"=$2 AND status IN ('pending','paid')
+      WHERE "artifactId"=$1 AND "buyerId"=$2
+        AND (status = 'paid'
+             OR (status = 'pending' AND "createdAt" > NOW() - INTERVAL '15 minutes'))
       ORDER BY "createdAt" DESC LIMIT 1`, [artifactId, auth.uid]);
   const att = inCorso.rows[0];
   if (att) {
@@ -132,7 +142,9 @@ async function gestisci(req: NextRequest) {
           + 'il webhook non ha completato. Contatta il supporto indicando '
           + 'l\'acquisto ' + att.id + '.'
         : 'Se hai appena pagato, l\'accesso si apre entro pochi istanti: '
-          + 'ricarica la pagina. Se hai annullato, riprova fra un minuto.',
+          + 'ricarica la pagina. Se invece hai chiuso o annullato il '
+          + 'pagamento, potrai riprovare fra 15 minuti: prima non si puo\', '
+          + 'perche\' quel pagamento potrebbe ancora concludersi.',
       purchaseId: att.id,
     }, { status: 409 });
   }
