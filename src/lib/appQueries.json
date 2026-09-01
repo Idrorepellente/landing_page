@@ -56,6 +56,11 @@
       "sql": "DELETE FROM app_agent_messages WHERE \"chatId\"=%s",
       "userParam": null
     },
+    "180ff1875d3893539c9043e1365b49f7": {
+      "source": "web_db.py",
+      "sql": "SELECT id, status::text AS status, \"createdAt\" FROM \"PerformanceClaim\" WHERE \"buyerId\" = %s AND \"artifactId\" = %s AND status IN ('open','reviewing') ORDER BY \"createdAt\" DESC LIMIT 1",
+      "userParam": null
+    },
     "1a23303dbc31aa9edfa83425ae7de64b": {
       "source": "web_db.py",
       "sql": "SELECT f.id, f.category, f.message, f.\"createdAt\", u.email, u.username FROM app_feedback f LEFT JOIN \"User\" u ON u.id = f.\"userId\" ORDER BY f.\"createdAt\" DESC LIMIT %s",
@@ -180,6 +185,11 @@
       "legacy": true,
       "source": "web_db.py",
       "sql": "SELECT p.id, p.\"paidAt\", p.\"amountCents\", p.currency, a.\"declaredMetrics\", a.name, a.kind::text AS kind FROM \"Purchase\" p JOIN \"Artifact\" a ON a.id = p.\"artifactId\" WHERE p.\"artifactId\" = %s AND p.\"buyerId\" = %s AND p.status IN ('paid','free') ORDER BY p.\"paidAt\" DESC LIMIT 1",
+      "userParam": null
+    },
+    "615aff113c812e01f58955c29b7bd020": {
+      "source": "web_db.py",
+      "sql": "SELECT 1 AS x FROM \"ClaimMessage\" WHERE \"claimId\" = %s AND \"isAdmin\" = TRUE LIMIT 1",
       "userParam": null
     },
     "644929c2a049f3fc0cea7445b15596b9": {
