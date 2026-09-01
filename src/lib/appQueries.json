@@ -15,6 +15,11 @@
       "sql": "SELECT context FROM app_agent_chats WHERE id=%s AND \"userId\"=%s",
       "userParam": 1
     },
+    "0d5721e99e038d49db91b6a2dc8f383b": {
+      "source": "web_db.py",
+      "sql": "UPDATE \"Artifact\" SET description = COALESCE(%s, description), details = COALESCE(details, '{}'::jsonb) || %s::jsonb, \"updatedAt\" = NOW() WHERE id = %s AND \"ownerId\" = %s",
+      "userParam": null
+    },
     "1019f612a7d1df0ab3530f2a3df8c2a4": {
       "source": "web_db.py",
       "sql": "SELECT * FROM beta_signups LIMIT %s",
@@ -172,6 +177,7 @@
       "userParam": null
     },
     "5f989ec670982c8b698593602c86ffcb": {
+      "legacy": true,
       "source": "web_db.py",
       "sql": "SELECT p.id, p.\"paidAt\", p.\"amountCents\", p.currency, a.\"declaredMetrics\", a.name, a.kind::text AS kind FROM \"Purchase\" p JOIN \"Artifact\" a ON a.id = p.\"artifactId\" WHERE p.\"artifactId\" = %s AND p.\"buyerId\" = %s AND p.status IN ('paid','free') ORDER BY p.\"paidAt\" DESC LIMIT 1",
       "userParam": null
@@ -303,6 +309,11 @@
     "a3ae98dd1383d2e652f4c813d523110c": {
       "source": "web_db.py",
       "sql": "UPDATE app_agent_chats SET context=%s WHERE id=%s",
+      "userParam": null
+    },
+    "aa6a1c85f8798f0aa0fb26ea55cf22d2": {
+      "source": "web_db.py",
+      "sql": "SELECT p.id, p.\"paidAt\", p.\"amountCents\", p.currency, a.\"declaredMetrics\", a.name, a.kind::text AS kind FROM \"Purchase\" p JOIN \"Artifact\" a ON a.id = p.\"artifactId\" WHERE p.\"artifactId\" = %s AND p.\"buyerId\" = %s",
       "userParam": null
     },
     "ad6a24a074e93e24993c9db073b6d512": {
