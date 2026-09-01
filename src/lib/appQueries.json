@@ -437,6 +437,11 @@
       "sql": "SELECT id, name, kind::text AS kind, \"isPublic\", \"publishedAt\" FROM \"Artifact\" ORDER BY \"createdAt\" DESC LIMIT 5",
       "userParam": null
     },
+    "f25e68212bf8e82394121917336f9461": {
+      "source": "web_db.py",
+      "sql": "SELECT 1 AS x FROM information_schema.columns WHERE table_name = 'Artifact' AND column_name = 'declaredMetrics'",
+      "userParam": null
+    },
     "f3cf70f89da3befa525c89087223b929": {
       "source": "web_db.py",
       "sql": "DELETE FROM \"Artifact\" WHERE id = %s AND \"ownerId\" = %s",
