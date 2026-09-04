@@ -18,7 +18,7 @@
     "0d5721e99e038d49db91b6a2dc8f383b": {
       "source": "web_db.py",
       "sql": "UPDATE \"Artifact\" SET description = COALESCE(%s, description), details = COALESCE(details, '{}'::jsonb) || %s::jsonb, \"updatedAt\" = NOW() WHERE id = %s AND \"ownerId\" = %s",
-      "userParam": null
+      "userParam": 3
     },
     "1019f612a7d1df0ab3530f2a3df8c2a4": {
       "source": "web_db.py",
@@ -28,7 +28,7 @@
     "10a2060dc3c2e02a51b75c530cefe4b6": {
       "source": "web_db.py",
       "sql": "INSERT INTO \"Artifact\"(id, \"ownerId\", kind, name, slug, description, summary, code, language, tags, \"isPublic\", \"priceCents\", currency, \"isForSale\", \"coverEmoji\", metrics, bundle, version, subtitle, \"pricePeriod\", details, files, likes, downloads, \"coverageOk\", \"coverageProof\", \"testedCategories\", \"createdAt\", \"publishedAt\", \"updatedAt\") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 0, 0, %s, %s, %s, NOW(), NOW(), NOW())",
-      "userParam": null
+      "userParam": 1
     },
     "125e9bf30c2ad62c7974e90acfb5f14d": {
       "legacy": true,
@@ -44,7 +44,7 @@
     "14f6d45ae5ca128a1e61496df7f2637b": {
       "source": "web_db.py",
       "sql": "INSERT INTO \"Artifact\"(id, \"ownerId\", kind, name, slug, description, summary, code, language, tags, \"isPublic\", \"priceCents\", currency, \"isForSale\", \"coverEmoji\", metrics, bundle, version, subtitle, \"pricePeriod\", details, files, likes, downloads, \"coverageOk\", \"coverageProof\", \"testedCategories\", \"createdAt\", \"publishedAt\", \"updatedAt\") VALUES (%s, %s, %s::\"",
-      "userParam": null
+      "userParam": 1
     },
     "179b538097e2836e091cd406b8122f77": {
       "source": "web_db.py",
@@ -59,7 +59,7 @@
     "180ff1875d3893539c9043e1365b49f7": {
       "source": "web_db.py",
       "sql": "SELECT id, status::text AS status, \"createdAt\" FROM \"PerformanceClaim\" WHERE \"buyerId\" = %s AND \"artifactId\" = %s AND status IN ('open','reviewing') ORDER BY \"createdAt\" DESC LIMIT 1",
-      "userParam": null
+      "userParam": 0
     },
     "1a23303dbc31aa9edfa83425ae7de64b": {
       "source": "web_db.py",
@@ -79,7 +79,7 @@
     "2b22d75eafc72e0bbfc757c0d927ff22": {
       "source": "web_db.py",
       "sql": "SELECT 1 AS x FROM \"Purchase\" WHERE \"artifactId\" = %s AND \"buyerId\" = %s AND status IN ('paid','free') LIMIT 1",
-      "userParam": null
+      "userParam": 1
     },
     "2c756af1d7093b4149afac7ce2c3b115": {
       "source": "web_db.py",
@@ -99,7 +99,7 @@
     "3453cbbad6564c6b08bf564146cf6c33": {
       "source": "web_db.py",
       "sql": "INSERT INTO \"PerformanceClaim\" (id,\"artifactId\",\"purchaseId\",\"buyerId\",\"declaredMetrics\", \"observedMetrics\",deviation,\"buyerNote\") VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",
-      "userParam": null
+      "userParam": 3
     },
     "347a3ceed03854c5fc06aa3810986005": {
       "source": "web_db.py",
@@ -149,7 +149,7 @@
     "4bebe43191bd0d0ca6e43fa15166c88a": {
       "source": "web_db.py",
       "sql": "SELECT id FROM \"Artifact\" WHERE \"ownerId\" = %s AND kind::text = %s AND lower(name) = lower(%s) AND \"publishedAt\" IS NOT NULL LIMIT 1",
-      "userParam": null
+      "userParam": 0
     },
     "512a423d80cc93c49045fc7d26e8599c": {
       "source": "web_db.py",
@@ -164,7 +164,7 @@
     "5981df1f144ff5fc3f637e7c4fe3b1c7": {
       "source": "web_db.py",
       "sql": "SELECT a.id, a.kind::text AS kind, a.name, a.\"isPublic\", COALESCE(a.\"priceCents\",0) AS price_cents, COALESCE(a.currency,'EUR') AS currency, COALESCE(a.downloads,0) AS downloads, a.likes, a.\"publishedAt\", (SELECT COUNT(*) FROM \"Purchase\" p WHERE p.\"artifactId\" = a.id AND p.status IN ('paid','free')) AS sales FROM \"Artifact\" a WHERE a.\"ownerId\" = %s ORDER BY COALESCE(a.\"publishedAt\", a.\"createdAt\") DESC LIMIT %s",
-      "userParam": null
+      "userParam": 0
     },
     "5a1b5fbbaacb1c9f8cf08088bd9584b2": {
       "source": "web_db.py",
@@ -184,23 +184,11 @@
     "5efde9650575d9845a29e5d5ee8594d7": {
       "source": "web_db.py",
       "sql": "SELECT status::text AS s FROM \"Purchase\" WHERE \"artifactId\" = %s AND \"buyerId\" = %s",
-      "userParam": null
-    },
-    "5f989ec670982c8b698593602c86ffcb": {
-      "legacy": true,
-      "source": "web_db.py",
-      "sql": "SELECT p.id, p.\"paidAt\", p.\"amountCents\", p.currency, a.\"declaredMetrics\", a.name, a.kind::text AS kind FROM \"Purchase\" p JOIN \"Artifact\" a ON a.id = p.\"artifactId\" WHERE p.\"artifactId\" = %s AND p.\"buyerId\" = %s AND p.status IN ('paid','free') ORDER BY p.\"paidAt\" DESC LIMIT 1",
-      "userParam": null
+      "userParam": 1
     },
     "615aff113c812e01f58955c29b7bd020": {
       "source": "web_db.py",
       "sql": "SELECT 1 AS x FROM \"ClaimMessage\" WHERE \"claimId\" = %s AND \"isAdmin\" = TRUE LIMIT 1",
-      "userParam": null
-    },
-    "644929c2a049f3fc0cea7445b15596b9": {
-      "legacy": true,
-      "source": "web_db.py",
-      "sql": "SELECT c.id, c.status::text AS status, a.name AS \"artifactName\", (SELECT COUNT(*) FROM \"ClaimMessage\" m WHERE m.\"claimId\" = c.id AND m.\"isAdmin\" = TRUE AND m.\"readByUser\" = FALSE) AS \"daLeggere\" FROM \"PerformanceClaim\" c LEFT JOIN \"Artifact\" a ON a.id = c.\"artifactId\" WHERE c.\"buyerId\" = %s AND c.status IN ('open','reviewing') ORDER BY c.\"createdAt\" DESC",
       "userParam": null
     },
     "68bfe78b93d27500ee65a464ff2ff1d2": {
@@ -211,7 +199,7 @@
     "6c91c440694131d85c24b3d9e81e428c": {
       "source": "web_db.py",
       "sql": "UPDATE \"Artifact\" SET \"isPublic\" = FALSE, \"publishedAt\" = NULL, \"updatedAt\" = NOW() WHERE id = %s AND \"ownerId\" = %s",
-      "userParam": null
+      "userParam": 1
     },
     "6cb3a21ca63b0fd6d3d536b42bf2fee4": {
       "source": "web_db.py",
@@ -223,22 +211,10 @@
       "sql": "UPDATE app_agent_chats SET \"updatedAt\"=now() WHERE id=%s",
       "userParam": null
     },
-    "6e3c59a04d63809ffa90e587e382ed6f": {
-      "legacy": true,
-      "source": "web_db.py",
-      "sql": "INSERT INTO \"Artifact\"(id, \"ownerId\", kind, name, slug, description, summary, code, language, tags, \"isPublic\", \"priceCents\", currency, \"isForSale\", \"coverEmoji\", metrics, bundle, version, subtitle, \"pricePeriod\", details, files, likes, downloads, \"createdAt\", \"publishedAt\", \"updatedAt\") VALUES (%s, %s, %s::\"",
-      "userParam": null
-    },
     "75060506f20aed80d214ea1e75afeeab": {
       "source": "web_db.py",
       "sql": "SELECT p.id AS \"purchaseId\", p.\"artifactId\", p.\"paidAt\", p.\"amountCents\", p.currency, a.name, a.kind::text AS kind FROM \"Purchase\" p JOIN \"Artifact\" a ON a.id = p.\"artifactId\" WHERE p.\"buyerId\" = %s AND p.status IN ('paid','free') ORDER BY p.\"paidAt\" DESC NULLS LAST LIMIT 200",
-      "userParam": null
-    },
-    "76a1a1ad390fb865ff48914949b71215": {
-      "legacy": true,
-      "source": "web_db.py",
-      "sql": "DELETE FROM \"Runner\" WHERE id = %s AND \"ownerId\" = %s",
-      "userParam": null
+      "userParam": 0
     },
     "7800079006a44a39158ca4a7bce6aa44": {
       "source": "web_db.py",
@@ -283,13 +259,7 @@
     "8defceec72b1a147a05c4fd2c60e2b3f": {
       "source": "web_db.py",
       "sql": "INSERT INTO \"Purchase\"(id, \"artifactId\", \"buyerId\", \"sellerId\", \"amountCents\", currency, status, provider, \"providerRef\", \"paidAt\") VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,CASE WHEN %s THEN NOW() ELSE NULL END)",
-      "userParam": null
-    },
-    "90f84d81d88219aa5d52697c264a5785": {
-      "legacy": true,
-      "source": "web_db.py",
-      "sql": "SELECT id, name, status, config, \"createdAt\", \"updatedAt\" FROM \"Runner\" WHERE id = %s AND \"ownerId\" = %s LIMIT 1",
-      "userParam": null
+      "userParam": 2
     },
     "949ab43a9c3bb2724f5983c2406687df": {
       "legacy": true,
@@ -310,12 +280,12 @@
     "a1acc3c186fd53e3ee8e84ffae753ce5": {
       "source": "web_db.py",
       "sql": "SELECT p.id, p.status, p.\"amountCents\" AS amount_cents, p.currency, p.provider, p.\"createdAt\", a.id AS artifact_id, a.name, a.kind::text AS kind, COALESCE(u.\"displayName\", u.username, u.email) AS owner FROM \"Purchase\" p JOIN \"Artifact\" a ON a.id = p.\"artifactId\" JOIN \"User\" u ON u.id = a.\"ownerId\" WHERE p.\"buyerId\" = %s ORDER BY p.\"createdAt\" DESC LIMIT %s",
-      "userParam": null
+      "userParam": 0
     },
     "a2a26694d8041a18b68ac0675551b1ea": {
       "source": "web_db.py",
       "sql": "SELECT c.id, c.status::text AS status, a.name AS \"artifactName\" FROM \"PerformanceClaim\" c LEFT JOIN \"Artifact\" a ON a.id = c.\"artifactId\" WHERE c.\"buyerId\" = %s AND c.status IN ('open','reviewing') ORDER BY c.\"createdAt\" DESC",
-      "userParam": null
+      "userParam": 0
     },
     "a2d2a4d522959ef5c54ba9ef330ef1ff": {
       "source": "web_db.py",
@@ -325,23 +295,11 @@
     "a32a2b7ecb7dff810220267a7a7506df": {
       "source": "web_db.py",
       "sql": "SELECT c.*, a.name AS \"artifactName\" FROM \"PerformanceClaim\" c LEFT JOIN \"Artifact\" a ON a.id = c.\"artifactId\" WHERE c.\"buyerId\" = %s ORDER BY c.\"createdAt\" DESC LIMIT 100",
-      "userParam": null
+      "userParam": 0
     },
     "a3ae98dd1383d2e652f4c813d523110c": {
       "source": "web_db.py",
       "sql": "UPDATE app_agent_chats SET context=%s WHERE id=%s",
-      "userParam": null
-    },
-    "aa6a1c85f8798f0aa0fb26ea55cf22d2": {
-      "legacy": true,
-      "source": "web_db.py",
-      "sql": "SELECT p.id, p.\"paidAt\", p.\"amountCents\", p.currency, a.\"declaredMetrics\", a.name, a.kind::text AS kind FROM \"Purchase\" p JOIN \"Artifact\" a ON a.id = p.\"artifactId\" WHERE p.\"artifactId\" = %s AND p.\"buyerId\" = %s",
-      "userParam": null
-    },
-    "ad6a24a074e93e24993c9db073b6d512": {
-      "legacy": true,
-      "source": "web_db.py",
-      "sql": "INSERT INTO \"Artifact\"(id, \"ownerId\", kind, name, slug, description, summary, code, language, tags, \"isPublic\", \"priceCents\", currency, \"isForSale\", \"coverEmoji\", metrics, bundle, version, subtitle, \"pricePeriod\", details, files, likes, downloads, \"createdAt\", \"publishedAt\", \"updatedAt\") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 0, 0, NOW(), NOW(), NOW())",
       "userParam": null
     },
     "af8674941b30fb8b6b05abb878a9777e": {
@@ -377,7 +335,7 @@
     "bc91c299bb6a17cd69eadc6479ad1f4b": {
       "source": "web_db.py",
       "sql": "SELECT id FROM \"Artifact\" WHERE id = %s AND \"ownerId\" = %s LIMIT 1",
-      "userParam": null
+      "userParam": 1
     },
     "bd7479fb413094683e698cd5919465b3": {
       "source": "web_db.py",
@@ -447,7 +405,7 @@
     "ed5ae653c3ff8c822b89724b0ffd5164": {
       "source": "web_db.py",
       "sql": "SELECT p.id, p.\"paidAt\", p.\"amountCents\", p.currency, a.\"declaredMetrics\", a.name, a.kind::text AS kind FROM \"Purchase\" p JOIN \"Artifact\" a ON a.id = p.\"artifactId\" WHERE p.\"artifactId\" = %s AND p.\"buyerId\" = %s AND (p.status IN ('paid','free') OR EXISTS ( SELECT 1 FROM \"License\" l WHERE l.\"artifactId\" = p.\"artifactId\" AND l.\"userId\" = p.\"buyerId\" AND l.status::text = 'active')) ORDER BY (p.status IN ('paid','free')) DESC, p.\"paidAt\" DESC NULLS LAST LIMIT 1",
-      "userParam": null
+      "userParam": 1
     },
     "f25e68212bf8e82394121917336f9461": {
       "source": "web_db.py",
@@ -457,17 +415,11 @@
     "f3cf70f89da3befa525c89087223b929": {
       "source": "web_db.py",
       "sql": "DELETE FROM \"Artifact\" WHERE id = %s AND \"ownerId\" = %s",
-      "userParam": null
+      "userParam": 1
     },
     "f3f6f648d84bdf050c663ffaae9a3238": {
       "source": "web_db.py",
       "sql": "SELECT m.\"claimId\" AS id, COUNT(*) AS n FROM \"ClaimMessage\" m WHERE m.\"isAdmin\" = TRUE AND m.\"readByUser\" = FALSE GROUP BY m.\"claimId\"",
-      "userParam": null
-    },
-    "f612effb0b6acad4b5f82bce773489ad": {
-      "legacy": true,
-      "source": "web_db.py",
-      "sql": "SELECT id, name, status, \"createdAt\", \"updatedAt\" FROM \"Runner\" WHERE \"ownerId\" = %s ORDER BY \"updatedAt\" DESC",
       "userParam": null
     },
     "ffffa48d616f1cd1e470f8ffa3ff98b7": {
