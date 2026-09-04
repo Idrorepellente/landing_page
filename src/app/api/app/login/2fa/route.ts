@@ -29,17 +29,20 @@ export async function POST(req: NextRequest) {
   // d'accesso: cosi' un token rubato altrove non serve a saltare il passo.
   const auth = verificaPassaggio(String(b?.challenge || ''), '2fa');
   if (!auth) {
+    return NextResponse.json({ error: 'sessione di accesso scaduta: rifai il login' },
+                             { status: 401 });
+  }
+
   // Un codice a sei cifre e' un milione di combinazioni: a mille tentativi
   // al secondo si esaurisce in venti minuti. Il limite e' quello che rende
   // il secondo fattore una difesa e non una formalita'.
-  const chiaveLimite = '2fa:' + String(auth?.uid || 'ignoto');
+  //
+  // Sta DOPO il controllo del challenge: prima, `auth` puo' essere nullo e
+  // non c'e' ancora un utente da limitare.
+  const chiaveLimite = '2fa:' + String(auth.uid);
   const lim = await consentito(chiaveLimite, 6, 600);
   if (!lim.ok) {
     return NextResponse.json({ error: messaggioLimite(lim) }, { status: 429 });
-  }
-
-    return NextResponse.json({ error: 'sessione di accesso scaduta: rifai il login' },
-                             { status: 401 });
   }
   const codice = String(b?.code || '').replace(/\D/g, '');
   if (codice.length !== 6) {
