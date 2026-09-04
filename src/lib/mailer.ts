@@ -132,3 +132,107 @@ function escapeHtml(t: string): string {
   return String(t ?? '').replace(/[&<>"']/g, (c) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string));
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ESITO DI UNA RICHIESTA DI RIMBORSO
+
+   Una richiesta si chiude in quattro modi, e ognuno merita parole diverse:
+   chi si sente dire «pratica chiusa» senza sapere se ha avuto ragione o
+   torto deve chiedere, e chiedere costa a entrambi.
+
+   L'email si manda SEMPRE, anche quando l'esito e' negativo: il silenzio
+   dopo una lamentela e' la cosa che fa perdere piu' fiducia.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+export type EsitoRimborso = 'rimborsato' | 'respinto' | 'ritirato' | 'chiuso';
+
+export type DatiEsitoRimborso = {
+  email: string;
+  artefatto: string;
+  esito: EsitoRimborso;
+  motivo?: string;
+  importoCents?: number;    // solo se rimborsato
+  valuta?: string;
+  claimId: string;
+  daAmministratore: boolean;
+};
+
+/** Titolo, riga d'apertura e spiegazione, per ciascun esito. */
+function testiEsito(d: DatiEsitoRimborso) {
+  const nome = d.artefatto || 'l\'artefatto';
+  switch (d.esito) {
+    case 'rimborsato':
+      return {
+        oggetto: `Rimborso approvato — ${nome}`,
+        titolo: 'La tua richiesta è stata accolta',
+        corpo: `Abbiamo esaminato la tua richiesta su <b>${nome}</b> e l'abbiamo `
+             + 'accolta. L\'importo torna sul metodo di pagamento che hai usato: '
+             + 'la tua banca lo accredita di norma entro cinque-dieci giorni '
+             + 'lavorativi.',
+      };
+    case 'respinto':
+      return {
+        oggetto: `Richiesta di rimborso non accolta — ${nome}`,
+        titolo: 'La tua richiesta non è stata accolta',
+        corpo: `Abbiamo esaminato la tua richiesta su <b>${nome}</b>. Dalle `
+             + 'verifiche non è emersa una difformità rispetto a quanto '
+             + 'dichiarato dall\'autore, e l\'acquisto resta valido: '
+             + 'l\'artefatto continua a essere tuo e utilizzabile.',
+      };
+    case 'ritirato':
+      return {
+        oggetto: `Richiesta di rimborso ritirata — ${nome}`,
+        titolo: 'Hai ritirato la tua richiesta',
+        corpo: `La richiesta su <b>${nome}</b> è stata chiusa su tua `
+             + 'indicazione. Nessun rimborso è stato emesso e l\'acquisto '
+             + 'resta valido. Se il problema si ripresenta puoi aprirne una '
+             + 'nuova.',
+      };
+    default:
+      return {
+        oggetto: `Richiesta di rimborso chiusa — ${nome}`,
+        titolo: 'La tua richiesta è stata chiusa',
+        corpo: `La richiesta su <b>${nome}</b> è stata chiusa senza emettere `
+             + 'un rimborso.',
+      };
+  }
+}
+
+export async function inviaEsitoRimborso(d: DatiEsitoRimborso): Promise<boolean> {
+  const t = testiEsito(d);
+  const importo = (d.esito === 'rimborsato' && d.importoCents)
+    ? soldi(d.importoCents, d.valuta || 'EUR') : null;
+
+  const righe: string[] = [];
+  righe.push(`<p style="margin:0 0 14px">${t.corpo}</p>`);
+  if (importo) {
+    righe.push(`<p style="margin:0 0 14px;font-size:20px"><b>${importo}</b></p>`);
+  }
+  if (d.motivo) {
+    // Il motivo si riporta testualmente: riassumerlo cambierebbe cio' che
+    // e' stato deciso, e questa email e' il documento che resta.
+    righe.push('<p style="margin:0 0 6px;font-size:12px;color:#6b7280;'
+      + 'text-transform:uppercase;letter-spacing:.08em">Motivo</p>'
+      + `<p style="margin:0 0 14px;padding:10px 12px;background:#f6f7f9;`
+      + `border-radius:6px">${d.motivo}</p>`);
+  }
+  righe.push('<p style="margin:14px 0 0;font-size:13px;color:#6b7280">'
+    + 'La conversazione resta consultabile nell\'applicazione, sezione '
+    + 'Rimborso. Se qualcosa non ti torna, rispondi a questa email.</p>');
+  righe.push(`<p style="margin:18px 0 0;font-size:11px;color:#9aa1ab">`
+    + `Riferimento richiesta: ${d.claimId}</p>`);
+
+  const html = `<div style="font-family:system-ui,-apple-system,Roboto,sans-serif;`
+    + `max-width:560px;margin:0 auto;padding:24px;color:#111827">`
+    + `<h2 style="margin:0 0 16px;font-size:19px">${t.titolo}</h2>`
+    + righe.join('') + '</div>';
+
+  // Il testo semplice non e' un ripiego: alcuni client mostrano solo quello,
+  // e una email vuota sarebbe peggio di nessuna email.
+  const testo = [t.titolo, '', t.corpo.replace(/<[^>]+>/g, ''),
+                 importo ? `Importo: ${importo}` : '',
+                 d.motivo ? `Motivo: ${d.motivo}` : '',
+                 `Riferimento: ${d.claimId}`].filter(Boolean).join('\n');
+
+  return inviaEmail(d.email, t.oggetto, testo, html);
+}

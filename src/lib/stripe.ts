@@ -105,6 +105,27 @@ export class ErroreStripe extends Error {
  * rete fa ritentare: Stripe riconosce la chiave e restituisce il primo esito
  * invece di creare un secondo pagamento.
  */
+/**
+ * La versione delle API di Stripe che questo codice si aspetta.
+ *
+ * Sta in una variabile d'ambiente, non nel codice: Stripe permette di
+ * tornare indietro di versione per 72 ore, e se un aggiornamento rompesse
+ * qualcosa si deve poter rimediare cambiando una riga sul pannello, senza
+ * ridistribuire il sito nel mezzo di un problema con i pagamenti.
+ *
+ * Deve COINCIDERE con la versione scelta per le destinazioni degli eventi:
+ * se le due divergono, le chiamate rispondono in un formato e i webhook ne
+ * consegnano un altro, e la differenza si scopre solo quando un campo manca.
+ *
+ * I campi che leggiamo — `charges_enabled`, `payouts_enabled`,
+ * `payment_status`, `client_reference_id`, `metadata` — sono stabili da
+ * anni: l'ultima rinomina che li riguardava risale al 2014.
+ */
+export function versioneApi(): string {
+  return (process.env.STRIPE_API_VERSION || '2026-07-29.dahlia').trim();
+}
+
+
 export async function stripeCall(
   path: string,
   data?: Record<string, any>,
@@ -116,7 +137,7 @@ export async function stripeCall(
   const headers: Record<string, string> = {
     Authorization: 'Bearer ' + key,
     'Content-Type': 'application/x-www-form-urlencoded',
-    'Stripe-Version': '2024-06-20',
+    'Stripe-Version': versioneApi(),
   };
   if (opts.idempotencyKey) headers['Idempotency-Key'] = opts.idempotencyKey;
   if (opts.stripeAccount) headers['Stripe-Account'] = opts.stripeAccount;

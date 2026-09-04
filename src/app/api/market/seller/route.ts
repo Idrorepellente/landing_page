@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getPool } from '@/lib/pg';
 import { tokenFromRequest } from '@/lib/appToken';
-import { stripeCall, configurato, baseUrl, ErroreStripe, ambienteStripe } from '@/lib/stripe';
+import { stripeCall, configurato, baseUrl, ErroreStripe, ambienteStripe, versioneApi } from '@/lib/stripe';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -66,6 +66,9 @@ export async function GET(req: NextRequest) {
   // L'ambiente viaggia sempre: quando qualcosa non torna, la prima domanda e'
   // "quale Stripe sto interrogando?" — e senza risposta si cerca alla cieca.
   const ambiente = ambienteStripe();
+  // La versione API viaggia nella risposta: dev'essere la stessa scelta per
+  // le destinazioni degli eventi, e senza vederla la differenza si scopre
+  // solo quando un campo manca in un webhook.
 
   const riga = await leggiConto(auth.uid);
   if (!riga?.providerRef) {
@@ -79,11 +82,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       configured: true, status: s.stato, payoutsEnabled: s.payouts,
       chargesEnabled: s.charges, missing: s.mancanti, country: acct?.country || null,
-      ambiente,
+      ambiente, versioneApi: versioneApi(),
     });
   } catch (e: any) {
     return NextResponse.json({ configured: true, status: riga.status,
-      payoutsEnabled: riga.payoutsEnabled, ambiente,
+      payoutsEnabled: riga.payoutsEnabled, ambiente, versioneApi: versioneApi(),
       error: String(e?.message || e) });
   }
 }
