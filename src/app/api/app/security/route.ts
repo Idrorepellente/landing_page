@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     if (azione === 'disconnetti_tutto') {
       await pool.query(
         'UPDATE "User" SET "tokenVersion" = COALESCE("tokenVersion",1) + 1 '
-        'WHERE id = $1', [u.id]);
+        + 'WHERE id = $1', [u.id]);
       return NextResponse.json({
         ok: true,
         nota: 'Tutti gli accessi sono stati chiusi: rientra con le tue '
@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
       // trenta giorni.
       await pool.query(
         'UPDATE "User" SET "tokenVersion" = COALESCE("tokenVersion",1) + 1 '
-        'WHERE id = $1', [u.id]).catch(() => {});
+        + 'WHERE id = $1', [u.id]).catch(() => {});
       await pool.query('UPDATE "User" SET "passwordHash" = $2 WHERE id = $1',
                        [u.id, hash]);
       return NextResponse.json({ ok: true });
