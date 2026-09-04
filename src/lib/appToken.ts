@@ -19,6 +19,7 @@ export type AppTokenPayload = {
   email: string;
   exp: number; // millisecondi epoch
   scopo?: string; // 'accesso' oppure il passo per cui vale (es. '2fa')
+  ver?: number;   // versione dei token dell'utente: vedi verificaVersione
 };
 
 function secret(): string {
@@ -61,8 +62,12 @@ export function isConfigured(): boolean {
  * completare il passo per cui e' stato emesso.
  */
 export function createToken(uid: string, email: string, ttlMs: number = DEFAULT_TTL,
-                            scopo: string = 'accesso'): string {
+                            scopo: string = 'accesso', ver?: number): string {
   const payload: AppTokenPayload = { uid, email, exp: Date.now() + ttlMs, scopo };
+  // La versione rende il token REVOCABILE: senza, un token rubato resta
+  // valido trenta giorni anche cambiando la password, e la vittima non ha
+  // modo di chiudere fuori chi lo possiede.
+  if (typeof ver === 'number') payload.ver = ver;
   const body = b64url(JSON.stringify(payload));
   const sig = b64url(crypto.createHmac('sha256', secret()).update(body).digest());
   return `${body}.${sig}`;
@@ -95,6 +100,35 @@ export function verifyToken(token: string | null | undefined): AppTokenPayload |
 }
 
 /** Legge il token dall'header Authorization: Bearer … oppure x-app-token. */
+/**
+ * Il token e' ancora valido per QUESTO utente?
+ *
+ * Confronta la versione che il token porta con quella sul database.
+ * Incrementando `tokenVersion` si invalidano in un colpo tutti i token di
+ * un utente — l'unica cosa che serve davvero quando non si sa quali siano
+ * in giro.
+ *
+ * I token emessi PRIMA di questa modifica non hanno `ver`: valgono, altrimenti
+ * la migrazione scollegherebbe tutti insieme. Vengono sostituiti al primo
+ * accesso successivo.
+ */
+export async function versioneValida(p: AppTokenPayload | null,
+                                     pool: any): Promise<boolean> {
+  if (!p) return false;
+  if (typeof p.ver !== 'number') return true;    // token precedente
+  try {
+    const r = await pool.query(
+      'SELECT "tokenVersion" FROM "User" WHERE id = $1 LIMIT 1', [p.uid]);
+    const attuale = Number(r.rows[0]?.tokenVersion ?? 1);
+    return p.ver === attuale;
+  } catch {
+    // Colonna non ancora creata: si lascia passare. Un controllo che non si
+    // puo' fare non deve chiudere fuori tutti.
+    return true;
+  }
+}
+
+
 export function tokenFromRequest(req: Request): AppTokenPayload | null {
   const auth = req.headers.get('authorization') || '';
   const bearer = auth.toLowerCase().startsWith('bearer ') ? auth.slice(7).trim() : '';

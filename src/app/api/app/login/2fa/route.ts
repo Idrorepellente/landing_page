@@ -8,8 +8,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPool } from '@/lib/pg';
 import { createToken, verificaPassaggio, isConfigured } from '@/lib/appToken';
+import { consentito, azzera, messaggioLimite } from '@/lib/limiti';
 import { verifica as verificaTotp } from '@/lib/totp';
 import { verificaCodice } from '@/lib/authcodes';
+import { cifra, decifra, cifraturaAttiva } from '@/lib/segreti';
 
 export const runtime = 'nodejs';
 
@@ -27,6 +29,15 @@ export async function POST(req: NextRequest) {
   // d'accesso: cosi' un token rubato altrove non serve a saltare il passo.
   const auth = verificaPassaggio(String(b?.challenge || ''), '2fa');
   if (!auth) {
+  // Un codice a sei cifre e' un milione di combinazioni: a mille tentativi
+  // al secondo si esaurisce in venti minuti. Il limite e' quello che rende
+  // il secondo fattore una difesa e non una formalita'.
+  const chiaveLimite = '2fa:' + String(auth?.uid || 'ignoto');
+  const lim = await consentito(chiaveLimite, 6, 600);
+  if (!lim.ok) {
+    return NextResponse.json({ error: messaggioLimite(lim) }, { status: 429 });
+  }
+
     return NextResponse.json({ error: 'sessione di accesso scaduta: rifai il login' },
                              { status: 401 });
   }
@@ -38,7 +49,7 @@ export async function POST(req: NextRequest) {
   try {
     const r = await getPool().query(
       `SELECT id, email, "displayName", username, "emailVerified",
-              "twoFactorMode"::text AS "twoFactorMode", "twoFactorSecret"
+              "twoFactorMode"::text AS "twoFactorMode", "twoFactorSecret", COALESCE("tokenVersion",1) AS "tokenVersion"
          FROM "User" WHERE id = $1 LIMIT 1`, [auth.uid]);
     const u = r.rows[0];
     if (!u) return NextResponse.json({ error: 'utente non trovato' }, { status: 404 });
@@ -46,7 +57,7 @@ export async function POST(req: NextRequest) {
     const modo = String(u.twoFactorMode || 'none');
     let valido = false;
     if (modo === 'totp') {
-      valido = verificaTotp(String(u.twoFactorSecret || ''), codice);
+      valido = verificaTotp(decifra(String(u.twoFactorSecret || '')), codice);
     } else if (modo === 'email') {
       valido = (await verificaCodice(String(u.id), 'login_2fa', codice)).ok;
     } else {
@@ -58,9 +69,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'codice non valido' }, { status: 403 });
     }
 
+    await azzera(chiaveLimite);
     return NextResponse.json({
       ok: true,
-      token: createToken(String(u.id), String(u.email)),
+      token: createToken(String(u.id), String(u.email),
+                         undefined, 'accesso',
+                         Number(u.tokenVersion ?? 1)),
       user: {
         id: u.id, email: u.email,
         displayName: u.displayName ?? null,

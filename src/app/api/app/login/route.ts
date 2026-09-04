@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { getPool } from '@/lib/pg';
 import { createToken, isConfigured, verifyToken } from '@/lib/appToken';
+import { consentito, azzera, messaggioLimite } from '@/lib/limiti';
 import { verifica as verificaTotp } from '@/lib/totp';
 import { creaCodice, verificaCodice } from '@/lib/authcodes';
 import { inviaEmail, postaConfigurata } from '@/lib/mailer';
@@ -34,6 +35,15 @@ export async function POST(req: NextRequest) {
   }
 
   const email = String(body?.email || '').trim().toLowerCase();
+
+  // Limite sui tentativi: senza, la password si prova all'infinito.
+  // La chiave e' l'INDIRIZZO, non l'IP: gli indirizzi IP si cambiano con
+  // nulla, e limitare per IP penalizza chi condivide una connessione.
+  const chiaveLimite = 'login:' + email;
+  const lim = await consentito(chiaveLimite, 8, 900);
+  if (!lim.ok) {
+    return NextResponse.json({ error: messaggioLimite(lim) }, { status: 429 });
+  }
   const password = String(body?.password || '');
   if (!email || !password) {
     return NextResponse.json({ error: 'credenziali mancanti' }, { status: 400 });
@@ -42,7 +52,7 @@ export async function POST(req: NextRequest) {
   try {
     const res = await getPool().query(
       'SELECT id, email, "passwordHash", "displayName", username, "emailVerified", '
-      + '"twoFactorMode"::text AS "twoFactorMode", "twoFactorSecret" '
+      + '"twoFactorMode"::text AS "twoFactorMode", "twoFactorSecret", COALESCE("tokenVersion",1) AS "tokenVersion" '
       + 'FROM "User" WHERE lower(email) = $1 LIMIT 1',
       [email],
     );
@@ -81,6 +91,7 @@ export async function POST(req: NextRequest) {
           + 'Se non stai accedendo tu, qualcuno conosce la tua password: '
           + 'cambiala appena puoi.');
       }
+      await azzera(chiaveLimite);   // password corretta: non e' un tentativo a vuoto
       return NextResponse.json({
         need2fa: true,
         mode: modo2fa,
@@ -93,9 +104,12 @@ export async function POST(req: NextRequest) {
       }, { status: 200 });
     }
 
+    await azzera(chiaveLimite);
     return NextResponse.json({
       ok: true,
-      token: createToken(String(user.id), String(user.email)),
+      token: createToken(String(user.id), String(user.email),
+                         undefined, 'accesso',
+                         Number(user.tokenVersion ?? 1)),
       user: {
         id: user.id,
         email: user.email,

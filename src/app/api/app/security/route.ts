@@ -14,6 +14,7 @@ import { tokenFromRequest } from '@/lib/appToken';
 import { inviaEmail, postaConfigurata } from '@/lib/mailer';
 import { creaCodice, verificaCodice } from '@/lib/authcodes';
 import { nuovoSegreto, verifica as verificaTotp, urlOtpauth } from '@/lib/totp';
+import { cifra, decifra, cifraturaAttiva } from '@/lib/segreti';
 
 export const runtime = 'nodejs';
 
@@ -69,6 +70,19 @@ export async function POST(req: NextRequest) {
 
   try {
     // ---- cambio password ------------------------------------------------
+    // Disconnessione da tutti i dispositivi, su richiesta. Serve quando si
+    // sospetta un accesso altrui ma non si vuole cambiare la password.
+    if (azione === 'disconnetti_tutto') {
+      await pool.query(
+        'UPDATE "User" SET "tokenVersion" = COALESCE("tokenVersion",1) + 1 '
+        'WHERE id = $1', [u.id]);
+      return NextResponse.json({
+        ok: true,
+        nota: 'Tutti gli accessi sono stati chiusi: rientra con le tue '
+            + 'credenziali.',
+      });
+    }
+
     if (azione === 'password') {
       const nuova = String(b?.newPassword || '');
       if (nuova.length < MIN_PASSWORD) {
@@ -80,6 +94,13 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'password attuale errata' }, { status: 403 });
       }
       const hash = await bcrypt.hash(nuova, 12);
+      // Cambiare la password INVALIDA tutti i token: e' il gesto che si compie
+      // quando si teme che qualcuno sia entrato, e finora non chiudeva fuori
+      // nessuno — chi aveva un token rubato continuava ad accedere per
+      // trenta giorni.
+      await pool.query(
+        'UPDATE "User" SET "tokenVersion" = COALESCE("tokenVersion",1) + 1 '
+        'WHERE id = $1', [u.id]).catch(() => {});
       await pool.query('UPDATE "User" SET "passwordHash" = $2 WHERE id = $1',
                        [u.id, hash]);
       return NextResponse.json({ ok: true });
@@ -155,8 +176,11 @@ export async function POST(req: NextRequest) {
       // l'utente non dimostra di saperlo usare: attivarla prima lo
       // chiuderebbe fuori se l'app non fosse configurata bene.
       const segreto = nuovoSegreto();
+      // Nel DATABASE va cifrato; all'utente si manda in chiaro, perche' deve
+      // poterlo inquadrare col telefono. Se la chiave non e' configurata si
+      // salva com'era: meglio un 2FA in chiaro che un 2FA che non si attiva.
       await pool.query('UPDATE "User" SET "twoFactorSecret" = $2 WHERE id = $1',
-                       [u.id, segreto]);
+                       [u.id, cifraturaAttiva() ? cifra(segreto) : segreto]);
       return NextResponse.json({
         ok: true, mode: 'totp', secret: segreto,
         otpauth: urlOtpauth(segreto, u.email),
@@ -169,7 +193,7 @@ export async function POST(req: NextRequest) {
       const codice = String(b?.code || '');
       let valido = false;
       if (modo === 'totp') {
-        valido = verificaTotp(String(u.twoFactorSecret || ''), codice);
+        valido = verificaTotp(decifra(String(u.twoFactorSecret || '')), codice);
       } else {
         valido = (await verificaCodice(u.id, 'login_2fa', codice)).ok;
       }

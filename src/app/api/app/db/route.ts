@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getPool } from '@/lib/pg';
-import { tokenFromRequest, isAdmin, isAdminCompleto } from '@/lib/appToken';
+import { tokenFromRequest, versioneValida, isAdmin, isAdminCompleto } from '@/lib/appToken';
 import manifest from '@/lib/appQueries.json';
 
 export const runtime = 'nodejs';
@@ -33,6 +33,14 @@ const WRITE = /^\s*(INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|TRUNCATE)/i;
 
 export async function POST(req: NextRequest) {
   const auth = tokenFromRequest(req);
+  // Il token e' firmato e non scaduto, ma potrebbe essere stato REVOCATO:
+  // e' il controllo che rende utile cambiare la password dopo un furto.
+  if (auth && !(await versioneValida(auth, getPool()))) {
+    return NextResponse.json(
+      { error: 'accesso revocato: esegui di nuovo l\'accesso' },
+      { status: 401 },
+    );
+  }
   if (!auth) {
     return NextResponse.json(
       { error: 'token assente o scaduto: esegui di nuovo l\'accesso' },
