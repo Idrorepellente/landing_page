@@ -97,8 +97,83 @@ export async function GET(req: NextRequest) {
  * Le query fuori dal `try` facevano cadere la richiesta prima che Next.js
  * potesse comporre una risposta, e all'utente arrivava un nudo «HTTP 500».
  */
+/**
+ * Scollega il conto per gli incassi dal profilo.
+ *
+ * Serviva: il rifiuto a disattivare la verifica in due passaggi diceva
+ * «scollega prima il conto», ma non esisteva alcun modo di farlo. Un
+ * messaggio che indica una strada chiusa e' peggio di un rifiuto secco,
+ * perche' manda a cercare qualcosa che non c'e'.
+ *
+ * COSA TOGLIE E COSA NO. Toglie il legame fra questo profilo e il conto
+ * Stripe: la riga "SellerAccount". NON tocca il conto su Stripe, che resta
+ * dell'intestatario con il suo storico e i suoi versamenti — non spetta a
+ * noi chiuderlo, e chiuderlo per errore non si rimedia.
+ *
+ * COSA NON SI PUO' SCOLLEGARE. Se restano incassi non ancora versati, il
+ * legame serve ancora: e' l'unico modo di sapere dove mandarli. Si blocca,
+ * dicendo quanto manca.
+ */
+async function scollegaConto(req: NextRequest) {
+  const auth = tokenFromRequest(req);
+  if (!auth) {
+    return NextResponse.json({ error: 'token missing or expired' }, { status: 401 });
+  }
+  const pool = getPool();
+
+  const conto = await pool.query(
+    'SELECT "providerRef", status FROM "SellerAccount" WHERE "userId" = $1 LIMIT 1',
+    [auth.uid]);
+  if (!conto.rows[0]) {
+    return NextResponse.json({ error: 'no account linked' }, { status: 404 });
+  }
+
+  // Il denaro non ancora versato tiene il legame in vita.
+  let daVersare = 0;
+  try {
+    const r = await pool.query(
+      `SELECT COALESCE(SUM("amountCents"), 0)::int AS n
+         FROM "LedgerEntry"
+        WHERE "userId" = $1 AND kind = 'seller_credit'
+          AND ("paidOutAt" IS NULL)`, [auth.uid]);
+    daVersare = Number(r.rows[0]?.n || 0);
+  } catch {
+    // colonna assente in schemi vecchi: non si blocca per questo
+  }
+  if (daVersare > 0) {
+    return NextResponse.json({
+      error: 'there are earnings still to be paid out',
+      detail: `${(daVersare / 100).toFixed(2)} EUR has not reached your bank `
+            + 'yet. Unlinking now would leave nowhere to send it. Wait for the '
+            + 'payout, then unlink.',
+    }, { status: 409 });
+  }
+
+  await pool.query('DELETE FROM "SellerAccount" WHERE "userId" = $1', [auth.uid]);
+  return NextResponse.json({
+    ok: true,
+    detail: 'The link is removed. Your Stripe account still exists and keeps '
+          + 'its history — we do not close it for you.',
+  });
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    return await scollegaConto(req);
+  } catch (e: any) {
+    return NextResponse.json({ error: String(e?.message || e) }, { status: 500 });
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
+    // stessa cosa, per i client che non possono mandare DELETE
+    const clone = req.clone();
+    let b: any = {};
+    try { b = await clone.json(); } catch { /* vuoto */ }
+    if (String(b?.azione || b?.action || '') === 'scollega') {
+      return await scollegaConto(req);
+    }
     return await gestisciPOST(req);
   } catch (e: any) {
     const testo = String(e?.message || e);

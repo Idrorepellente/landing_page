@@ -227,8 +227,9 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({
           error: 'you cannot turn it off while an account is linked',
           detail: 'Two-step verification protects the account that '
-                + 'receives the earnings. To turn it off, unlink the  '
-                + 'conto dal profilo.',
+                + 'receives the earnings. Unlink the payout account first, '
+                + 'from Profile \u2192 Marketplace earnings; then you can '
+                + 'turn this off.',
         }, { status: 409 });
       }
       await pool.query(
