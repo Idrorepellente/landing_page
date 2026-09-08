@@ -13,7 +13,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { getPool } from '@/lib/pg';
 import { createToken, isConfigured } from '@/lib/appToken';
-import { betaAttiva, ammessoInBeta } from '@/app/api/dashboard/beta/route';
+import { betaAttiva, ammessoInBeta } from '@/lib/beta';
 
 export const runtime = 'nodejs';
 

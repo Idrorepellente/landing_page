@@ -12,36 +12,10 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { checkSecret } from '@/lib/dashApi';
 import { getPool } from '@/lib/pg';
+import { betaAttiva, ammessoInBeta, tabellaBetaEsiste } from '@/lib/beta';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-
-/** Vero se la beta è attiva. Un errore vale come "spenta". */
-export async function betaAttiva(pool: any): Promise<boolean> {
-  try {
-    const r = await pool.query(
-      `SELECT valore FROM "AppSetting" WHERE chiave = 'beta_enabled' LIMIT 1`);
-    return String(r.rows[0]?.valore || '').toLowerCase() === 'true';
-  } catch {
-    // Tabella assente o database irraggiungibile: NON si chiude fuori
-    // nessuno. Un controllo che non si può eseguire non deve trasformarsi
-    // in un blocco totale — il rischio è minore del danno.
-    return false;
-  }
-}
-
-/** Vero se l'indirizzo può entrare. Chiamare solo con la beta attiva. */
-export async function ammessoInBeta(pool: any, email: string): Promise<boolean> {
-  const e = String(email || '').trim().toLowerCase();
-  if (!e) return false;
-  try {
-    const r = await pool.query(
-      'SELECT 1 AS x FROM "BetaAccess" WHERE lower(email) = $1 LIMIT 1', [e]);
-    return !!r.rows[0];
-  } catch {
-    return false;
-  }
-}
 
 export async function GET(req: NextRequest) {
   try {
@@ -64,22 +38,13 @@ export async function GET(req: NextRequest) {
       emails,
       // Serve al pannello per dire cosa manca invece di mostrare un elenco
       // vuoto che sembra "nessuno invitato".
-      schema: emails.length > 0 || (await tabellaEsiste(pool)),
+      schema: emails.length > 0 || (await tabellaBetaEsiste(pool)),
     });
   } catch (e: any) {
     return NextResponse.json({ error: String(e?.message || e) }, { status: 500 });
   }
 }
 
-async function tabellaEsiste(pool: any): Promise<boolean> {
-  try {
-    const r = await pool.query(
-      `SELECT to_regclass('public."BetaAccess"') AS t`);
-    return !!r.rows[0]?.t;
-  } catch {
-    return false;
-  }
-}
 
 export async function POST(req: NextRequest) {
   try {

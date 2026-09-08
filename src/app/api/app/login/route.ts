@@ -7,7 +7,7 @@ import { consentito, azzera, messaggioLimite } from '@/lib/limiti';
 import { verifica as verificaTotp } from '@/lib/totp';
 import { creaCodice, verificaCodice } from '@/lib/authcodes';
 import { inviaEmail, postaConfigurata } from '@/lib/mailer';
-import { betaAttiva, ammessoInBeta } from '@/app/api/dashboard/beta/route';
+import { betaAttiva, ammessoInBeta } from '@/lib/beta';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
