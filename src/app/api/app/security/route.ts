@@ -18,7 +18,11 @@ import { cifra, decifra, cifraturaAttiva } from '@/lib/segreti';
 
 export const runtime = 'nodejs';
 
-const MIN_PASSWORD = 10;
+// Deve combaciare con MIN_PASSWORD di dashboard/auth.py e con quella in
+// dashboard/static/js/security.js. Era 10 mentre la registrazione ne
+// ammetteva 6: chi si iscriveva con sette caratteri non poteva piu'
+// cambiare password, e il messaggio non diceva perche'.
+const MIN_PASSWORD = 8;
 
 async function utente(uid: string) {
   const r = await getPool().query(
@@ -87,7 +91,7 @@ export async function POST(req: NextRequest) {
       const nuova = String(b?.newPassword || '');
       if (nuova.length < MIN_PASSWORD) {
         return NextResponse.json({
-          error: `la nuova password deve avere almeno ${MIN_PASSWORD} caratteri`,
+          error: `the new password must be at least ${MIN_PASSWORD} characters long`,
         }, { status: 400 });
       }
       if (!(await passwordCorretta(u, b?.currentPassword))) {
