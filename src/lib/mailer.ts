@@ -36,7 +36,7 @@ function trasporto() {
 /**
  * Spedisce. Non solleva mai: un guasto della posta non deve far fallire il
  * webhook, altrimenti Stripe ritenta e si rischia di rielaborare un pagamento
- * gia' registrato. L'acquisto vale, la ricevuta e' un di piu'.
+ * gia' registrato. L'the purchase stands, the receipt is' un di piu'.
  */
 export async function inviaEmail(
   a: string, oggetto: string, testo: string, html?: string,
@@ -53,7 +53,7 @@ export async function inviaEmail(
     });
     return true;
   } catch (e) {
-    console.error('[posta] invio fallito:', e);
+    console.error('[mail] sending failed:', e);
     return false;
   }
 }
@@ -83,10 +83,10 @@ export async function inviaRicevuta(d: DatiRicevuta): Promise<boolean> {
     ? 'This artifact runs without installation: it is not saved on your '
       + 'computer, si carica al momento dell\'uso. Serve una connessione a internet.'
     : 'Puoi installarlo dalla pagina Marketplace dell\'app: i file vengono scritti '
-      + 'nella cartella del progetto.';
+      + 'in the project folder.';
 
   const testo = [
-    `Grazie per l'acquisto.`,
+    `Thanks for your purchase.`,
     ``,
     `Artefatto : ${d.artefatto}`,
     `Amount   : ${importo}`,
@@ -95,7 +95,7 @@ export async function inviaRicevuta(d: DatiRicevuta): Promise<boolean> {
     ``,
     comeSiUsa,
     ``,
-    `Lo trovi gia' disponibile nella pagina Marketplace dell'app.`,
+    `You will find it in the Marketplace page of the app.`,
     ``,
     `If you did not make this purchase, reply to this email.`,
   ].join('\n');
@@ -141,7 +141,7 @@ function escapeHtml(t: string): string {
    torto deve chiedere, e chiedere costa a entrambi.
 
    L'email si manda SEMPRE, anche quando l'esito e' negativo: il silenzio
-   dopo una lamentela e' la cosa che fa perdere piu' fiducia.
+   dopo una lamentela e' the thing that wastes the most' fiducia.
    ═══════════════════════════════════════════════════════════════════════ */
 
 export type EsitoRimborso = 'rimborsato' | 'respinto' | 'ritirato' | 'chiuso';
@@ -166,7 +166,7 @@ function testiEsito(d: DatiEsitoRimborso) {
         oggetto: `Refund approved — ${nome}`,
         titolo: 'Your request has been accepted',
         corpo: `We have reviewed your request on <b>${nome}</b> and `
-             + 'accolta. L\'importo torna sul metodo di pagamento che hai usato: '
+             + 'accolta. L\'the amount goes back to the payment method you used:  '
              + 'your bank normally credits it within five to ten working '
              + 'days.',
       };
@@ -176,7 +176,7 @@ function testiEsito(d: DatiEsitoRimborso) {
         titolo: 'Your request was not accepted',
         corpo: `We have reviewed your request on <b>${nome}</b>. The `
              + 'checks found no discrepancy against what '
-             + 'dichiarato dall\'autore, e l\'acquisto resta valido: '
+             + 'dichiarato dall\'autore, e l\'the purchase stands:  '
              + 'l\'the artifact remains yours and usable.',
       };
     case 'ritirato':
@@ -184,7 +184,7 @@ function testiEsito(d: DatiEsitoRimborso) {
         oggetto: `Refund request withdrawn — ${nome}`,
         titolo: 'You withdrew your request',
         corpo: `The request on <b>${nome}</b> was closed at your `
-             + 'indicazione. Nessun rimborso è stato emesso e l\'acquisto '
+             + 'request. No refund was issued and the\'acquisto '
              + 'stands. If the problem happens again you can open a '
              + 'new one.',
       };

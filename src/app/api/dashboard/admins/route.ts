@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
       }, { status: 403 });
     }
     if (!bersaglio.includes('@')) {
-      return NextResponse.json({ error: 'indirizzo non valido' }, { status: 400 });
+      return NextResponse.json({ error: 'invalid address' }, { status: 400 });
     }
 
     // ── NON SI RIMUOVE SE STESSI ─────────────────────────────────────────

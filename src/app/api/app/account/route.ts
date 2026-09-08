@@ -25,7 +25,7 @@ function cuid(): string {
 export async function POST(req: NextRequest) {
   if (!isConfigured()) {
     return NextResponse.json(
-      { error: 'APP_TOKEN_SECRET non impostato sul sito' },
+      { error: 'APP_TOKEN_SECRET is not set on the site' },
       { status: 503 },
     );
   }

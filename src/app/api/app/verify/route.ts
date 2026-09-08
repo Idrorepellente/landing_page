@@ -57,7 +57,7 @@ const newCode = () => String(crypto.randomInt(0, 1_000_000)).padStart(6, '0');
 async function sendMail(to: string, subject: string, text: string, html: string) {
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
-  if (!user || !pass) throw new Error('SMTP_USER / SMTP_PASS non configurati sul sito');
+  if (!user || !pass) throw new Error('SMTP_USER / SMTP_PASS are not configured on the site');
 
   const host = process.env.SMTP_HOST || REGISTER_SMTP_HOST;
   const port = Number(process.env.SMTP_PORT) || (host === REGISTER_SMTP_HOST ? REGISTER_SMTP_PORT : 587);
@@ -71,17 +71,17 @@ async function sendMail(to: string, subject: string, text: string, html: string)
 }
 
 function mailBody(purpose: string, code: string) {
-  const what = purpose === 'reset' ? 'reimpostare la password' : 'confermare il tuo indirizzo';
-  const subject = purpose === 'reset' ? 'Lyra · codice per la password' : 'Lyra · codice di conferma';
+  const what = purpose === 'reset' ? 'reset your password' : 'confirm your address';
+  const subject = purpose === 'reset' ? 'Lyra · password code' : 'Lyra · confirmation code';
   const text =
     `Il tuo codice per ${what} e': ${code}\n\n` +
-    `Scade fra ${CODE_TTL_MIN} minuti. Se non hai richiesto nulla, ignora questo messaggio.`;
+    `It expires in ${CODE_TTL_MIN} minutes. If you did not ask for anything, ignore this message.`;
   const html =
     `<div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#18181b">` +
-    `<p style="margin:0 0 14px">Il tuo codice per ${what}:</p>` +
+    `<p style="margin:0 0 14px">Your code to ${what}:</p>` +
     `<p style="margin:0 0 14px;font:700 30px ui-monospace,monospace;letter-spacing:.22em;color:#1800ac">${code}</p>` +
-    `<p style="margin:0;color:#6b7280;font-size:13px">Scade fra ${CODE_TTL_MIN} minuti. ` +
-    `Se non hai richiesto nulla, puoi ignorare questo messaggio.</p></div>`;
+    `<p style="margin:0;color:#6b7280;font-size:13px">It expires in ${CODE_TTL_MIN} minutes. ` +
+    `If you did not ask for anything, you can ignore this message.</p></div>`;
   return { subject, text, html };
 }
 
@@ -91,7 +91,7 @@ function cuid() {
 
 export async function POST(req: NextRequest) {
   if (!isConfigured()) {
-    return NextResponse.json({ error: 'APP_TOKEN_SECRET non impostato sul sito' }, { status: 503 });
+    return NextResponse.json({ error: 'APP_TOKEN_SECRET is not set on the site' }, { status: 503 });
   }
 
   let body: any;
@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
   const purpose = String(body?.purpose || '');
   const email = String(body?.email || '').trim().toLowerCase();
   if (!['register', 'reset'].includes(purpose) || !email) {
-    return NextResponse.json({ error: 'parametri non validi' }, { status: 400 });
+    return NextResponse.json({ error: 'invalid parameters' }, { status: 400 });
   }
 
   const pool = getPool();
@@ -121,13 +121,13 @@ export async function POST(req: NextRequest) {
 
       if (purpose === 'register') {
         if (exists.rows.length) {
-          return NextResponse.json({ error: 'Email già registrata.' }, { status: 409 });
+          return NextResponse.json({ error: 'That email is already registered.' }, { status: 409 });
         }
         if (username) {
           const dupU = await pool.query(
             'SELECT id FROM "User" WHERE lower(username) = $1 LIMIT 1', [username.toLowerCase()]);
           if (dupU.rows.length) {
-            return NextResponse.json({ error: 'Username già in uso.' }, { status: 409 });
+            return NextResponse.json({ error: 'That username is already taken.' }, { status: 409 });
           }
         }
       }
@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
         [email, purpose, String(RESEND_WAIT_S)]);
       if (recent.rows.length) {
         return NextResponse.json(
-          { error: `Attendi ${RESEND_WAIT_S} secondi prima di chiedere un altro codice.` },
+          { error: `Wait ${RESEND_WAIT_S} seconds before asking for another code.` },
           { status: 429 });
       }
 
@@ -172,7 +172,7 @@ export async function POST(req: NextRequest) {
       const password = String(body?.password || '');
       if (!code || password.length < 8) {
         return NextResponse.json(
-          { error: 'Codice mancante o password troppo corta (minimo 8 caratteri).' },
+          { error: 'Code missing, or password too short (at least 8 characters).' },
           { status: 400 });
       }
 
@@ -181,21 +181,21 @@ export async function POST(req: NextRequest) {
         [email, purpose]);
       const row = r.rows[0];
       if (!row) {
-        return NextResponse.json({ error: 'Nessuna richiesta in corso: chiedi un nuovo codice.' }, { status: 400 });
+        return NextResponse.json({ error: 'No request in progress: ask for a new code.' }, { status: 400 });
       }
       if (new Date(row.expires_at).getTime() < Date.now()) {
         await pool.query('DELETE FROM app_email_codes WHERE email = $1 AND purpose = $2', [email, purpose]);
-        return NextResponse.json({ error: 'Codice scaduto: chiedine uno nuovo.' }, { status: 400 });
+        return NextResponse.json({ error: 'Code expired: ask for a new one.' }, { status: 400 });
       }
       if (row.attempts >= MAX_ATTEMPTS) {
         await pool.query('DELETE FROM app_email_codes WHERE email = $1 AND purpose = $2', [email, purpose]);
-        return NextResponse.json({ error: 'Troppi tentativi: chiedi un nuovo codice.' }, { status: 429 });
+        return NextResponse.json({ error: 'Too many attempts: ask for a new code.' }, { status: 429 });
       }
       if (sha(code) !== row.code_hash) {
         await pool.query(
           'UPDATE app_email_codes SET attempts = attempts + 1 WHERE email = $1 AND purpose = $2',
           [email, purpose]);
-        return NextResponse.json({ error: 'Codice non valido.' }, { status: 400 });
+        return NextResponse.json({ error: 'Invalid code.' }, { status: 400 });
       }
 
       const hash = await bcrypt.hash(password, 12);
@@ -206,7 +206,7 @@ export async function POST(req: NextRequest) {
       if (purpose === 'register') {
         const dup = await pool.query('SELECT id FROM "User" WHERE lower(email) = $1 LIMIT 1', [email]);
         if (dup.rows.length) {
-          return NextResponse.json({ error: 'Email già registrata.' }, { status: 409 });
+          return NextResponse.json({ error: 'That email is already registered.' }, { status: 409 });
         }
         const p = row.payload || {};
         const username = String(p.username || '').trim() || email.split('@')[0];
@@ -220,7 +220,7 @@ export async function POST(req: NextRequest) {
         const u = await pool.query(
           'SELECT id, username, "displayName" FROM "User" WHERE lower(email) = $1 LIMIT 1', [email]);
         if (!u.rows.length) {
-          return NextResponse.json({ error: 'Utente non trovato.' }, { status: 404 });
+          return NextResponse.json({ error: 'User not found.' }, { status: 404 });
         }
         uid = String(u.rows[0].id);
         profile = { username: u.rows[0].username ?? null, displayName: u.rows[0].displayName ?? null };
@@ -237,7 +237,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    return NextResponse.json({ error: 'azione non riconosciuta' }, { status: 400 });
+    return NextResponse.json({ error: 'unknown action' }, { status: 400 });
   } catch (e: any) {
     return NextResponse.json({ error: String(e?.message || e) }, { status: 500 });
   }

@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'riservato agli amministratori' }, { status: 403 });
   }
   if (!configurato()) {
-    return NextResponse.json({ error: 'Stripe non configurato' }, { status: 503 });
+    return NextResponse.json({ error: 'Stripe is not configured' }, { status: 503 });
   }
 
   let body: Corpo;
@@ -91,14 +91,14 @@ export async function POST(req: NextRequest) {
     const c = await pool.query(
       'SELECT * FROM "PerformanceClaim" WHERE id = $1', [String(body.claimId)]);
     claim = c.rows[0];
-    if (!claim) return NextResponse.json({ error: 'contestazione inesistente' }, { status: 404 });
+    if (!claim) return NextResponse.json({ error: 'claim does not exist' }, { status: 404 });
     if (claim.status === 'accepted') {
-      return NextResponse.json({ error: 'contestazione gia\' rimborsata' }, { status: 409 });
+      return NextResponse.json({ error: 'claim already\' rimborsata' }, { status: 409 });
     }
     purchaseId = purchaseId || String(claim.purchaseId || '');
   }
   if (!purchaseId) {
-    return NextResponse.json({ error: 'serve purchaseId oppure claimId' }, { status: 400 });
+    return NextResponse.json({ error: 'purchaseId or claimId is required' }, { status: 400 });
   }
 
   const p = await pool.query(
@@ -108,23 +108,23 @@ export async function POST(req: NextRequest) {
        LEFT JOIN "User" u ON u.id = p."buyerId"
       WHERE p.id = $1`, [purchaseId]);
   const acq = p.rows[0];
-  if (!acq) return NextResponse.json({ error: 'acquisto inesistente' }, { status: 404 });
+  if (!acq) return NextResponse.json({ error: 'purchase does not exist' }, { status: 404 });
   if (acq.status === 'refunded') {
     return NextResponse.json({ error: 'gia\' rimborsato' }, { status: 409 });
   }
   if (acq.status !== 'paid') {
     return NextResponse.json(
-      { error: `l'acquisto risulta '${acq.status}': non c'e' nulla da rimborsare` },
+      { error: `the purchase shows as '${acq.status}': there is nothing to refund` },
       { status: 409 });
   }
   if (!acq.providerRef) {
-    return NextResponse.json({ error: 'manca il riferimento del pagamento' }, { status: 409 });
+    return NextResponse.json({ error: 'the payment reference is missing' }, { status: 409 });
   }
 
   const totale = Number(acq.amountCents || 0);
   const importo = Math.min(Math.max(0, Math.round(Number(body.amountCents ?? totale))), totale);
   if (importo <= 0) {
-    return NextResponse.json({ error: 'importo non valido' }, { status: 400 });
+    return NextResponse.json({ error: 'invalid amount' }, { status: 400 });
   }
   const parziale = importo < totale;
 
@@ -141,7 +141,7 @@ export async function POST(req: NextRequest) {
       metadata: {
         purchaseId,
         claimId: String(body.claimId || ''),
-        motivo: String(body.reason || 'performance non conformi').slice(0, 200),
+        motivo: String(body.reason || 'performance did not match').slice(0, 200),
         deciso_da: auth.email,
       },
     }, {
@@ -166,10 +166,10 @@ export async function POST(req: NextRequest) {
             feeRestituita = quota;
           }
         } catch (e) {
-          // La commissione non e' tornata indietro: il compratore e' comunque
+          // La commissione non e'  gone back: the buyer is' comunque
           // stato rimborsato, quindi non si annulla tutto — si registra, cosi'
           // la differenza si vede nel mastro invece di sparire.
-          console.error('[refund] commissione non restituita:', e);
+          console.error('[refund] fee not returned:', e);
         }
       }
     }
@@ -206,7 +206,7 @@ export async function POST(req: NextRequest) {
                 ($1,NULL,'fee',$8,$4,$5,'storno commissione piattaforma')`,
         [purchaseId, acq.buyerId, -importo, String(acq.currency || 'EUR'),
          String(rimborso.id || ''),
-         String(body.reason || 'rimborso per performance non conformi'),
+         String(body.reason || 'rimborso per performance did not match'),
          -netto, -feeRestituita]);
 
       if (claim) {
@@ -221,9 +221,9 @@ export async function POST(req: NextRequest) {
       await cli.query('COMMIT');
     } catch (e) {
       await cli.query('ROLLBACK');
-      // Il denaro e' gia' tornato al compratore ma il database non lo sa: e'
+      // Il denaro e' gia'  returned to the buyer but the database does not know: it is'
       // il caso peggiore, e va reso evidente invece di restare in un log.
-      console.error('[refund] RIMBORSO ESEGUITO MA NON REGISTRATO', purchaseId, e);
+      console.error('[refund] REFUND ISSUED BUT NOT RECORDED', purchaseId, e);
       return NextResponse.json({
         error: 'rimborso eseguito su Stripe ma NON registrato nel database',
         detail: String((e as any)?.message || e),
@@ -240,12 +240,12 @@ export async function POST(req: NextRequest) {
       await inviaEmail(
         acq.buyerEmail,
         `Rimborso effettuato — ${acq.artifactName || 'artefatto'}`,
-        [`Ti abbiamo rimborsato ${euro(importo)} ${acq.currency || 'EUR'}`,
-         `per l'acquisto di "${acq.artifactName || 'artefatto'}".`,
+        [`We have refunded you ${euro(importo)} ${acq.currency || 'EUR'}`,
+         `for your purchase of "${acq.artifactName || 'artifact'}".`,
          '',
          body.reason ? `Motivo: ${body.reason}` : '',
          '',
-         'L\'importo torna sul metodo di pagamento usato: la banca puo\'',
+         'L\'the amount goes back to the payment method used: your bank can\'',
          'impiegare qualche giorno lavorativo a renderlo visibile.',
         ].filter(Boolean).join('\n'));
     }

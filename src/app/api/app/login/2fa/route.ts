@@ -17,7 +17,7 @@ export const runtime = 'nodejs';
 
 export async function POST(req: NextRequest) {
   if (!isConfigured()) {
-    return NextResponse.json({ error: 'APP_TOKEN_SECRET non impostato sul sito' },
+    return NextResponse.json({ error: 'APP_TOKEN_SECRET is not set on the site' },
                              { status: 503 });
   }
   let b: any = {};
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
               "twoFactorMode"::text AS "twoFactorMode", "twoFactorSecret", COALESCE("tokenVersion",1) AS "tokenVersion"
          FROM "User" WHERE id = $1 LIMIT 1`, [auth.uid]);
     const u = r.rows[0];
-    if (!u) return NextResponse.json({ error: 'utente non trovato' }, { status: 404 });
+    if (!u) return NextResponse.json({ error: 'user not found' }, { status: 404 });
 
     const modo = String(u.twoFactorMode || 'none');
     let valido = false;
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (!valido) {
-      return NextResponse.json({ error: 'codice non valido' }, { status: 403 });
+      return NextResponse.json({ error: 'invalid code' }, { status: 403 });
     }
 
     await azzera(chiaveLimite);

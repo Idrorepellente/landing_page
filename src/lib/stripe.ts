@@ -33,7 +33,7 @@ export function configurato(): boolean {
  * venditore diventa verificato). Stripe assegna a ciascuna una firma diversa.
  *
  * Con un solo segreto una delle due destinazioni viene sempre rifiutata come
- * "firma non corrispondente" — e siccome le due mandano eventi diversi, il
+ * "signature does not match" — e siccome le due mandano eventi diversi, il
  * sintomo e' parziale: i pagamenti funzionano e i venditori non si attivano
  * mai, oppure il contrario. Difficile da collegare alla causa.
  *
@@ -132,7 +132,7 @@ export async function stripeCall(
   opts: { method?: string; idempotencyKey?: string; stripeAccount?: string } = {},
 ): Promise<any> {
   const key = chiaveSegreta();
-  if (!key) throw new ErroreStripe(500, 'config', 'STRIPE_SECRET_KEY non impostata');
+  if (!key) throw new ErroreStripe(500, 'config', 'STRIPE_SECRET_KEY is not set');
 
   const headers: Record<string, string> = {
     Authorization: 'Bearer ' + key,
@@ -176,7 +176,7 @@ export function verificaFirmaWebhook(
 ): { ok: true; evento: any } | { ok: false; motivo: string } {
   const segreti = segretiWebhook();
   if (!segreti.length) {
-    return { ok: false, motivo: 'STRIPE_WEBHOOK_SECRET non impostata' };
+    return { ok: false, motivo: 'STRIPE_WEBHOOK_SECRET is not set' };
   }
   if (!header) return { ok: false, motivo: 'firma assente' };
 
@@ -209,12 +209,12 @@ export function verificaFirmaWebhook(
     const a = Buffer.from(atteso, 'utf8');
     if (a.length === b.length && crypto.timingSafeEqual(a, b)) valida = true;
   }
-  if (!valida) return { ok: false, motivo: 'firma non corrispondente' };
+  if (!valida) return { ok: false, motivo: 'signature does not match' };
 
   try {
     return { ok: true, evento: JSON.parse(payload) };
   } catch {
-    return { ok: false, motivo: 'corpo non leggibile' };
+    return { ok: false, motivo: 'body not readable' };
   }
 }
 

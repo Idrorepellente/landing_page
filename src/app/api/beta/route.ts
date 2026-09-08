@@ -48,7 +48,7 @@ export async function POST(req: Request) {
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ ok: false, error: 'JSON non valido' }, { status: 400 });
+    return NextResponse.json({ ok: false, error: 'invalid JSON' }, { status: 400 });
   }
 
   const email = (body.email || '').trim().toLowerCase();

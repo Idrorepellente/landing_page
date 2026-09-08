@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
 
     const email = String(b?.email || '').trim().toLowerCase();
     if (!email.includes('@')) {
-      return NextResponse.json({ error: 'indirizzo non valido' }, { status: 400 });
+      return NextResponse.json({ error: 'invalid address' }, { status: 400 });
     }
 
     if (azione === 'aggiungi') {

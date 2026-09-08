@@ -23,7 +23,7 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: NextRequest) {
   if (!isConfigured()) {
     return NextResponse.json(
-      { error: 'APP_TOKEN_SECRET non impostato sul sito' },
+      { error: 'APP_TOKEN_SECRET is not set on the site' },
       { status: 503 },
     );
   }
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
     const hash = user?.passwordHash || '$2b$12$invalidinvalidinvalidinvalidinvalidinvalidinvalidinvaliduu';
     const ok = await bcrypt.compare(password, hash);
     if (!user || !ok) {
-      return NextResponse.json({ error: 'credenziali non valide' }, { status: 401 });
+      return NextResponse.json({ error: 'invalid credentials' }, { status: 401 });
     }
 
     // ---- ACCESSO RISERVATO DURANTE LA BETA -------------------------------
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({
           error: 'L\'applicazione e\' in fase beta e questo indirizzo non e\' '
                + 'fra quelli ammessi.',
-          detail: 'Se pensi che debba esserlo, scrivi a chi gestisce la beta.',
+          detail: 'If you think it should be, contact whoever runs the beta.',
         }, { status: 403 });
       }
     }
@@ -100,15 +100,15 @@ export async function POST(req: NextRequest) {
       if (modo2fa === 'email') {
         if (!postaConfigurata()) {
           return NextResponse.json({
-            error: 'verifica in due passaggi via email attiva, ma la posta non '
-                 + 'e\' configurata sul sito: contatta il supporto',
+            error: 'two-step verification by email is on, but mail is not '
+                 + 'e\' configured on the site: contact support',
           }, { status: 503 });
         }
         const codice = await creaCodice(String(user.id), 'login_2fa', 10);
-        await inviaEmail(String(user.email), 'Codice di accesso Lyra',
-          `Il tuo codice di accesso e' ${codice}. Scade fra 10 minuti.\n`
-          + 'Se non stai accedendo tu, qualcuno conosce la tua password: '
-          + 'cambiala appena puoi.');
+        await inviaEmail(String(user.email), 'Lyra sign-in code',
+          `Your sign-in code is ${codice}. It expires in 10 minutes.\n`
+          + 'If you are not signing in, somebody knows your password: '
+          + 'change it as soon as you can.');
       }
       await azzera(chiaveLimite);   // password corretta: non e' un tentativo a vuoto
       return NextResponse.json({

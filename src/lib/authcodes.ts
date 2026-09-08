@@ -74,7 +74,7 @@ export async function verificaCodice(
   if (!uguale) {
     await pool.query(
       'UPDATE "AuthCode" SET attempts = attempts + 1 WHERE id = $1', [riga.id]);
-    return { ok: false, motivo: 'codice non valido' };
+    return { ok: false, motivo: 'invalid code' };
   }
 
   // usato una volta e basta: un codice riutilizzabile e' un codice permanente

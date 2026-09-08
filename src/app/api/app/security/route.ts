@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
   const auth = tokenFromRequest(req);
   if (!auth) return NextResponse.json({ error: 'token assente o scaduto' }, { status: 401 });
   const u = await utente(auth.uid);
-  if (!u) return NextResponse.json({ error: 'utente non trovato' }, { status: 404 });
+  if (!u) return NextResponse.json({ error: 'user not found' }, { status: 404 });
 
   return NextResponse.json({
     ok: true,
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
   const azione = String(b?.action || '');
   const pool = getPool();
   const u = await utente(auth.uid);
-  if (!u) return NextResponse.json({ error: 'utente non trovato' }, { status: 404 });
+  if (!u) return NextResponse.json({ error: 'user not found' }, { status: 404 });
 
   try {
     // ---- cambio password ------------------------------------------------
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
         + 'WHERE id = $1', [u.id]);
       return NextResponse.json({
         ok: true,
-        nota: 'Tutti gli accessi sono stati chiusi: rientra con le tue '
+        nota: 'All sessions have been signed out: sign in again with your '
             + 'credenziali.',
       });
     }
@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
         }, { status: 400 });
       }
       if (!(await passwordCorretta(u, b?.currentPassword))) {
-        return NextResponse.json({ error: 'password attuale errata' }, { status: 403 });
+        return NextResponse.json({ error: 'current password is wrong' }, { status: 403 });
       }
       const hash = await bcrypt.hash(nuova, 12);
       // Cambiare la password INVALIDA tutti i token: e' il gesto che si compie
@@ -114,30 +114,30 @@ export async function POST(req: NextRequest) {
     if (azione === 'email_start') {
       const nuova = String(b?.newEmail || '').trim().toLowerCase();
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(nuova)) {
-        return NextResponse.json({ error: 'indirizzo non valido' }, { status: 400 });
+        return NextResponse.json({ error: 'invalid address' }, { status: 400 });
       }
       if (!(await passwordCorretta(u, b?.currentPassword))) {
-        return NextResponse.json({ error: 'password attuale errata' }, { status: 403 });
+        return NextResponse.json({ error: 'current password is wrong' }, { status: 403 });
       }
       const gia = await pool.query(
         'SELECT id FROM "User" WHERE lower(email) = $1 AND id <> $2 LIMIT 1',
         [nuova, u.id]);
       if (gia.rows[0]) {
-        return NextResponse.json({ error: 'indirizzo già in uso' }, { status: 409 });
+        return NextResponse.json({ error: 'address already in use' }, { status: 409 });
       }
       if (!postaConfigurata()) {
         return NextResponse.json({
-          error: 'la posta non è configurata sul sito: impossibile confermare',
+          error: 'mail is not configured on the site: cannot confirm',
         }, { status: 503 });
       }
       // Il codice va al NUOVO indirizzo, non al vecchio: serve a dimostrare
       // che quella casella esiste e che è tua. Un errore di battitura viene
       // scoperto qui, non dopo aver perso l'accesso.
       const codice = await creaCodice(u.id, 'email_change', 15, { email: nuova });
-      await inviaEmail(nuova, 'Conferma il nuovo indirizzo',
-        `Il codice per confermare questo indirizzo su Lyra è ${codice}.\n`
-        + 'Scade fra 15 minuti. Se non hai richiesto tu il cambio, ignora '
-        + 'questo messaggio: il tuo indirizzo attuale resta invariato.');
+      await inviaEmail(nuova, 'Confirm your new address',
+        `Your code to confirm this address on Lyra is ${codice}.\n`
+        + 'It expires in 15 minutes. If you did not ask for the change, ignore '
+        + 'this message: your current address stays as it is.');
       return NextResponse.json({ ok: true, sent: true });
     }
 
@@ -149,16 +149,16 @@ export async function POST(req: NextRequest) {
       }
       const nuova = String((esito as any).payload?.email || '');
       if (!nuova) {
-        return NextResponse.json({ error: 'richiesta non più valida' }, { status: 409 });
+        return NextResponse.json({ error: 'request no longer valid' }, { status: 409 });
       }
       await pool.query(
         'UPDATE "User" SET email = $2, "emailVerified" = NOW() WHERE id = $1',
         [u.id, nuova]);
       // avviso al vecchio indirizzo: se il cambio non l'hai chiesto tu, e'
       // l'unico modo per accorgertene
-      await inviaEmail(u.email, 'Il tuo indirizzo Lyra è cambiato',
-        `L'indirizzo dell'account è stato cambiato in ${nuova}.\n`
-        + 'Se non sei stato tu, contatta subito il supporto.');
+      await inviaEmail(u.email, 'Your Lyra address has changed',
+        `The account address has been changed to ${nuova}.\n`
+        + 'If this was not you, contact support right away.');
       return NextResponse.json({ ok: true, email: nuova });
     }
 
@@ -168,12 +168,12 @@ export async function POST(req: NextRequest) {
       if (modo === 'email') {
         if (!postaConfigurata()) {
           return NextResponse.json({
-            error: 'la posta non è configurata sul sito',
+            error: 'mail is not configured on the site',
           }, { status: 503 });
         }
         const codice = await creaCodice(u.id, 'login_2fa', 10);
-        await inviaEmail(u.email, 'Codice di verifica Lyra',
-          `Il tuo codice è ${codice}. Scade fra 10 minuti.`);
+        await inviaEmail(u.email, 'Lyra verification code',
+          `Your code is ${codice}. It expires in 10 minutes.`);
         return NextResponse.json({ ok: true, mode: 'email', sent: true });
       }
       // Il segreto si conserva SUBITO ma la modalità resta 'none' finché
@@ -202,15 +202,15 @@ export async function POST(req: NextRequest) {
         valido = (await verificaCodice(u.id, 'login_2fa', codice)).ok;
       }
       if (!valido) {
-        return NextResponse.json({ error: 'codice non valido' }, { status: 403 });
+        return NextResponse.json({ error: 'invalid code' }, { status: 403 });
       }
       await pool.query(
         `UPDATE "User" SET "twoFactorMode" = $2::two_factor_mode,
                            "twoFactorSince" = NOW() WHERE id = $1`,
         [u.id, modo]);
       await inviaEmail(u.email, 'Verifica in due passaggi attivata',
-        'La verifica in due passaggi è ora attiva sul tuo account Lyra.\n'
-        + 'Se non sei stato tu, contatta subito il supporto.');
+        'Two-step verification is now on for your Lyra account.\n'
+        + 'If this was not you, contact support right away.');
       return NextResponse.json({ ok: true, twoFactor: modo });
     }
 
@@ -219,15 +219,15 @@ export async function POST(req: NextRequest) {
       // Serve la password: disattivare la protezione è esattamente
       // l'operazione che un intruso proverebbe per prima.
       if (!(await passwordCorretta(u, b?.currentPassword))) {
-        return NextResponse.json({ error: 'password attuale errata' }, { status: 403 });
+        return NextResponse.json({ error: 'current password is wrong' }, { status: 403 });
       }
       const conto = await pool.query(
         'SELECT 1 FROM "SellerAccount" WHERE "userId" = $1 LIMIT 1', [u.id]);
       if (conto.rows[0]) {
         return NextResponse.json({
-          error: 'non puoi disattivarla finché hai un conto collegato',
-          detail: 'La verifica in due passaggi protegge il conto su cui '
-                + 'arrivano gli incassi. Per disattivarla, scollega prima il '
+          error: 'you cannot turn it off while an account is linked',
+          detail: 'Two-step verification protects the account that '
+                + 'receives the earnings. To turn it off, unlink the  '
                 + 'conto dal profilo.',
         }, { status: 409 });
       }
@@ -236,8 +236,8 @@ export async function POST(req: NextRequest) {
                            "twoFactorSecret" = NULL, "twoFactorSince" = NULL
           WHERE id = $1`, [u.id]);
       await inviaEmail(u.email, 'Verifica in due passaggi disattivata',
-        'La verifica in due passaggi è stata disattivata sul tuo account Lyra.\n'
-        + 'Se non sei stato tu, contatta subito il supporto.');
+        'Two-step verification has been turned off for your Lyra account.\n'
+        + 'If this was not you, contact support right away.');
       return NextResponse.json({ ok: true, twoFactor: 'none' });
     }
 

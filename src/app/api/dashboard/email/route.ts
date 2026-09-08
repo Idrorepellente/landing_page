@@ -32,19 +32,19 @@ export async function POST(req: Request) {
   const secret = (process.env.DASHBOARD_API_SECRET || '').trim();
   if (!secret) {
     return NextResponse.json(
-      { sent: false, error: 'DASHBOARD_API_SECRET non configurato sul sito' },
+      { sent: false, error: 'DASHBOARD_API_SECRET is not configured on the site' },
       { status: 500 },
     );
   }
   if ((req.headers.get('x-dashboard-secret') || '').trim() !== secret) {
-    return NextResponse.json({ sent: false, error: 'segreto non valido' }, { status: 401 });
+    return NextResponse.json({ sent: false, error: 'invalid secret' }, { status: 401 });
   }
 
   let body: { to?: string; subject?: string; text?: string; html?: string };
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ sent: false, error: 'JSON non valido' }, { status: 400 });
+    return NextResponse.json({ sent: false, error: 'invalid JSON' }, { status: 400 });
   }
 
   const to = (body.to || '').trim();
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
   const pass = process.env.SMTP_PASS;
   if (!user || !pass) {
     return NextResponse.json(
-      { sent: false, error: 'SMTP_USER / SMTP_PASS non configurati sul sito' },
+      { sent: false, error: 'SMTP_USER / SMTP_PASS are not configured on the site' },
       { status: 500 },
     );
   }
@@ -86,9 +86,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ sent: true });
   } catch (e) {
-    console.error('[dashboard/email] invio fallito:', e);
+    console.error('[dashboard/email] sending failed:', e);
     return NextResponse.json(
-      { sent: false, error: e instanceof Error ? e.message : 'invio fallito' },
+      { sent: false, error: e instanceof Error ? e.message : 'sending failed' },
       { status: 502 },
     );
   }

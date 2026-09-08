@@ -49,14 +49,14 @@ export async function POST(req: NextRequest) {
         WHERE c.id = $1 LIMIT 1`, [claimId]);
     const c = r.rows[0];
     if (!c) {
-      return NextResponse.json({ error: 'contestazione non trovata' },
+      return NextResponse.json({ error: 'claim not found' },
                                { status: 404 });
     }
     if (!c.email) {
       // Non e' un errore da bloccare: la chiusura e' gia' avvenuta. Si dice
       // che l'avviso non e' partito, cosi' chi decide lo sa.
       return NextResponse.json({ ok: true, inviata: false,
-                                 motivo: 'utente senza indirizzo email' });
+                                 motivo: 'user has no email address' });
     }
 
     const inviata = await inviaEsitoRimborso({
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
       // Se la posta non e' configurata `inviaEmail` risponde false senza
       // errore: va distinto da un invio riuscito, altrimenti si crede di
       // aver avvisato qualcuno che non ha ricevuto niente.
-      motivo: inviata ? undefined : 'posta non configurata o invio non riuscito',
+      motivo: inviata ? undefined : 'mail not configured, or sending failed',
       destinatario: String(c.email),
     });
   } catch (e: any) {

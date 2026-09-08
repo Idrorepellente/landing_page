@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
   // e' il controllo che rende utile cambiare la password dopo un furto.
   if (auth && !(await versioneValida(auth, getPool()))) {
     return NextResponse.json(
-      { error: 'accesso revocato: esegui di nuovo l\'accesso' },
+      { error: 'access revoked: sign in again from the\'accesso' },
       { status: 401 },
     );
   }
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
   const def = OPS[op];
   if (!def) {
     // niente dettagli: un elenco degli op validi aiuterebbe solo chi sonda
-    return NextResponse.json({ error: 'operazione non consentita' }, { status: 403 });
+    return NextResponse.json({ error: 'action not allowed' }, { status: 403 });
   }
 
   const params: any[] = Array.isArray(body?.params) ? [...body.params] : [];
@@ -82,11 +82,11 @@ export async function POST(req: NextRequest) {
   // tabelle (i feedback, per esempio, non si salvavano). Tutto il resto —
   // DROP, TRUNCATE, ALTER — resta vietato anche se finisse nell'elenco.
   if (/^\s*(DROP|TRUNCATE|ALTER)/i.test(def.sql)) {
-    return NextResponse.json({ error: 'operazione non consentita' }, { status: 403 });
+    return NextResponse.json({ error: 'action not allowed' }, { status: 403 });
   }
   if (/^\s*CREATE/i.test(def.sql)
       && !/^\s*CREATE\s+(TABLE|INDEX)\s+IF\s+NOT\s+EXISTS/i.test(def.sql)) {
-    return NextResponse.json({ error: 'operazione non consentita' }, { status: 403 });
+    return NextResponse.json({ error: 'action not allowed' }, { status: 403 });
   }
 
   const sql = toPgPlaceholders(def.sql);

@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   const v = verificaFirmaWebhook(corpo, req.headers.get('stripe-signature'));
   if (!v.ok) {
     // 400: Stripe ritentera'. Nessun dettaglio a chi sta sondando.
-    return NextResponse.json({ error: 'firma non valida' }, { status: 400 });
+    return NextResponse.json({ error: 'invalid signature' }, { status: 400 });
   }
 
   const ev = v.evento;
@@ -84,10 +84,10 @@ export async function pagamentoRiuscito(pool: any, sess: any) {
   // 200 OK e non succedeva nulla, senza lasciare traccia del perche'. Ora
   // ogni uscita dice il motivo, e il motivo si legge nel corpo della risposta
   // che Stripe conserva accanto alla consegna.
-  if (sess.payment_status !== 'paid') return 'pagamento non risulta incassato';
+  if (sess.payment_status !== 'paid') return 'the payment does not show as collected';
   const meta = sess.metadata || {};
   const purchaseId = String(sess.client_reference_id || meta.purchaseId || '');
-  if (!purchaseId) return 'evento senza purchaseId';
+  if (!purchaseId) return 'event without a purchaseId';
 
   const p = await pool.query('SELECT * FROM "Purchase" WHERE id = $1', [purchaseId]);
   const acq = p.rows[0];
@@ -168,7 +168,7 @@ export async function pagamentoRiuscito(pool: any, sess: any) {
       });
     }
   } catch (e) {
-    console.error('[webhook] ricevuta non inviata:', e);
+    console.error('[webhook] receipt not sent:', e);
   }
 }
 
