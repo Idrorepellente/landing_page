@@ -7,6 +7,7 @@ import { consentito, azzera, messaggioLimite } from '@/lib/limiti';
 import { verifica as verificaTotp } from '@/lib/totp';
 import { creaCodice, verificaCodice } from '@/lib/authcodes';
 import { inviaEmail, postaConfigurata } from '@/lib/mailer';
+import { betaAttiva, ammessoInBeta } from '@/app/api/dashboard/beta/route';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -64,6 +65,24 @@ export async function POST(req: NextRequest) {
     const ok = await bcrypt.compare(password, hash);
     if (!user || !ok) {
       return NextResponse.json({ error: 'credenziali non valide' }, { status: 401 });
+    }
+
+    // ---- ACCESSO RISERVATO DURANTE LA BETA -------------------------------
+    // Il controllo sta QUI, dopo la verifica della password: prima sarebbe
+    // un modo per scoprire quali indirizzi sono invitati provandoli a uno a
+    // uno, senza conoscerne la password.
+    //
+    // Quando la beta e' spenta questa funzione risponde subito false e non
+    // si legge nemmeno la lista: nessun costo, e l'accesso resta quello di
+    // sempre.
+    if (await betaAttiva(getPool())) {
+      if (!(await ammessoInBeta(getPool(), String(user.email)))) {
+        return NextResponse.json({
+          error: 'L\'applicazione e\' in fase beta e questo indirizzo non e\' '
+               + 'fra quelli ammessi.',
+          detail: 'Se pensi che debba esserlo, scrivi a chi gestisce la beta.',
+        }, { status: 403 });
+      }
     }
 
     // ---- VERIFICA IN DUE PASSAGGI ----------------------------------------

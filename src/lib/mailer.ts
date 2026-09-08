@@ -20,7 +20,7 @@ export function postaConfigurata(): boolean {
 function trasporto() {
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
-  if (!user || !pass) throw new Error('SMTP_USER / SMTP_PASS non configurati');
+  if (!user || !pass) throw new Error('SMTP_USER / SMTP_PASS not configured');
 
   const host = process.env.SMTP_HOST || REGISTER_SMTP_HOST;
   const port = Number(process.env.SMTP_PORT)
@@ -80,7 +80,7 @@ export async function inviaRicevuta(d: DatiRicevuta): Promise<boolean> {
   const quando = d.data.toLocaleString('it-IT', { dateStyle: 'long', timeStyle: 'short' });
 
   const comeSiUsa = d.consegna === 'streamed'
-    ? 'Questo artefatto si esegue senza installazione: non viene salvato sul tuo '
+    ? 'This artifact runs without installation: it is not saved on your '
       + 'computer, si carica al momento dell\'uso. Serve una connessione a internet.'
     : 'Puoi installarlo dalla pagina Marketplace dell\'app: i file vengono scritti '
       + 'nella cartella del progetto.';
@@ -89,15 +89,15 @@ export async function inviaRicevuta(d: DatiRicevuta): Promise<boolean> {
     `Grazie per l'acquisto.`,
     ``,
     `Artefatto : ${d.artefatto}`,
-    `Importo   : ${importo}`,
-    `Data      : ${quando}`,
+    `Amount   : ${importo}`,
+    `Date      : ${quando}`,
     `Riferimento: ${d.purchaseId}`,
     ``,
     comeSiUsa,
     ``,
     `Lo trovi gia' disponibile nella pagina Marketplace dell'app.`,
     ``,
-    `Se non hai effettuato tu questo acquisto, rispondi a questa email.`,
+    `If you did not make this purchase, reply to this email.`,
   ].join('\n');
 
   const html = `
@@ -110,7 +110,7 @@ export async function inviaRicevuta(d: DatiRicevuta): Promise<boolean> {
   <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px">
     <tr><td style="padding:8px 0;color:#6e7681">Artefatto</td>
         <td style="padding:8px 0;text-align:right;font-weight:600">${escapeHtml(d.artefatto)}</td></tr>
-    <tr><td style="padding:8px 0;color:#6e7681;border-top:1px solid #e5e7eb">Importo</td>
+    <tr><td style="padding:8px 0;color:#6e7681;border-top:1px solid #e5e7eb">Amount</td>
         <td style="padding:8px 0;text-align:right;font-weight:600;border-top:1px solid #e5e7eb">${importo}</td></tr>
     <tr><td style="padding:8px 0;color:#6e7681;border-top:1px solid #e5e7eb">Data</td>
         <td style="padding:8px 0;text-align:right;border-top:1px solid #e5e7eb">${escapeHtml(quando)}</td></tr>
@@ -122,7 +122,7 @@ export async function inviaRicevuta(d: DatiRicevuta): Promise<boolean> {
   <p style="margin:0 0 20px;font-size:14px">
     Lo trovi già disponibile nella pagina <b>Marketplace</b> dell'app.</p>
   <p style="margin:0;font-size:12px;color:#6e7681;border-top:1px solid #e5e7eb;padding-top:14px">
-    Se non hai effettuato tu questo acquisto, rispondi a questa email.</p>
+    If you did not make this purchase, reply to this email.</p>
 </div>`;
 
   return inviaEmail(d.email, `Acquisto confermato — ${d.artefatto}`, testo, html);
@@ -163,37 +163,37 @@ function testiEsito(d: DatiEsitoRimborso) {
   switch (d.esito) {
     case 'rimborsato':
       return {
-        oggetto: `Rimborso approvato — ${nome}`,
-        titolo: 'La tua richiesta è stata accolta',
-        corpo: `Abbiamo esaminato la tua richiesta su <b>${nome}</b> e l'abbiamo `
+        oggetto: `Refund approved — ${nome}`,
+        titolo: 'Your request has been accepted',
+        corpo: `We have reviewed your request on <b>${nome}</b> and `
              + 'accolta. L\'importo torna sul metodo di pagamento che hai usato: '
-             + 'la tua banca lo accredita di norma entro cinque-dieci giorni '
-             + 'lavorativi.',
+             + 'your bank normally credits it within five to ten working '
+             + 'days.',
       };
     case 'respinto':
       return {
-        oggetto: `Richiesta di rimborso non accolta — ${nome}`,
-        titolo: 'La tua richiesta non è stata accolta',
-        corpo: `Abbiamo esaminato la tua richiesta su <b>${nome}</b>. Dalle `
-             + 'verifiche non è emersa una difformità rispetto a quanto '
+        oggetto: `Refund request declined — ${nome}`,
+        titolo: 'Your request was not accepted',
+        corpo: `We have reviewed your request on <b>${nome}</b>. The `
+             + 'checks found no discrepancy against what '
              + 'dichiarato dall\'autore, e l\'acquisto resta valido: '
-             + 'l\'artefatto continua a essere tuo e utilizzabile.',
+             + 'l\'the artifact remains yours and usable.',
       };
     case 'ritirato':
       return {
-        oggetto: `Richiesta di rimborso ritirata — ${nome}`,
-        titolo: 'Hai ritirato la tua richiesta',
-        corpo: `La richiesta su <b>${nome}</b> è stata chiusa su tua `
+        oggetto: `Refund request withdrawn — ${nome}`,
+        titolo: 'You withdrew your request',
+        corpo: `The request on <b>${nome}</b> was closed at your `
              + 'indicazione. Nessun rimborso è stato emesso e l\'acquisto '
-             + 'resta valido. Se il problema si ripresenta puoi aprirne una '
-             + 'nuova.',
+             + 'stands. If the problem happens again you can open a '
+             + 'new one.',
       };
     default:
       return {
-        oggetto: `Richiesta di rimborso chiusa — ${nome}`,
-        titolo: 'La tua richiesta è stata chiusa',
-        corpo: `La richiesta su <b>${nome}</b> è stata chiusa senza emettere `
-             + 'un rimborso.',
+        oggetto: `Refund request closed — ${nome}`,
+        titolo: 'Your request has been closed',
+        corpo: `The request on <b>${nome}</b> was closed without issuing `
+             + 'a refund.',
       };
   }
 }
@@ -212,15 +212,15 @@ export async function inviaEsitoRimborso(d: DatiEsitoRimborso): Promise<boolean>
     // Il motivo si riporta testualmente: riassumerlo cambierebbe cio' che
     // e' stato deciso, e questa email e' il documento che resta.
     righe.push('<p style="margin:0 0 6px;font-size:12px;color:#6b7280;'
-      + 'text-transform:uppercase;letter-spacing:.08em">Motivo</p>'
+      + 'text-transform:uppercase;letter-spacing:.08em">Reason</p>'
       + `<p style="margin:0 0 14px;padding:10px 12px;background:#f6f7f9;`
       + `border-radius:6px">${d.motivo}</p>`);
   }
   righe.push('<p style="margin:14px 0 0;font-size:13px;color:#6b7280">'
     + 'La conversazione resta consultabile nell\'applicazione, sezione '
-    + 'Rimborso. Se qualcosa non ti torna, rispondi a questa email.</p>');
+    + 'Refund. If something does not add up, reply to this email.</p>');
   righe.push(`<p style="margin:18px 0 0;font-size:11px;color:#9aa1ab">`
-    + `Riferimento richiesta: ${d.claimId}</p>`);
+    + `Request reference: ${d.claimId}</p>`);
 
   const html = `<div style="font-family:system-ui,-apple-system,Roboto,sans-serif;`
     + `max-width:560px;margin:0 auto;padding:24px;color:#111827">`
@@ -230,8 +230,8 @@ export async function inviaEsitoRimborso(d: DatiEsitoRimborso): Promise<boolean>
   // Il testo semplice non e' un ripiego: alcuni client mostrano solo quello,
   // e una email vuota sarebbe peggio di nessuna email.
   const testo = [t.titolo, '', t.corpo.replace(/<[^>]+>/g, ''),
-                 importo ? `Importo: ${importo}` : '',
-                 d.motivo ? `Motivo: ${d.motivo}` : '',
+                 importo ? `Amount: ${importo}` : '',
+                 d.motivo ? `Reason: ${d.motivo}` : '',
                  `Riferimento: ${d.claimId}`].filter(Boolean).join('\n');
 
   return inviaEmail(d.email, t.oggetto, testo, html);

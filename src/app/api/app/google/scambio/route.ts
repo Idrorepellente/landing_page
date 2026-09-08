@@ -13,6 +13,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { getPool } from '@/lib/pg';
 import { createToken, isConfigured } from '@/lib/appToken';
+import { betaAttiva, ammessoInBeta } from '@/app/api/dashboard/beta/route';
 
 export const runtime = 'nodejs';
 
@@ -110,6 +111,23 @@ export async function POST(req: NextRequest) {
            VALUES ($1, $2, '$google$', $3, $4, $5, NOW(), NOW())`,
           [id, email, nome, await nomeUtenteLibero(pool, email), sub]);
         user = { id, email, displayName: nome };
+      }
+    }
+
+    // ---- ACCESSO RISERVATO DURANTE LA BETA -------------------------------
+    // Google e' una porta d'ingresso diversa dalla password, e va chiusa
+    // anch'essa: proteggere una sola delle due lascia l'altra spalancata.
+    //
+    // Il controllo sta DOPO la creazione dell'utente, non prima: chi non e'
+    // ammesso oggi potrebbe esserlo domani, e non avrebbe senso perdere il
+    // collegamento con il suo account Google nel frattempo.
+    if (await betaAttiva(pool)) {
+      if (!(await ammessoInBeta(pool, String(user.email)))) {
+        return NextResponse.json({
+          error: 'L\'applicazione e\' in fase beta e questo indirizzo non e\' '
+               + 'fra quelli ammessi.',
+          detail: 'Se pensi che debba esserlo, scrivi a chi gestisce la beta.',
+        }, { status: 403 });
       }
     }
 
