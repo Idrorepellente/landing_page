@@ -4,6 +4,7 @@ import { getPool } from '@/lib/pg';
 import { tokenFromRequest } from '@/lib/appToken';
 import { stripeCall, configurato, baseUrl, ErroreStripe } from '@/lib/stripe';
 import { dividiPagamento, idNuovo, masterKeyReady } from '@/lib/marketplace';
+import { venditeAttive, VENDITE_SPENTE } from '@/lib/impostazioni';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -68,6 +69,15 @@ async function gestisci(req: NextRequest) {
   if (!art) return NextResponse.json({ error: 'artefatto inesistente' }, { status: 404 });
 
   // ── gratuito: licenza subito, nessun pagamento ──
+  // ── LE VENDITE SONO SPENTE? ────────────────────────────────────────
+  // Il controllo sta QUI e non solo nell'interfaccia: l'applicazione gira
+  // sul computer di chi la usa, e chiunque puo' modificarla per chiamare
+  // questa rotta lo stesso. L'unico punto che non si puo' aggirare e' il
+  // server.
+  if (!(await venditeAttive(pool))) {
+    return NextResponse.json(VENDITE_SPENTE, { status: 403 });
+  }
+
   if (!art.isForSale || Number(art.priceCents || 0) <= 0) {
     const licId = idNuovo();
     await pool.query(
