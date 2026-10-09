@@ -1,3 +1,3 @@
 import { loadRaw, withParts } from './_loader';
-export const css = loadRaw('soluzione.css');
-export const html = withParts(loadRaw('soluzione.html'));
+export const css = loadRaw('solution.css');
+export const html = withParts(loadRaw('solution.html'));

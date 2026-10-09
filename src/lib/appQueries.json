@@ -1,5 +1,11 @@
 {
   "ops": {
+    "049fc2473ea2a9731605f4d7bb0cd7d3": {
+      "admin": true,
+      "source": "web_db.py",
+      "sql": "SELECT \"artifactId\", \"ownerId\", machine, kind, name, sharpe, \"createdAt\" FROM app_auto_publish ORDER BY \"createdAt\" DESC LIMIT %s",
+      "userParam": null
+    },
     "06e415a8643540bfc1b9a31fea8ec3f1": {
       "source": "web_db.py",
       "sql": "SELECT a.id, a.kind::text AS kind, a.name, a.slug, a.description, a.summary, a.language, a.tags, a.likes, a.\"createdAt\", a.\"publishedAt\", COALESCE(a.\"priceCents\",0) AS price_cents, COALESCE(a.currency,'EUR') AS currency, COALESCE(a.\"isForSale\", FALSE) AS for_sale, COALESCE(a.downloads,0) AS downloads, a.\"coverEmoji\" AS cover, a.metrics, a.bundle, a.\"ownerId\", a.subtitle, a.version, COALESCE(a.\"pricePeriod\",'once') AS price_period, a.rating, COALESCE(u.\"displayName\", u.username, u.email) AS owner FROM \"Artifact\" a JOIN \"User\" u ON u.id = a.\"ownerId\" WHERE a.\"isPublic\" = TRUE AND a.\"publishedAt\" IS NOT NULL ORDER BY COALESCE(a.\"publishedAt\", a.\"createdAt\") DESC LIMIT %s",
@@ -62,6 +68,7 @@
       "userParam": 0
     },
     "1a23303dbc31aa9edfa83425ae7de64b": {
+      "admin": true,
       "source": "web_db.py",
       "sql": "SELECT f.id, f.category, f.message, f.\"createdAt\", u.email, u.username FROM app_feedback f LEFT JOIN \"User\" u ON u.id = f.\"userId\" ORDER BY f.\"createdAt\" DESC LIMIT %s",
       "userParam": null
@@ -227,6 +234,7 @@
       "userParam": null
     },
     "7b43655238871d441a2757710b8f546b": {
+      "admin": true,
       "source": "web_db.py",
       "sql": "SELECT c.*, a.name AS \"artifactName\", u.email AS \"buyerEmail\" FROM \"PerformanceClaim\" c LEFT JOIN \"Artifact\" a ON a.id = c.\"artifactId\" LEFT JOIN \"User\" u ON u.id = c.\"buyerId\" ORDER BY c.\"createdAt\" DESC LIMIT 200",
       "userParam": null
@@ -312,7 +320,13 @@
       "sql": "SELECT COUNT(*) AS n FROM \"Purchase\" WHERE \"artifactId\" = %s AND status IN ('paid','free')",
       "userParam": null
     },
+    "b20ca380c150c06ad86587006debb4fa": {
+      "source": "web_db.py",
+      "sql": "SELECT \"artifactId\", \"ownerId\", machine, kind, name, sharpe, \"createdAt\" FROM app_auto_publish WHERE \"ownerId\" = %s ORDER BY \"createdAt\" DESC LIMIT %s",
+      "userParam": 0
+    },
     "b35658a6eb355458278e0226b669aca1": {
+      "admin": true,
       "source": "auth.py",
       "sql": "SELECT u.id, u.email, u.username, u.\"displayName\", u.\"createdAt\", MAX(l.\"at\") AS last_login, COUNT(l.id) AS logins FROM \"User\" u LEFT JOIN \"LoginEvent\" l ON l.\"userId\" = u.id GROUP BY u.id, u.email, u.username, u.\"displayName\", u.\"createdAt\" ORDER BY MAX(l.\"at\") DESC NULLS LAST, u.\"createdAt\" DESC LIMIT %s",
       "userParam": null
@@ -352,6 +366,11 @@
       "sql": "UPDATE \"PerformanceClaim\" SET status = 'reviewing'::claim_status WHERE id = %s",
       "userParam": null
     },
+    "c5772b9a377f0d6753db03a04acde433": {
+      "source": "web_db.py",
+      "sql": "CREATE TABLE IF NOT EXISTS app_auto_publish (\"artifactId\" text PRIMARY KEY, \"ownerId\" text, machine text, kind text NOT NULL, name text NOT NULL, sharpe numeric, \"createdAt\" timestamptz NOT NULL DEFAULT now())",
+      "userParam": null
+    },
     "cd086748fe7b25dd311b024c78c24131": {
       "source": "web_db.py",
       "sql": "SELECT status::text AS s FROM \"License\" WHERE \"artifactId\" = %s AND \"userId\" = %s",
@@ -360,6 +379,17 @@
     "cd16cbda32452912cca1d6d410c3b67e": {
       "source": "web_db.py",
       "sql": "CREATE TABLE IF NOT EXISTS app_agent_messages (id text PRIMARY KEY, \"chatId\" text NOT NULL, role text NOT NULL, content text NOT NULL, \"createdAt\" timestamptz NOT NULL DEFAULT now())",
+      "userParam": null
+    },
+    "cde7670cbd7271f1242d2e426e0cc84c": {
+      "source": "web_db.py",
+      "sql": "INSERT INTO app_auto_publish(\"artifactId\", \"ownerId\", machine, kind, name, sharpe) VALUES (%s, %s, %s, %s, %s, %s)",
+      "userParam": 1
+    },
+    "d02b9748dd1c9424269b10bd783471a3": {
+      "admin": true,
+      "source": "web_db.py",
+      "sql": "SELECT a.id, a.\"ownerId\", a.kind::text AS kind, a.name, a.files, a.bundle, a.metrics, a.\"isPublic\", a.\"createdAt\", u.email, u.username, u.\"displayName\" FROM \"Artifact\" a LEFT JOIN \"User\" u ON u.id = a.\"ownerId\" ORDER BY a.\"createdAt\" DESC LIMIT %s",
       "userParam": null
     },
     "d8990e0dd7d4ecbca44883fd63dd26d0": {
@@ -381,6 +411,12 @@
       "source": "auth.py",
       "sql": "INSERT INTO \"LoginEvent\"(\"userId\", email, ip, \"userAgent\") VALUES (%s, %s, %s, %s)",
       "userParam": 0
+    },
+    "df2fed02da9185c4b5d68fbea2b09d39": {
+      "admin": true,
+      "source": "web_db.py",
+      "sql": "SELECT a.id, a.\"ownerId\", a.kind::text AS kind, a.name, a.\"isPublic\", a.\"publishedAt\", COALESCE(a.\"priceCents\",0) AS price_cents, u.email, u.username, u.\"displayName\" FROM \"Artifact\" a LEFT JOIN \"User\" u ON u.id = a.\"ownerId\" ORDER BY a.\"createdAt\" DESC LIMIT %s",
+      "userParam": null
     },
     "e1b6d8922eed3ccb5891f72fe6753a97": {
       "source": "web_db.py",

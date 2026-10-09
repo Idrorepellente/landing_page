@@ -20,7 +20,22 @@ export const dynamic = 'force-dynamic';
  * token, così chiedere i dati di un altro non serve a nulla.
  */
 
-type OpDef = { sql: string; userParam: number | null; source?: string };
+type OpDef = {
+  sql: string;
+  userParam: number | null;
+  source?: string;
+  /**
+   * Query che ATTRAVERSA gli account: l'elenco di tutti gli artefatti col
+   * loro codice, i feedback con le email, il registro delle pubblicazioni
+   * automatiche, le contestazioni di tutti, gli accessi.
+   *
+   * Per queste non esiste un parametro dell'identità da riscrivere — per
+   * mestiere leggono i dati di chiunque — quindi l'unico controllo possibile
+   * è QUI: l'applicazione gira sulla macchina di chi la usa, il token è suo,
+   * e il suo controllo «sei amministratore?» lo può togliere.
+   */
+  admin?: boolean;
+};
 const OPS = (manifest as any).ops as Record<string, OpDef>;
 
 // %s (stile psycopg) -> $1, $2 … (node-postgres)
@@ -59,6 +74,12 @@ export async function POST(req: NextRequest) {
   const def = OPS[op];
   if (!def) {
     // niente dettagli: un elenco degli op validi aiuterebbe solo chi sonda
+    return NextResponse.json({ error: 'action not allowed' }, { status: 403 });
+  }
+
+  // Riservate agli amministratori: stessa risposta di una query inesistente,
+  // perché sapere che un'operazione esiste ed è negata è già un'informazione.
+  if (def.admin && !(await isAdminCompleto(auth.email, getPool()))) {
     return NextResponse.json({ error: 'action not allowed' }, { status: 403 });
   }
 
