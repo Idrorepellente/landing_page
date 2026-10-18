@@ -17,6 +17,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { getPool } from '@/lib/pg';
+import { nomeUtenteLibero } from '@/lib/utenti';
 import { createToken, isConfigured } from '@/lib/appToken';
 import { baseUrl } from '@/lib/stripe';
 
@@ -39,18 +40,6 @@ function redirectUri(req: NextRequest): string {
  *  entrava, chi arrivava per la prima volta no. Si parte dalla parte prima
  *  della chiocciola e si aggiunge un numero finche' e' libero.
  */
-async function nomeUtenteLibero(pool: any, email: string): Promise<string> {
-  const base = (String(email).split('@')[0] || 'utente')
-    .toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 24) || 'utente';
-  for (let i = 0; i < 50; i++) {
-    const tentativo = i === 0 ? base : `${base}${i + 1}`;
-    const r = await pool.query(
-      'SELECT 1 FROM "User" WHERE lower(username) = $1 LIMIT 1', [tentativo]);
-    if (!r.rows[0]) return tentativo;
-  }
-  // dopo cinquanta tentativi si smette di indovinare
-  return `${base}${Date.now().toString(36).slice(-6)}`;
-}
 
 export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get('code');

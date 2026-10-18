@@ -12,8 +12,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { getPool } from '@/lib/pg';
+import { nomeUtenteLibero } from '@/lib/utenti';
 import { createToken, isConfigured } from '@/lib/appToken';
-import { betaAttiva, ammessoInBeta } from '@/lib/beta';
+import { betaAttiva, ammessoInBeta, BETA_NON_AMMESSO } from '@/lib/beta';
 
 export const runtime = 'nodejs';
 
@@ -24,18 +25,6 @@ export const runtime = 'nodejs';
  *  entrava, chi arrivava per la prima volta no. Si parte dalla parte prima
  *  della chiocciola e si aggiunge un numero finche' e' libero.
  */
-async function nomeUtenteLibero(pool: any, email: string): Promise<string> {
-  const base = (String(email).split('@')[0] || 'utente')
-    .toLowerCase().replace(/[^a-z0-9_]/g, '').slice(0, 24) || 'utente';
-  for (let i = 0; i < 50; i++) {
-    const tentativo = i === 0 ? base : `${base}${i + 1}`;
-    const r = await pool.query(
-      'SELECT 1 FROM "User" WHERE lower(username) = $1 LIMIT 1', [tentativo]);
-    if (!r.rows[0]) return tentativo;
-  }
-  // dopo cinquanta tentativi si smette di indovinare
-  return `${base}${Date.now().toString(36).slice(-6)}`;
-}
 
 export async function POST(req: NextRequest) {
   if (!isConfigured() || !process.env.GOOGLE_CLIENT_ID
@@ -89,6 +78,22 @@ export async function POST(req: NextRequest) {
     }
 
     const pool = getPool();
+
+    // ---- ACCESSO RISERVATO DURANTE LA BETA -------------------------------
+    // Il controllo sta PRIMA di guardare o creare l'utente, e prima stava
+    // dopo. Spostarlo non e' un riordino cosmetico: con il controllo a valle,
+    // un indirizzo non ammesso otteneva comunque una riga in "User" — creata
+    // qui sotto — e solo dopo si vedeva negare il token. Risultato: la beta
+    // chiudeva l'accesso ma lasciava aperta la REGISTRAZIONE, e il database si
+    // riempiva di account che non servivano a nessuno e di cui nessuno sapeva
+    // piu' il perche'.
+    //
+    // Google e' una porta d'ingresso diversa dalla password, e va chiusa
+    // anch'essa: proteggere una sola delle due lascia l'altra spalancata.
+    if (await betaAttiva(pool) && !(await ammessoInBeta(pool, email))) {
+      return NextResponse.json(BETA_NON_AMMESSO, { status: 403 });
+    }
+
     let r = await pool.query(
       'SELECT id, email, "displayName" FROM "User" WHERE "googleSub" = $1 LIMIT 1',
       [sub]);
@@ -114,22 +119,9 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // ---- ACCESSO RISERVATO DURANTE LA BETA -------------------------------
-    // Google e' una porta d'ingresso diversa dalla password, e va chiusa
-    // anch'essa: proteggere una sola delle due lascia l'altra spalancata.
-    //
-    // Il controllo sta DOPO la creazione dell'utente, non prima: chi non e'
-    // ammesso oggi potrebbe esserlo domani, e non avrebbe senso perdere il
-    // collegamento con il suo account Google nel frattempo.
-    if (await betaAttiva(pool)) {
-      if (!(await ammessoInBeta(pool, String(user.email)))) {
-        return NextResponse.json({
-          error: 'L\'applicazione e\' in fase beta e questo indirizzo non e\' '
-               + 'fra quelli ammessi.',
-          detail: 'Se pensi che debba esserlo, scrivi a chi gestisce la beta.',
-        }, { status: 403 });
-      }
-    }
+    // Il controllo della beta e' gia' stato fatto sopra, sull'indirizzo
+    // dichiarato da Google e prima di creare qualunque cosa. Qui non si
+    // ricontrolla: l'indirizzo e' lo stesso.
 
     return NextResponse.json({
       ok: true,

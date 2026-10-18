@@ -7,7 +7,9 @@ import { consentito, azzera, messaggioLimite } from '@/lib/limiti';
 import { verifica as verificaTotp } from '@/lib/totp';
 import { creaCodice, verificaCodice } from '@/lib/authcodes';
 import { inviaEmail, postaConfigurata } from '@/lib/mailer';
-import { betaAttiva, ammessoInBeta } from '@/lib/beta';
+import {
+  betaAttiva, ammessoInBeta, BETA_NON_AMMESSO, BETA_SENZA_PASSWORD,
+} from '@/lib/beta';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -60,29 +62,63 @@ export async function POST(req: NextRequest) {
     const user = res.rows[0];
 
     // Stessa risposta e stesso costo se l'utente non esiste: altrimenti i tempi
-    // di risposta direbbero quali indirizzi sono registrati.
+    // di risposta direbbero quali indirizzi sono registrati. Il confronto si
+    // fa SEMPRE, anche quando si sa già che non c'è nessun utente.
     const hash = user?.passwordHash || '$2b$12$invalidinvalidinvalidinvalidinvalidinvalidinvalidinvaliduu';
     const ok = await bcrypt.compare(password, hash);
-    if (!user || !ok) {
+
+    // ---- ACCESSO RISERVATO DURANTE LA BETA -------------------------------
+    // Con la beta attiva gli unici indirizzi che possono entrare sono quelli
+    // ammessi: iscritti dal sito, invitati dal pannello, amministratori.
+    //
+    // DUE CASI DIVERSI, e qui sta il punto di tutta questa parte:
+    //
+    //   nessun account + indirizzo AMMESSO
+    //     È il primo accesso di chi si è iscritto alla beta. Non ha una
+    //     password perché non ha un account: ha solo lasciato un indirizzo sul
+    //     form. Rispondere «credenziali non valide» lo lascia davanti a un
+    //     muro, convinto di aver sbagliato a digitare — e il percorso
+    //     previsto, «dimentica password», non lo trova nessuno da solo.
+    //     Quindi si dice dove andare.
+    //
+    //   indirizzo NON ammesso
+    //     Rifiutato, con l'indicazione di iscriversi alla beta.
+    //
+    // L'ORDINE conta. Per un account che ESISTE il controllo della beta viene
+    // DOPO la verifica della password: altrimenti provando indirizzi a uno a
+    // uno si scoprirebbe chi è invitato senza conoscerne la password. Per un
+    // account che non esiste non c'è nessuna password da verificare, quindi la
+    // distinzione si può fare subito; e ciò che si rivela — «questo indirizzo
+    // è nella lista e non ha ancora una password» — non è sfruttabile, perché
+    // per impostarla serve leggere il codice spedito a quella casella.
+    //
+    // Quando la beta è spenta `betaAttiva` risponde subito false e non si
+    // legge nemmeno una lista: nessun costo, e l'accesso resta quello di
+    // sempre.
+    const beta = await betaAttiva(getPool());
+
+    // Ramo A — l'account NON esiste. Non c'è nessuna password da verificare,
+    // quindi il motivo si può dire subito. È il ramo che fa funzionare il
+    // primo accesso di chi si è iscritto alla beta.
+    if (!user) {
+      if (beta) {
+        return NextResponse.json(
+          (await ammessoInBeta(getPool(), email))
+            ? BETA_SENZA_PASSWORD : BETA_NON_AMMESSO,
+          { status: 403 });
+      }
       return NextResponse.json({ error: 'invalid credentials' }, { status: 401 });
     }
 
-    // ---- ACCESSO RISERVATO DURANTE LA BETA -------------------------------
-    // Il controllo sta QUI, dopo la verifica della password: prima sarebbe
-    // un modo per scoprire quali indirizzi sono invitati provandoli a uno a
-    // uno, senza conoscerne la password.
-    //
-    // Quando la beta e' spenta questa funzione risponde subito false e non
-    // si legge nemmeno la lista: nessun costo, e l'accesso resta quello di
-    // sempre.
-    if (await betaAttiva(getPool())) {
-      if (!(await ammessoInBeta(getPool(), String(user.email)))) {
-        return NextResponse.json({
-          error: 'L\'applicazione e\' in fase beta e questo indirizzo non e\' '
-               + 'fra quelli ammessi.',
-          detail: 'If you think it should be, contact whoever runs the beta.',
-        }, { status: 403 });
-      }
+    // Ramo B — l'account esiste. Qui la password si verifica PRIMA della
+    // beta, e l'ordine non è un dettaglio: invertirlo trasformerebbe questo
+    // endpoint in un modo per scoprire chi è ammesso provando indirizzi a uno
+    // a uno con una password qualsiasi.
+    if (!ok) {
+      return NextResponse.json({ error: 'invalid credentials' }, { status: 401 });
+    }
+    if (beta && !(await ammessoInBeta(getPool(), String(user.email)))) {
+      return NextResponse.json(BETA_NON_AMMESSO, { status: 403 });
     }
 
     // ---- VERIFICA IN DUE PASSAGGI ----------------------------------------

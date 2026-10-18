@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getPool } from '@/lib/pg';
-import { verificaFirmaWebhook } from '@/lib/stripe';
+import { verificaFirmaWebhook, stripeCall } from '@/lib/stripe';
 import { idNuovo } from '@/lib/marketplace';
 import { inviaRicevuta } from '@/lib/mailer';
+import { periodoValido } from '@/lib/abbonamenti';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -23,7 +24,15 @@ export const dynamic = 'force-dynamic';
  *
  * Da configurare su Stripe: endpoint  <sito>/api/market/webhook
  * eventi: checkout.session.completed, checkout.session.expired,
- *         charge.refunded, charge.dispute.created, account.updated
+ *         charge.refunded, charge.dispute.created, account.updated,
+ *         customer.subscription.created, customer.subscription.updated,
+ *         customer.subscription.deleted, invoice.paid,
+ *         invoice.payment_failed
+ *
+ * Gli ultimi cinque sono gli ABBONAMENTI. Sono qui e non in un endpoint a
+ * parte perche' la protezione contro il doppio accredito — la firma piu' il
+ * registro degli eventi gia' visti — e' la stessa, e duplicarla significa
+ * dover ricordarsi di correggerla in due posti.
  */
 export async function POST(req: NextRequest) {
   const corpo = await req.text();
@@ -46,6 +55,16 @@ export async function POST(req: NextRequest) {
   try {
     switch (ev.type) {
       case 'checkout.session.completed': {
+        // Due cose arrivano con lo stesso nome: l'acquisto di un artefatto e
+        // l'attivazione di un abbonamento. Si distinguono dal `mode`.
+        // Senza questa biforcazione, l'abbonamento finiva in
+        // `pagamentoRiuscito`, che cercava un `purchaseId` inesistente e
+        // uscuiva in silenzio: il cliente pagava e non riceveva il livello.
+        if (String(ev.data.object?.mode || '') === 'subscription') {
+          const motivo = await abbonamentoDaSessione(pool, ev.data.object);
+          if (motivo) return NextResponse.json({ ok: true, nulla: motivo });
+          break;
+        }
         const motivo = await pagamentoRiuscito(pool, ev.data.object);
         if (motivo) {
           // Non e' un errore da ritentare, ma non e' nemmeno un successo:
@@ -67,6 +86,21 @@ export async function POST(req: NextRequest) {
       case 'account.updated':
         await contoAggiornato(pool, ev.data.object);
         break;
+
+      // ── abbonamenti ──────────────────────────────────────────────────
+      case 'customer.subscription.created':
+      case 'customer.subscription.updated':
+      case 'customer.subscription.deleted':
+        await abbonamentoAggiornato(pool, ev.data.object);
+        break;
+      case 'invoice.paid':
+      case 'invoice.payment_succeeded':
+        await fatturaAbbonamento(pool, ev.data.object, 'paid');
+        break;
+      case 'invoice.payment_failed':
+        await fatturaAbbonamento(pool, ev.data.object, 'failed');
+        break;
+
       default:
         break;   // evento non gestito: registrato e basta
     }
@@ -217,6 +251,198 @@ async function contestazione(pool: any, disputa: any) {
     `INSERT INTO "LedgerEntry" ("purchaseId","userId",kind,"amountCents",currency,"providerRef",note)
      VALUES ($1,$2,'chargeback',$3,$4,$5,'contestazione')`,
     [acq.id, acq.sellerId, -Number(disputa.amount || 0), String(acq.currency || 'EUR'), pi]);
+}
+
+// ===========================================================================
+//  ABBONAMENTI
+// ===========================================================================
+
+/**
+ * La fine del periodo pagato.
+ *
+ * Si guarda in DUE posti e non per abbondanza: Stripe ha spostato
+ * `current_period_end` dall'abbonamento alla singola voce, e il sito dichiara
+ * una versione dell'API configurabile (`STRIPE_API_VERSION`). Leggere solo il
+ * primo posto significa che, cambiando versione, la scadenza arriva vuota e
+ * ogni abbonato risulta scaduto subito — cioe' tutti perdono l'accesso in
+ * blocco il giorno dell'aggiornamento.
+ */
+function finePeriodo(sub: any): Date | null {
+  const n = Number(sub?.current_period_end
+    ?? sub?.items?.data?.[0]?.current_period_end
+    ?? 0);
+  return n > 0 ? new Date(n * 1000) : null;
+}
+
+/** Lo stato di Stripe tradotto nel nostro, e se dà diritto a pubblicare. */
+function traduciStato(stripeStatus: string): { stato: string; vale: boolean } {
+  switch (String(stripeStatus || '').toLowerCase()) {
+    case 'active':
+    case 'trialing':
+      return { stato: 'subscribed', vale: true };
+    // Pagamento rifiutato: Stripe ritenta per giorni. Nel frattempo
+    // l'abbonamento NON vale — dare il servizio a chi non lo sta pagando e
+    // poi toglierlo è peggio che non darlo subito.
+    case 'past_due':
+    case 'unpaid':
+    case 'incomplete':
+    case 'paused':
+      return { stato: 'past_due', vale: false };
+    case 'canceled':
+    case 'incomplete_expired':
+      return { stato: 'cancelled', vale: false };
+    default:
+      return { stato: 'none', vale: false };
+  }
+}
+
+/**
+ * Scrive lo stato dell'abbonamento a partire dall'oggetto di Stripe.
+ *
+ * È IL SOLO PUNTO che tocca `subscriptionStatus` e `subscriptionTier`. Vale
+ * per un abbonamento nuovo, per un rinnovo, per un cambio di livello e per
+ * una disdetta fatta dal portale: in tutti i casi l'oggetto che arriva
+ * descrive lo stato COMPLETO, quindi riscriverlo tutto è giusto ed è anche
+ * idempotente — lo stesso evento consegnato due volte lascia lo stesso
+ * risultato.
+ *
+ * Chi è stato attivato A MANO durante la beta non ha un abbonamento su
+ * Stripe, quindi nessun evento lo riguarda e nessun evento lo tocca.
+ */
+async function abbonamentoAggiornato(pool: any, sub: any) {
+  const meta = sub?.metadata || {};
+  const subId = String(sub?.id || '');
+  const customer = String(sub?.customer || '');
+
+  // Chi è: prima i metadati (li scriviamo noi al checkout), poi l'id del
+  // cliente, poi l'id dell'abbonamento. Tre strade perché un evento che non
+  // si sa a chi attribuire è un pagamento incassato e non accreditato.
+  let uid = String(meta.uid || '');
+  if (!uid && customer) {
+    const r = await pool.query(
+      'SELECT id FROM "User" WHERE "stripeCustomerId" = $1 LIMIT 1', [customer]);
+    uid = String(r.rows[0]?.id || '');
+  }
+  if (!uid && subId) {
+    const r = await pool.query(
+      'SELECT id FROM "User" WHERE "stripeSubscriptionId" = $1 LIMIT 1', [subId]);
+    uid = String(r.rows[0]?.id || '');
+  }
+  if (!uid) {
+    console.error('[webhook] subscription without a known user:', subId, customer);
+    return;
+  }
+
+  const { stato, vale } = traduciStato(sub?.status);
+  const tierMeta = Number(meta.tier || 0);
+  const tier = vale && tierMeta >= 1 && tierMeta <= 3 ? tierMeta : 0;
+  const periodo = periodoValido(meta.periodo)
+    || (String(sub?.items?.data?.[0]?.price?.recurring?.interval || '') === 'year'
+        ? 'annual' : 'monthly');
+  const fine = finePeriodo(sub);
+  // Disdetta chiesta ma periodo in corso: resta attivo fino alla fine. Senza
+  // questa distinzione si toglierebbe l'accesso a qualcuno che ha pagato.
+  const disdetta = sub?.cancel_at_period_end
+    ? (Number(sub?.cancel_at || 0) > 0 ? new Date(Number(sub.cancel_at) * 1000) : fine)
+    : null;
+
+  await pool.query(
+    `UPDATE "User"
+        SET "subscriptionStatus"     = $2::subscription_status,
+            "subscriptionTier"       = $3,
+            "subscriptionUntil"      = $4,
+            "subscriptionPeriod"     = $5,
+            "subscriptionCancelAt"   = $6,
+            "stripeSubscriptionId"   = $7,
+            "stripeCustomerId"       = COALESCE("stripeCustomerId", $8)
+      WHERE id = $1`,
+    [uid, stato, tier, fine, periodo, disdetta, subId || null, customer || null]);
+}
+
+/**
+ * L'abbonamento appena attivato, a partire dalla sessione di checkout.
+ *
+ * Stripe manda ANCHE `customer.subscription.created`, ma l'ordine di arrivo
+ * non è garantito e una delle due consegne può fallire. Gestirle entrambe non
+ * raddoppia nulla: scrivono lo stesso stato dalla stessa fonte.
+ */
+async function abbonamentoDaSessione(pool: any, sess: any): Promise<string | null> {
+  const subId = String(sess?.subscription || '');
+  if (!subId) return 'subscription session without a subscription id';
+  // Si RILEGGE l'abbonamento da Stripe invece di fidarsi della sessione: la
+  // sessione dice cosa è stato chiesto, l'abbonamento dice cosa esiste.
+  const sub = await stripeCall(`/subscriptions/${subId}`);
+  // Se i metadati non sono arrivati sull'abbonamento, si prendono dalla
+  // sessione: senza il livello, l'accredito sarebbe a zero.
+  if (!sub.metadata || !sub.metadata.uid) {
+    sub.metadata = {
+      ...(sub.metadata || {}),
+      uid: String(sess?.metadata?.uid || sess?.client_reference_id || ''),
+      tier: String(sess?.metadata?.tier || ''),
+      periodo: String(sess?.metadata?.periodo || ''),
+    };
+  }
+  await abbonamentoAggiornato(pool, sub);
+  return null;
+}
+
+/**
+ * Lo storico degli incassi di abbonamento.
+ *
+ * Serve a tre domande a cui le colonne su "User" non possono rispondere,
+ * perché quelle tengono lo stato corrente: quanto ha pagato questa persona,
+ * quando un rinnovo è stato rifiutato, e quale fattura copre quale periodo.
+ *
+ * `providerRef` è unico nella tabella: è così che un webhook ritentato non
+ * registra due volte lo stesso incasso. Il conflitto si ignora invece di
+ * essere un errore, perché un doppione non è un guasto — è Stripe che
+ * riprova.
+ */
+async function fatturaAbbonamento(pool: any, inv: any, esito: 'paid' | 'failed') {
+  const subId = String(inv?.subscription
+    || inv?.parent?.subscription_details?.subscription || '');
+  const customer = String(inv?.customer || '');
+  if (!subId && !customer) return;
+
+  const r = await pool.query(
+    `SELECT id, "subscriptionTier" AS tier, "subscriptionPeriod" AS periodo
+       FROM "User"
+      WHERE ($1 <> '' AND "stripeSubscriptionId" = $1)
+         OR ($2 <> '' AND "stripeCustomerId" = $2)
+      LIMIT 1`, [subId, customer]);
+  const u = r.rows[0];
+  if (!u) {
+    console.error('[webhook] invoice without a known user:', inv?.id, subId, customer);
+    return;
+  }
+
+  const riga = inv?.lines?.data?.[0];
+  const inizio = Number(riga?.period?.start || 0);
+  const fine = Number(riga?.period?.end || 0);
+
+  await pool.query(
+    `INSERT INTO "SubscriptionPayment"
+       (id, "userId", tier, period, "amountCents", currency, status,
+        provider, "providerRef", "periodStart", "periodEnd")
+     VALUES ($1,$2,$3,$4,$5,$6,$7,'stripe',$8,$9,$10)
+     ON CONFLICT ("providerRef") DO NOTHING`,
+    [idNuovo(), u.id, Number(u.tier || 0),
+     String(u.periodo || 'monthly'),
+     Number(esito === 'paid' ? (inv?.amount_paid || 0) : (inv?.amount_due || 0)),
+     String(inv?.currency || 'eur').toUpperCase(),
+     esito, String(inv?.id || ''),
+     inizio ? new Date(inizio * 1000) : null,
+     fine ? new Date(fine * 1000) : null]);
+
+  // Un rinnovo pagato SPOSTA la scadenza. L'evento dell'abbonamento la porta
+  // comunque, ma può arrivare dopo o non arrivare: aggiornarla anche da qui
+  // evita che qualcuno risulti scaduto per un ordine di consegna.
+  if (esito === 'paid' && fine) {
+    await pool.query(
+      `UPDATE "User" SET "subscriptionUntil" = GREATEST(
+          COALESCE("subscriptionUntil", TO_TIMESTAMP($2)), TO_TIMESTAMP($2))
+        WHERE id = $1`, [u.id, fine]);
+  }
 }
 
 async function contoAggiornato(pool: any, acct: any) {

@@ -32,6 +32,7 @@
       "userParam": null
     },
     "10a2060dc3c2e02a51b75c530cefe4b6": {
+      "pubblica": true,
       "source": "web_db.py",
       "sql": "INSERT INTO \"Artifact\"(id, \"ownerId\", kind, name, slug, description, summary, code, language, tags, \"isPublic\", \"priceCents\", currency, \"isForSale\", \"coverEmoji\", metrics, bundle, version, subtitle, \"pricePeriod\", details, files, likes, downloads, \"coverageOk\", \"coverageProof\", \"testedCategories\", \"createdAt\", \"publishedAt\", \"updatedAt\") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 0, 0, %s, %s, %s, NOW(), NOW(), NOW())",
       "userParam": 1
@@ -48,6 +49,7 @@
       "userParam": 1
     },
     "14f6d45ae5ca128a1e61496df7f2637b": {
+      "pubblica": true,
       "source": "web_db.py",
       "sql": "INSERT INTO \"Artifact\"(id, \"ownerId\", kind, name, slug, description, summary, code, language, tags, \"isPublic\", \"priceCents\", currency, \"isForSale\", \"coverEmoji\", metrics, bundle, version, subtitle, \"pricePeriod\", details, files, likes, downloads, \"coverageOk\", \"coverageProof\", \"testedCategories\", \"createdAt\", \"publishedAt\", \"updatedAt\") VALUES (%s, %s, %s::\"",
       "userParam": 1

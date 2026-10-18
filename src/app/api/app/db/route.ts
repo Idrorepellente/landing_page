@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getPool } from '@/lib/pg';
 import { tokenFromRequest, versioneValida, isAdmin, isAdminCompleto } from '@/lib/appToken';
+import { puoPubblicare } from '@/lib/abbonamenti';
 import manifest from '@/lib/appQueries.json';
 
 export const runtime = 'nodejs';
@@ -35,6 +36,18 @@ type OpDef = {
    * e il suo controllo «sei amministratore?» lo può togliere.
    */
   admin?: boolean;
+  /**
+   * Query che METTE QUALCOSA IN VETRINA (le INSERT su "Artifact").
+   *
+   * Il permesso di pubblicare ha due strati — il lucchetto del marketplace e
+   * l'abbonamento — e finche' stavano solo nell'applicazione non proteggevano
+   * niente: l'app gira sulla macchina di chi la usa, il token e' suo, e una
+   * chiamata a questo endpoint si costruisce a mano in tre righe. Chiunque
+   * avesse un account poteva inserire una riga in "Artifact" a marketplace
+   * chiuso e senza abbonamento. Il controllo e' QUI perche' qui non si
+   * aggira.
+   */
+  pubblica?: boolean;
 };
 const OPS = (manifest as any).ops as Record<string, OpDef>;
 
@@ -81,6 +94,24 @@ export async function POST(req: NextRequest) {
   // perché sapere che un'operazione esiste ed è negata è già un'informazione.
   if (def.admin && !(await isAdminCompleto(auth.email, getPool()))) {
     return NextResponse.json({ error: 'action not allowed' }, { status: 403 });
+  }
+
+  // Pubblicare: lucchetto del marketplace, poi abbonamento. Gli
+  // amministratori passano sopra entrambi.
+  //
+  // Qui la risposta DICE il motivo, al contrario delle riservate agli
+  // amministratori: la differenza non e' una dimenticanza. Sapere che esiste
+  // un'operazione riservata e' un'informazione utile a chi sta sondando;
+  // sapere che il marketplace e' chiuso, o che serve un abbonamento, e'
+  // un'informazione utile a chi sta provando a pubblicare — ed e' cio' che
+  // l'app mostra all'utente invece di un rifiuto muto.
+  if (def.pubblica) {
+    const esito = await puoPubblicare(auth.uid, auth.email, getPool());
+    if (!esito.ok) {
+      return NextResponse.json(
+        { error: esito.error, detail: esito.detail, code: esito.codice },
+        { status: 403 });
+    }
   }
 
   const params: any[] = Array.isArray(body?.params) ? [...body.params] : [];

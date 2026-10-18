@@ -5,6 +5,8 @@ import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 import { getPool } from '@/lib/pg';
 import { createToken, isConfigured } from '@/lib/appToken';
+import { betaAttiva, ammessoInBeta, BETA_NON_AMMESSO } from '@/lib/beta';
+import { nomeUtenteLibero, nuovoId } from '@/lib/utenti';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -28,6 +30,23 @@ export const dynamic = 'force-dynamic';
  * Contro gli abusi: il codice è conservato come impronta, scade, ha un numero
  * massimo di tentativi, e l'invio è limitato nel tempo per indirizzo. Le
  * risposte non rivelano se un indirizzo è registrato.
+ *
+ * IL RECUPERO PASSWORD È ANCHE IL PRIMO ACCESSO IN BETA
+ * ----------------------------------------------------
+ * Chi si iscrive alla beta dal form del sito lascia un indirizzo, non crea un
+ * account: non ha una password, e non ha nemmeno una riga in "User". Il
+ * percorso previsto per entrare la prima volta è proprio «dimentica
+ * password», e prima non funzionava — in due punti:
+ *
+ *   - la RICHIESTA del codice vedeva che l'indirizzo non è registrato e
+ *     rispondeva «ok, inviato» senza inviare niente. Chi aspettava il codice
+ *     aspettava per sempre;
+ *   - la CONFERMA, anche con un codice valido, rispondeva «User not found».
+ *
+ * Ora, con la beta attiva e l'indirizzo ammesso, la richiesta invia il codice
+ * anche a chi non ha un account, e la conferma CREA l'account con la password
+ * scelta. Fuori dalla beta il comportamento resta quello di prima: il
+ * recupero non è una scorciatoia per registrarsi.
  */
 
 const CODE_TTL_MIN = 20;
@@ -70,9 +89,21 @@ async function sendMail(to: string, subject: string, text: string, html: string)
   });
 }
 
-function mailBody(purpose: string, code: string) {
-  const what = purpose === 'reset' ? 'reset your password' : 'confirm your address';
-  const subject = purpose === 'reset' ? 'Lyra · password code' : 'Lyra · confirmation code';
+/**
+ * `primoAccesso` cambia le parole, non il meccanismo.
+ *
+ * Chi entra per la prima volta in beta passa dal recupero password senza aver
+ * mai avuto una password: «il tuo codice per REIMPOSTARE la password» lo
+ * manderebbe a cercare quella vecchia, che non esiste. Due parole diverse
+ * costano niente e togliono il dubbio nel momento in cui conta.
+ */
+function mailBody(purpose: string, code: string, primoAccesso = false) {
+  const what = purpose !== 'reset' ? 'confirm your address'
+    : (primoAccesso ? 'set the password for your beta access'
+                    : 'reset your password');
+  const subject = purpose === 'reset'
+    ? (primoAccesso ? 'Lyra · set your password' : 'Lyra · password code')
+    : 'Lyra · confirmation code';
   const text =
     `Il tuo codice per ${what} e': ${code}\n\n` +
     `It expires in ${CODE_TTL_MIN} minutes. If you did not ask for anything, ignore this message.`;
@@ -83,10 +114,6 @@ function mailBody(purpose: string, code: string) {
     `<p style="margin:0;color:#6b7280;font-size:13px">It expires in ${CODE_TTL_MIN} minutes. ` +
     `If you did not ask for anything, you can ignore this message.</p></div>`;
   return { subject, text, html };
-}
-
-function cuid() {
-  return 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
 }
 
 export async function POST(req: NextRequest) {
@@ -119,7 +146,18 @@ export async function POST(req: NextRequest) {
       const exists = await pool.query(
         'SELECT id FROM "User" WHERE lower(email) = $1 LIMIT 1', [email]);
 
+      // Con la beta attiva, l'indirizzo deve essere ammesso. Si calcola una
+      // volta e si riusa: serve sia al ramo `register` sia al ramo `reset`,
+      // dove decide se spedire il codice a chi non ha ancora un account.
+      const beta = await betaAttiva(pool);
+      const ammesso = beta ? await ammessoInBeta(pool, email) : true;
+
       if (purpose === 'register') {
+        // Il motivo si dice: chi prova a registrarsi deve sapere che serve
+        // l'iscrizione alla beta, altrimenti riprova credendo a un guasto.
+        if (!ammesso) {
+          return NextResponse.json(BETA_NON_AMMESSO, { status: 403 });
+        }
         if (exists.rows.length) {
           return NextResponse.json({ error: 'That email is already registered.' }, { status: 409 });
         }
@@ -144,12 +182,30 @@ export async function POST(req: NextRequest) {
           { status: 429 });
       }
 
-      // Per il recupero: se l'indirizzo non esiste si risponde comunque "ok",
-      // senza inviare nulla. Altrimenti si potrebbe scoprire chi è registrato.
-      if (purpose === 'reset' && !exists.rows.length) {
-        return NextResponse.json({ ok: true, sent: true });
-      }
+      // ── A CHI SI SPEDISCE DAVVERO IL CODICE DI RECUPERO ───────────────
+      // A chi ha un account, come sempre. E — questa è la parte nuova — a
+      // chi NON ce l'ha ma è ammesso alla beta: per lui questo è il primo
+      // accesso, e il codice è l'unico modo per arrivare a una password.
+      // Prima si rispondeva «ok, inviato» senza inviare niente, e il percorso
+      // previsto per entrare in beta finiva in un'attesa infinita.
+      //
+      // Fuori dalla beta nulla cambia: a un indirizzo senza account non si
+      // manda nulla, altrimenti il recupero diventerebbe una scorciatoia per
+      // registrarsi senza passare dall'iscrizione.
+      const spedire = purpose === 'register'
+        || exists.rows.length > 0
+        || (beta && ammesso);
 
+      // La riga si scrive SEMPRE, anche quando non si spedisce. Non è uno
+      // spreco: è ciò che chiude un oracolo. L'attesa fra due invii si misura
+      // su questa riga, quindi scrivendola solo quando si spedisce bastavano
+      // due richieste di fila per sapere se la prima aveva prodotto un codice
+      // — e cioè se quell'indirizzo è registrato o ammesso. Scrivendola
+      // sempre, le due risposte sono indistinguibili dall'esterno.
+      //
+      // `inviata` resta nel payload, che non viene mai restituito: serve a
+      // leggere dal database cosa è stato deciso, quando un utente dice di
+      // non aver ricevuto niente.
       const code = newCode();
       await pool.query(
         `INSERT INTO app_email_codes(email, purpose, code_hash, payload, expires_at, attempts, created_at)
@@ -158,10 +214,17 @@ export async function POST(req: NextRequest) {
            SET code_hash = EXCLUDED.code_hash, payload = EXCLUDED.payload,
                expires_at = EXCLUDED.expires_at, attempts = 0, created_at = now()`,
         [email, purpose, sha(code),
-         JSON.stringify({ username, displayName: String(body?.displayName || '') }),
+         JSON.stringify({ username, displayName: String(body?.displayName || ''),
+                          inviata: spedire,
+                          nuovoAccount: purpose === 'reset' && !exists.rows.length }),
          String(CODE_TTL_MIN)]);
 
-      const m = mailBody(purpose, code);
+      if (!spedire) {
+        return NextResponse.json({ ok: true, sent: true });
+      }
+
+      const m = mailBody(purpose, code,
+                         purpose === 'reset' && !exists.rows.length);
       await sendMail(email, m.subject, m.text, m.html);
       return NextResponse.json({ ok: true, sent: true, ttlMinutes: CODE_TTL_MIN });
     }
@@ -203,6 +266,17 @@ export async function POST(req: NextRequest) {
       let profile: { username: string | null; displayName: string | null } =
         { username: null, displayName: null };
 
+      // Il controllo della beta si RIFA' qui, non si eredita da quello fatto
+      // alla richiesta del codice: fra i due momenti passano fino a venti
+      // minuti, e in quel tempo un indirizzo puo' essere stato togliato dalla
+      // lista. Il permesso va verificato quando si agisce, non quando si
+      // chiede.
+      const beta = await betaAttiva(pool);
+      const ammesso = beta ? await ammessoInBeta(pool, email) : true;
+      if (!ammesso) {
+        return NextResponse.json(BETA_NON_AMMESSO, { status: 403 });
+      }
+
       if (purpose === 'register') {
         const dup = await pool.query('SELECT id FROM "User" WHERE lower(email) = $1 LIMIT 1', [email]);
         if (dup.rows.length) {
@@ -211,7 +285,7 @@ export async function POST(req: NextRequest) {
         const p = row.payload || {};
         const username = String(p.username || '').trim() || email.split('@')[0];
         const displayName = String(p.displayName || '').trim() || username;
-        uid = cuid();
+        uid = nuovoId();
         profile = { username, displayName };
         await pool.query(
           'INSERT INTO "User"(id, email, username, "passwordHash", "displayName", "createdAt") VALUES ($1,$2,$3,$4,$5, now())',
@@ -219,9 +293,36 @@ export async function POST(req: NextRequest) {
       } else {
         const u = await pool.query(
           'SELECT id, username, "displayName" FROM "User" WHERE lower(email) = $1 LIMIT 1', [email]);
+
         if (!u.rows.length) {
-          return NextResponse.json({ error: 'User not found.' }, { status: 404 });
+          // ── PRIMO ACCESSO IN BETA ──────────────────────────────────────
+          // Nessun account: chi si e' iscritto alla beta ha lasciato un
+          // indirizzo, non si e' registrato. Il codice e' stato verificato
+          // poche righe sopra, quindi questa casella e' sua: l'account si crea
+          // adesso, con la password che ha appena scelto.
+          //
+          // Fuori dalla beta resta il 404 di prima: il recupero non deve
+          // diventare una scorciatoia per registrarsi senza iscrizione.
+          if (!beta) {
+            return NextResponse.json({ error: 'User not found.' }, { status: 404 });
+          }
+          const username = await nomeUtenteLibero(pool, email);
+          uid = nuovoId();
+          profile = { username, displayName: username };
+          await pool.query(
+            'INSERT INTO "User"(id, email, username, "passwordHash", "displayName", "createdAt") '
+            + 'VALUES ($1,$2,$3,$4,$5, now())',
+            [uid, email, username, hash, username]);
+          await pool.query('DELETE FROM app_email_codes WHERE email = $1 AND purpose = $2',
+                           [email, purpose]);
+          return NextResponse.json({
+            ok: true,
+            creato: true,
+            token: createToken(uid, email),
+            user: { id: uid, email, ...profile },
+          });
         }
+
         uid = String(u.rows[0].id);
         profile = { username: u.rows[0].username ?? null, displayName: u.rows[0].displayName ?? null };
         await pool.query('UPDATE "User" SET "passwordHash" = $1 WHERE id = $2', [hash, uid]);

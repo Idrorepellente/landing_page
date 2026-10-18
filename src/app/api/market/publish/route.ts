@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 import { getPool } from '@/lib/pg';
 import { tokenFromRequest } from '@/lib/appToken';
 import { cifraPacchetto, masterKeyReady, idNuovo } from '@/lib/marketplace';
+import { puoPubblicare } from '@/lib/abbonamenti';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -39,6 +40,20 @@ export async function POST(req: NextRequest) {
   }
 
   const pool = getPool();
+
+  // ── LUCCHETTO E ABBONAMENTO ──────────────────────────────────────────
+  // Caricare i file di una versione E' pubblicare: senza questo controllo si
+  // bloccava la creazione dell'artefatto (in /api/app/db) e si lasciava
+  // aperta la strada per riempirlo. Il controllo e' lo stesso di la',
+  // calcolato dalla stessa funzione, perche' due idee di «chi puo'
+  // pubblicare» prima o poi divergono.
+  const permesso = await puoPubblicare(auth.uid, auth.email, pool);
+  if (!permesso.ok) {
+    return NextResponse.json(
+      { error: permesso.error, detail: permesso.detail, code: permesso.codice },
+      { status: 403 });
+  }
+
   const a = await pool.query(
     `SELECT a.id, a."ownerId" AS "authorId", a."isForSale", a."pricePeriod", a.delivery::text AS delivery,
             s."payoutsEnabled"

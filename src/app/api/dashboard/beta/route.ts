@@ -12,7 +12,9 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { checkSecret } from '@/lib/dashApi';
 import { getPool } from '@/lib/pg';
-import { betaAttiva, ammessoInBeta, tabellaBetaEsiste } from '@/lib/beta';
+import {
+  betaAttiva, ammessoInBeta, tabellaBetaEsiste, conteggiBeta,
+} from '@/lib/beta';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -32,10 +34,30 @@ export async function GET(req: NextRequest) {
     } catch {
       // la tabella può non esistere ancora
     }
+    // Gli ultimi iscritti dal form del sito. Si mostrano perché valgono come
+    // ammissione: senza, il pannello farebbe credere che l'unica lista sia
+    // quella degli inviti, e chiudere fuori qualcuno togliendolo da qui
+    // sembrerebbe funzionare mentre non funziona.
+    let iscritti: Array<{ email: string; profile: string | null; created_at: any }> = [];
+    try {
+      const r = await pool.query(
+        'SELECT email, profile, created_at FROM beta_signups '
+        + 'ORDER BY created_at DESC LIMIT 500');
+      iscritti = r.rows.map((x: any) => ({
+        email: String(x.email), profile: x.profile ?? null, created_at: x.created_at,
+      }));
+    } catch {
+      // la tabella la crea /api/beta alla prima iscrizione
+    }
+
+    const conteggi = await conteggiBeta(pool);
+
     return NextResponse.json({
       ok: true,
       attiva: await betaAttiva(pool),
       emails,
+      iscritti,
+      conteggi,
       // Serve al pannello per dire cosa manca invece di mostrare un elenco
       // vuoto che sembra "nessuno invitato".
       schema: emails.length > 0 || (await tabellaBetaEsiste(pool)),
@@ -62,31 +84,36 @@ export async function POST(req: NextRequest) {
       const acceso = !!b?.attiva;
 
       // ── NON CI SI CHIUDE FUORI DA SOLI ────────────────────────────────
-      // Accendere la beta con l'elenco vuoto, o senza il proprio indirizzo,
-      // significa non poter più entrare per riaprire: l'unico rimedio
-      // sarebbe il database a mano. Si blocca prima che accada.
+      // I due controlli guardavano la sola tabella "BetaAccess", e da quando
+      // il cancello è l'UNIONE di tre fonti quella domanda non è più quella
+      // giusta: accendere la beta con zero inviti ma cinquanta iscritti dal
+      // sito è perfettamente sensato, e veniva rifiutato con un messaggio
+      // ormai falso («nessuno potrebbe più entrare»).
+      //
+      // Ora si controlla la cosa vera, con la stessa funzione che decide
+      // l'accesso: c'è qualcuno di ammesso, e fra questi ci sei tu?
       if (acceso) {
-        const r = await pool.query('SELECT COUNT(*)::int AS n FROM "BetaAccess"');
-        if (!Number(r.rows[0]?.n || 0)) {
+        const conteggi = await conteggiBeta(pool);
+        if (!conteggi.iscrizioni && !conteggi.inviti) {
           return NextResponse.json({
-            error: 'La lista è vuota: aggiungi almeno un indirizzo prima di '
-                 + 'attivare la beta.',
-            detail: 'Con la beta attiva e nessun indirizzo ammesso, nessuno '
-                  + 'potrebbe più entrare — nemmeno tu.',
+            error: 'Nessun indirizzo è ammesso: aggiungine almeno uno prima '
+                 + 'di attivare la beta.',
+            detail: 'Valgono sia le iscrizioni raccolte dal form del sito sia '
+                  + 'gli inviti aggiunti qui. Con la beta attiva e nessuno '
+                  + 'ammesso, nessuno potrebbe più entrare.',
           }, { status: 409 });
         }
-        if (chiede) {
-          const mio = await pool.query(
-            'SELECT 1 AS x FROM "BetaAccess" WHERE lower(email) = $1 LIMIT 1',
-            [chiede]);
-          if (!mio.rows[0]) {
-            return NextResponse.json({
-              error: 'Il tuo indirizzo non è nella lista: aggiungilo prima di '
-                   + 'attivare la beta.',
-              detail: 'Altrimenti resteresti chiuso fuori dall\'applicazione '
-                    + 'senza modo di riaprirla.',
-            }, { status: 409 });
-          }
+        // Gli amministratori passano il cancello per il solo fatto di essere
+        // amministratori, quindi di norma questo controllo non scatta. Resta
+        // per il caso in cui chi preme non sia riconosciuto come tale — e
+        // allora chiudersi fuori sarebbe reale.
+        if (chiede && !(await ammessoInBeta(pool, chiede))) {
+          return NextResponse.json({
+            error: 'Il tuo indirizzo non risulta ammesso: aggiungilo prima di '
+                 + 'attivare la beta.',
+            detail: 'Altrimenti resteresti chiuso fuori dall\'applicazione '
+                  + 'senza modo di riaprirla.',
+          }, { status: 409 });
         }
       }
 
@@ -116,19 +143,38 @@ export async function POST(req: NextRequest) {
     }
 
     if (azione === 'rimuovi') {
-      // Togliere se stessi mentre la beta è attiva è lo stesso errore di
-      // accenderla senza esserci dentro, solo compiuto in un altro ordine.
-      if (chiede && email === chiede && await betaAttiva(pool)) {
-        return NextResponse.json({
-          error: 'Non puoi togliere te stesso mentre la beta è attiva.',
-          detail: 'Resteresti chiuso fuori. Spegni prima la beta, oppure '
-                + 'togli un altro indirizzo.',
-        }, { status: 409 });
-      }
       const r = await pool.query('DELETE FROM "BetaAccess" WHERE email = $1',
                                  [email]);
+      // Togliere se stessi mentre la beta è attiva era vietato. Il controllo
+      // si fa ora DOPO la cancellazione, e sulla domanda vera: resti ammesso
+      // per qualche altra via? Un amministratore sì, sempre — e vietargli di
+      // togliere il proprio invito era un divieto senza causa.
+      if (chiede && email === chiede && await betaAttiva(pool)
+          && !(await ammessoInBeta(pool, chiede))) {
+        // si rimette com'era: meglio annullare che lasciare chiuso fuori
+        await pool.query(
+          `INSERT INTO "BetaAccess"(email, "addedBy", nota) VALUES ($1,$2,$3)
+           ON CONFLICT (email) DO NOTHING`,
+          [email, chiede, 'ripristinato: toglierlo ti chiudeva fuori']);
+        return NextResponse.json({
+          error: 'Non puoi togliere te stesso mentre la beta è attiva.',
+          detail: 'Resteresti chiuso fuori, perché questo indirizzo non è '
+                + 'ammesso per nessun\'altra via. Niente è stato cambiato: '
+                + 'spegni prima la beta, oppure togli un altro indirizzo.',
+        }, { status: 409 });
+      }
       if (!r.rowCount) {
-        return NextResponse.json({ error: 'non era nella lista' }, { status: 404 });
+        // Non era fra gli INVITI. Può comunque essere ammesso dal form del
+        // sito, e dirlo evita di credere di averlo escluso.
+        const anche = await ammessoInBeta(pool, email);
+        return NextResponse.json({
+          error: 'non era nella lista degli inviti',
+          detail: anche
+            ? 'Questo indirizzo resta però ammesso: è fra le iscrizioni '
+              + 'raccolte dal form del sito, oppure è un amministratore. '
+              + 'Togliere l\'invito non lo esclude.'
+            : undefined,
+        }, { status: 404 });
       }
       return NextResponse.json({ ok: true, email, azione });
     }

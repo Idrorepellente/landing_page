@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { getPool } from '@/lib/pg';
 import { createToken, isConfigured, tokenFromRequest } from '@/lib/appToken';
+import { betaAttiva, ammessoInBeta, BETA_NON_AMMESSO } from '@/lib/beta';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -67,6 +68,21 @@ export async function POST(req: NextRequest) {
     }
 
     // ------------------------------------------------------------ iscrizione
+    // ---- ACCESSO RISERVATO DURANTE LA BETA -------------------------------
+    // Con la beta attiva non si registra chi non e' ammesso. Questa porta
+    // restava aperta: la beta chiudeva l'accesso e lasciava creare l'account,
+    // che poi non si poteva usare. Un account che nasce inutile e' peggio di
+    // un rifiuto — resta nel database e nessuno sa piu' perche' c'e'.
+    //
+    // Qui il motivo si DICE, al contrario che altrove: chi prova a
+    // registrarsi deve sapere che serve l'iscrizione alla beta, altrimenti
+    // riprova all'infinito credendo a un guasto. Cio' che si rivela e'
+    // l'appartenenza a una lista di indirizzi raccolti da un form pubblico:
+    // non e' sfruttabile.
+    if (await betaAttiva(pool) && !(await ammessoInBeta(pool, email))) {
+      return NextResponse.json(BETA_NON_AMMESSO, { status: 403 });
+    }
+
     const username = String(body?.username || '').trim() || email.split('@')[0];
     const displayName = String(body?.displayName || '').trim() || username;
 
