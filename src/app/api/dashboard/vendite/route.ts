@@ -22,6 +22,7 @@ import { checkSecret } from '@/lib/dashApi';
 import { getPool } from '@/lib/pg';
 import { marketplaceBloccato, impostaLucchetto } from '@/lib/impostazioni';
 import { piani } from '@/lib/abbonamenti';
+import { stripeCall, configurato } from '@/lib/stripe';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -132,7 +133,22 @@ export async function POST(req: NextRequest) {
     }
 
     await impostaLucchetto(chiuso, chi, pool);
-    return NextResponse.json({ ok: true, bloccato: chiuso, attive: !chiuso });
+
+    // ── CHIUDENDO, SI CHIUDONO ANCHE I PAGAMENTI GIA' APERTI ──────────
+    // Il lucchetto ferma chi chiede un pagamento da adesso in poi. Una pagina
+    // di pagamento aperta un minuto prima pero' resterebbe valida fino alla
+    // sua scadenza, e chi la completasse comprerebbe a marketplace chiuso.
+    // Si fanno scadere subito tutte quelle ancora aperte (abbonamenti e
+    // acquisti di artefatti): da quel momento Stripe non accetta piu' nulla.
+    let pagamentiChiusi = 0;
+    let pagamentiNonChiusi = 0;
+    if (chiuso && configurato()) {
+      const esito = await chiudiPagamentiAperti();
+      pagamentiChiusi = esito.chiusi;
+      pagamentiNonChiusi = esito.falliti;
+    }
+    return NextResponse.json({ ok: true, bloccato: chiuso, attive: !chiuso,
+                               pagamentiChiusi, pagamentiNonChiusi });
   } catch (e: any) {
     const t = String(e?.message || e);
     if (/relation .*AppSetting.* does not exist/i.test(t)) {
@@ -144,4 +160,45 @@ export async function POST(req: NextRequest) {
     }
     return NextResponse.json({ error: t }, { status: 500 });
   }
+}
+
+
+/**
+ * Fa scadere le sessioni di Checkout ancora aperte create dal marketplace:
+ * abbonamenti (`metadata.kind = 'subscription'`) e acquisti di artefatti
+ * (`metadata.purchaseId`). Le altre sessioni dell'account Stripe, se ce ne
+ * sono, non si toccano.
+ *
+ * Non solleva: un errore di Stripe qui non deve impedire di chiudere il
+ * marketplace, che e' gia' chiuso nel database. Si contano i casi falliti e
+ * il pannello li riporta.
+ */
+async function chiudiPagamentiAperti(): Promise<{ chiusi: number; falliti: number }> {
+  let chiusi = 0;
+  let falliti = 0;
+  let dopo = '';
+  for (let pagina = 0; pagina < 10; pagina++) {
+    let lista: any;
+    try {
+      lista = await stripeCall('/checkout/sessions?status=open&limit=100'
+        + (dopo ? '&starting_after=' + encodeURIComponent(dopo) : ''));
+    } catch {
+      falliti++;
+      break;
+    }
+    const sessioni: any[] = lista?.data || [];
+    for (const s of sessioni) {
+      const m = s?.metadata || {};
+      if (m.kind !== 'subscription' && !m.purchaseId) continue;
+      try {
+        await stripeCall(`/checkout/sessions/${encodeURIComponent(s.id)}/expire`, {});
+        chiusi++;
+      } catch {
+        falliti++;
+      }
+    }
+    if (!lista?.has_more || !sessioni.length) break;
+    dopo = String(sessioni[sessioni.length - 1].id || '');
+  }
+  return { chiusi, falliti };
 }

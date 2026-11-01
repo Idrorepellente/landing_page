@@ -205,6 +205,13 @@ async function gestisci(req: NextRequest) {
       },
       metadata: { uid: auth.uid, tier: String(p.tier), periodo, kind: 'subscription' },
       allow_promotion_codes: true,
+      // La pagina di pagamento vale 30 minuti (il minimo che Stripe accetta)
+      // invece delle 24 ore predefinite: una pagina rimasta aperta non resta
+      // pagabile a lungo dopo che il marketplace e' stato richiuso.
+      // Calcolata dal MINUTO della chiave di idempotenza, non dall'istante:
+      // due clic nello stesso minuto devono mandare a Stripe parametri
+      // identici, altrimenti la seconda richiesta viene rifiutata.
+      expires_at: minuto * 60 + 31 * 60,
     }, { idempotencyKey: chiave });
 
     return NextResponse.json({

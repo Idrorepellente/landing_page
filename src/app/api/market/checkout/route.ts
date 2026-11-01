@@ -179,8 +179,8 @@ async function gestisci(req: NextRequest) {
       mode: 'payment',
       client_reference_id: purchaseId,
       customer_email: auth.email,
-      success_url: `${base}/marketplace/grazie?p=${purchaseId}`,
-      cancel_url: `${base}/marketplace?annullato=1`,
+      success_url: `${base}/marketplace/thank-you?p=${purchaseId}`,
+      cancel_url: `${base}/marketplace?cancelled=1`,
       line_items: [{
         quantity: 1,
         price_data: {
@@ -198,6 +198,8 @@ async function gestisci(req: NextRequest) {
         metadata: { purchaseId, artifactId, buyerId: auth.uid, sellerId: art.authorId },
       },
       metadata: { purchaseId, artifactId, buyerId: auth.uid, sellerId: art.authorId },
+      // 30 minuti invece di 24 ore: vedi il checkout degli abbonamenti.
+      expires_at: Math.floor(Date.now() / 1000) + 30 * 60 + 60,
     }, { idempotencyKey: 'co:' + purchaseId });
 
     await pool.query(

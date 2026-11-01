@@ -44,10 +44,11 @@ export default function Page() {
 
         <p style={{ fontSize: '15px', lineHeight: 1.65, color: '#c3ccd8',
                     margin: '0 0 22px' }}>
-          <strong style={{ color: '#e6ebf2' }}>Go back to the application</strong> and
-          open <em>Profile</em>: your level is shown there, and publishing to
-          the marketplace unlocks with it. If it does not appear within a few
-          minutes, reload the page — the level is re-checked every time.
+          <strong style={{ color: '#e6ebf2' }}>Go back to the application</strong>:
+          the <em>My subscription</em> page updates by itself and shows your
+          plan, and publishing to the marketplace unlocks with it. If it does
+          not appear within a few minutes, reload the page — the level is
+          re-checked every time.
         </p>
 
         <div style={{

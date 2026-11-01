@@ -18,7 +18,8 @@ export const metadata: Metadata = {
 export default function Page({
   searchParams,
 }: { searchParams?: { [k: string]: string | string[] | undefined } }) {
-  const annullato = searchParams?.annullato === '1';
+  // `cancelled` e' il parametro attuale; `annullato` resta per i link gia' emessi.
+  const annullato = searchParams?.cancelled === '1' || searchParams?.annullato === '1';
 
   return (
     <main style={{
@@ -38,19 +39,19 @@ export default function Page({
 
         <h1 style={{ fontSize: '26px', lineHeight: 1.25, margin: '0 0 16px',
                      fontWeight: 700 }}>
-          {annullato ? 'Pagamento annullato' : 'Marketplace'}
+          {annullato ? 'Payment cancelled' : 'Marketplace'}
         </h1>
 
         <p style={{ fontSize: '15px', lineHeight: 1.65, color: '#c3ccd8',
                     margin: '0 0 22px' }}>
           {annullato
-            ? 'Non è stato addebitato nulla. Puoi tornare nell\u2019applicazione e riprovare quando vuoi.'
-            : 'La vetrina degli artefatti si trova nell\u2019applicazione Lyra, dove puoi provarli e installarli.'}
+            ? 'Nothing was charged. Go back to the Lyra application and try again whenever you like.'
+            : 'The artifact storefront lives in the Lyra application, where you can try and install them.'}
         </p>
 
         <p style={{ marginTop: '26px', fontSize: '13px' }}>
           <a href="/" style={{ color: '#7fb2ff', textDecoration: 'none' }}>
-            ← Torna al sito
+            ← Back to the site
           </a>
         </p>
       </div>
