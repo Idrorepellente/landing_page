@@ -17,12 +17,29 @@ const nextConfig = {
   async redirects() {
     return [
       { source: '/accesso',                destination: '/sign-in',    permanent: true },
-      { source: '/termini',                destination: '/terms',      permanent: true },
-      { source: '/rischi',                 destination: '/risks',      permanent: true },
-      { source: '/soluzione',              destination: '/solution',   permanent: true },
-      { source: '/ecosistema',             destination: '/ecosystem',  permanent: true },
-      { source: '/motore-mappa',           destination: '/engine-map', permanent: true },
-      { source: '/obiettivo-fondo',        destination: '/fund-goal',  permanent: true },
+
+      // Dalla landing "Lyra Capital" in poi, le pagine pubbliche (prezzi, roadmap,
+      // team, legali…) vivono dentro la home come pagine interne (#prezzi, #roadmap…).
+      // I vecchi indirizzi, italiani e inglesi, portano alla pagina interna giusta.
+      { source: '/pricing',                destination: '/#prezzi',     permanent: true },
+      { source: '/prezzi',                 destination: '/#prezzi',     permanent: true },
+      { source: '/roadmap',                destination: '/#roadmap',    permanent: true },
+      { source: '/team',                   destination: '/#team',       permanent: true },
+      { source: '/terms',                  destination: '/#termini',    permanent: true },
+      { source: '/termini',                destination: '/#termini',    permanent: true },
+      { source: '/privacy',                destination: '/#privacy',    permanent: true },
+      { source: '/cookie',                 destination: '/#cookie',     permanent: true },
+      { source: '/disclaimer',             destination: '/#disclaimer', permanent: true },
+      { source: '/risks',                  destination: '/#rischi',     permanent: true },
+      { source: '/rischi',                 destination: '/#rischi',     permanent: true },
+      { source: '/solution',               destination: '/#piattaforma', permanent: true },
+      { source: '/soluzione',              destination: '/#piattaforma', permanent: true },
+      { source: '/ecosystem',              destination: '/#community',  permanent: true },
+      { source: '/ecosistema',             destination: '/#community',  permanent: true },
+      { source: '/engine-map',             destination: '/#mappa',      permanent: true },
+      { source: '/motore-mappa',           destination: '/#mappa',      permanent: true },
+      { source: '/fund-goal',              destination: '/#capitale',   permanent: true },
+      { source: '/obiettivo-fondo',        destination: '/#capitale',   permanent: true },
       { source: '/marketplace/grazie',     destination: '/marketplace/thank-you', permanent: true },
       { source: '/marketplace/venditore',  destination: '/marketplace/seller',    permanent: true },
     ];
