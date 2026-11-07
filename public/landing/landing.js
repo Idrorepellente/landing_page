@@ -225,7 +225,8 @@ function glass(canvas) {
 
 /* ============================================================ il loader ============================================================ */
 function loader() {
-  const box = $('.loader'); if (!box || RIDOTTO || store.sg('lyra-seen')) { box && box.remove(); return; }
+  // v4.16: niente schermata di caricamento, il sito si mostra direttamente quando e' pronto
+  const box = $('.loader'); if (box) box.remove(); return;
   store.ss('lyra-seen', '1');
   html.classList.add('loading');
   const p = $('p', box);
@@ -1343,6 +1344,14 @@ document.addEventListener('click', e => {
 
 /* Avvio sul sito: il markup e' gia' nella pagina (reso dal server), basta far partire la landing. */
 (function () {
-  var go = function () { if (window.__lyraCapitalStarted) return; window.__lyraCapitalStarted = true; window.__LYRA_LANDING_RUN(); };
+  var pronto = function () { document.documentElement.classList.add('lyra-pronta'); };
+  var go = function () {
+    if (window.__lyraCapitalStarted) return; window.__lyraCapitalStarted = true;
+    window.__LYRA_LANDING_RUN();
+    // la pagina resta invisibile (vedi lo stile in page.tsx) finche' stile, script e caratteri non sono pronti
+    var f = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+    f.then(function () { requestAnimationFrame(pronto); }, pronto);
+    setTimeout(pronto, 2500);
+  };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
 })();

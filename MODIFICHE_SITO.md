@@ -1,6 +1,7 @@
 # Sito — aggiornamento del 7 novembre 2026
 
-## Ultime modifiche (v4.15, 8 novembre)
+## Ultime modifiche (v4.15–4.16, 8 novembre)
+- **Niente schermata di caricamento** ("Se regge, va."): tolta. La pagina resta invisibile, con lo sfondo del tema, finché stile, script e caratteri non sono pronti, e poi compare già finita: niente più frame senza stile o con la pagina sbagliata (`src/app/page.tsx`, `public/landing/landing.js`).
 - **Sezione "Passo 01–05" (funzioni sul monitor)**: lo sfondo non si alterna più tra scuro e chiaro a ogni passo; resta blu notte con il tema scuro e avorio con il tema chiaro.
 - **Striscia nera sotto i passi (smartphone)**: quando la barra del browser si nasconde, sotto la scena fissa non resta più lo spazio scuro: il colore del passo copre anche quella parte.
 - **Team**: le tre schede dei fondatori hanno le foto vere (`public/landing/img/founder-1..3.webp`) al posto delle sfere low-poly.

@@ -25,6 +25,20 @@ export default function Page() {
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Caveat:wght@700&family=Kaushan+Script&display=swap"
         rel="stylesheet"
       />
+      {/* Tema scelto prima di disegnare qualsiasi cosa, cosi' lo sfondo e' quello giusto fin dal primo frame */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html:
+            '(function(){var t=null;try{t=localStorage.getItem("lyra-tema")}catch(e){}if(t!=="chiaro"&&t!=="scuro"){t=window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches?"chiaro":"scuro"}document.documentElement.setAttribute("data-tema",t)})();',
+        }}
+      />
+      {/* La landing resta invisibile finche' stile, script e caratteri non sono pronti (landing.js aggiunge .lyra-pronta) */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html:
+            'html:not(.lyra-pronta) .lyra-landing-live{visibility:hidden}html:not(.lyra-pronta){background:#000}html[data-tema="chiaro"]:not(.lyra-pronta){background:#fff}',
+        }}
+      />
       <style dangerouslySetInnerHTML={{ __html: css }} />
       <div className="lyra-landing-live" dangerouslySetInnerHTML={{ __html: html }} />
       <script src="/landing/landing.js" defer />
