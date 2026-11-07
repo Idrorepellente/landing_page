@@ -3,6 +3,7 @@
 ## Ultime modifiche (v4.15, 8 novembre)
 - **Sezione "Passo 01–05" (funzioni sul monitor)**: lo sfondo non si alterna più tra scuro e chiaro a ogni passo; resta blu notte con il tema scuro e avorio con il tema chiaro.
 - **Striscia nera sotto i passi (smartphone)**: quando la barra del browser si nasconde, sotto la scena fissa non resta più lo spazio scuro: il colore del passo copre anche quella parte.
+- **Team**: le tre schede dei fondatori hanno le foto vere (`public/landing/img/founder-1..3.webp`) al posto delle sfere low-poly.
 - **Footer**: il copyright "© 2026 Lyra Capital" sta sotto i link (Termini … GitHub, Discord).
 
 ## Modifiche precedenti (v4.14)

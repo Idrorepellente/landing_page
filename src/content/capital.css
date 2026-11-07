@@ -2440,3 +2440,6 @@ html.beta-aperta{overflow:hidden}
 
 /* v4.15 · su smartphone, quando la barra del browser si nasconde, sotto la scena fissa non resta una striscia nera */
 .st{background:var(--sbg)}
+
+/* v4.15 · Team: foto dei fondatori al posto delle sfere */
+.scheda .pic.pic-foto img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 20%}
