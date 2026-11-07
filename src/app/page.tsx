@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 import { html, css } from '@/content/capital';
 
 export const metadata: Metadata = {
-  title: 'Lyra Capital — Se regge, va.',
+  title: 'Lyra Capital',
   description:
     'Costruisci strategie senza codice, validale con backtest e walk-forward riproducibili, mandale live. Se superano il protocollo possono girare su conti certificati e andare in licenza ai gestori.',
-  openGraph: { title: 'Lyra Capital — Se regge, va.', description: 'Dall’idea al capitale: strategie no-code, validazione, live e programma capitale.' },
-  twitter: { title: 'Lyra Capital — Se regge, va.', description: 'Dall’idea al capitale: strategie no-code, validazione, live e programma capitale.' },
+  openGraph: { title: 'Lyra Capital', description: 'Dall’idea al capitale: strategie no-code, validazione, live e programma capitale.' },
+  twitter: { title: 'Lyra Capital', description: 'Dall’idea al capitale: strategie no-code, validazione, live e programma capitale.' },
 };
 
 // Pagina STATICA: markup e CSS della landing sono letti a build-time da src/content

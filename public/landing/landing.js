@@ -43,7 +43,7 @@ window.__LYRA_LANDING_RUN = function () {
    LYRA CAPITAL — anteprima sito. I link definitivi vanno qui: lascia "" per vedere il segnaposto.
    ============================================================ */
 const LYRA_CONFIG = {
-  github: "", demo: "", docs: "", discord: "", kickstarter: "", sponsors: "",
+  github: "https://github.com/Lyra-Capital", download: "", demo: "", docs: "", discord: "", kickstarter: "", sponsors: "",
   email_desk: "", email_gestori: "", email_data: "",
   darwin1: "", darwin2: "", darwin3: "", darwin4: "",
   darwin_url1: "", darwin_url2: "", darwin_url3: "", darwin_url4: "",
@@ -229,7 +229,7 @@ function loader() {
   store.ss('lyra-seen', '1');
   html.classList.add('loading');
   const p = $('p', box);
-  if (store.g('lyra-lang') === 'en' || (!store.g('lyra-lang') && /^en/i.test(navigator.language || ''))) p.innerHTML = 'If it holds, it <span data-roll="goes.|lasts.|pays.">goes.</span>';
+  if ('it' === 'en' || (!'it' && /^en/i.test(navigator.language || ''))) p.innerHTML = 'If it holds, it <span data-roll="goes.|lasts.|pays.">goes.</span>';
   const roll = $('[data-roll]', p);
   // le parole una alla volta; la colonna che rotola porta le alternative sulla riga
   const words = [];
@@ -686,7 +686,7 @@ function setTema(t) {
   tema(); dispatchEvent(new Event('lyra-tema'));
 }
 function placeholders() {
-  $$('[data-ph]').forEach(a => { const url = LYRA_CONFIG[a.dataset.ph]; if (url) { a.href = url; a.target = '_blank'; a.rel = 'noopener'; } else { a.classList.add('da-fare'); a.setAttribute('href', '#'); a.addEventListener('click', e => e.preventDefault()); if (a.classList.contains('btn') && !a.querySelector('small')) a.insertAdjacentHTML('beforeend', '<small><span class="l-it">da completare</span><span class="l-en">to complete</span></small>'); } });
+  $$('[data-ph]').forEach(a => { const url = LYRA_CONFIG[a.dataset.ph]; if (!url && (a.dataset.ph === 'download' || a.dataset.ph === 'demo')) { a.setAttribute('href', '#beta'); a.setAttribute('data-beta-open', ''); return; } if (url) { a.href = url; a.target = '_blank'; a.rel = 'noopener'; } else { a.classList.add('da-fare'); a.setAttribute('href', '#'); a.addEventListener('click', e => e.preventDefault()); if (a.classList.contains('btn') && !a.querySelector('small')) a.insertAdjacentHTML('beforeend', '<small><span class="l-it">da completare</span><span class="l-en">to complete</span></small>'); } });
   $$('[data-phk]').forEach(s => { const v = LYRA_CONFIG[s.dataset.phk]; if (v) { s.textContent = v; s.classList.remove('ph'); } });
 }
 function menu() {
@@ -866,7 +866,7 @@ rails(); wheel(); wall(); chapters(); menu(); misc();
 appCharts(); heroFan(); story(); rises(); tabs();
 $$('canvas[data-glass]').forEach(glass);
 $$('.rv').forEach(rv);
-setLang(store.g('lyra-lang') === 'en' ? 'en' : 'it');
+setLang('it' === 'en' ? 'en' : 'it');
 addEventListener('hashchange', route); route();
 if (!html.classList.contains('loading')) dispatchEvent(new Event('loader-done'));
 })();
@@ -1296,6 +1296,48 @@ document.addEventListener('click', e => {
 })();
 
 };
+
+/* v4.14 · iscrizione alla beta: i pulsanti "Prova la demo" e "Scarica gratis" aprono il modulo finche' i link veri non ci sono.
+   Il modulo scrive su /api/beta del sito (email + profilo), la stessa lista che apre l'accesso durante la beta. */
+(function () {
+  if (window.__lyraBeta) return; window.__lyraBeta = true;
+  var html = document.documentElement, ultimo = null, dlg = null, pronto = false;
+  var init = function () { if (pronto) return true; dlg = document.getElementById('beta-dlg'); if (!dlg) return false; pronto = true; wire(); return true; };
+  var apri = function (da) { ultimo = da || document.activeElement; dlg.hidden = false; html.classList.add('beta-aperta'); var f = dlg.querySelector('input'); setTimeout(function () { if (f && !dlg.querySelector('.beta-ok:not([hidden])')) f.focus(); }, 60); };
+  var chiudi = function () { dlg.hidden = true; html.classList.remove('beta-aperta'); if (ultimo && ultimo.focus) try { ultimo.focus(); } catch (e) {} };
+  document.addEventListener('click', function (e) {
+    var o = e.target.closest ? e.target.closest('[data-beta-open]') : null;
+    if ((o || (e.target.closest && e.target.closest('[data-beta-close]'))) && !init()) return;
+    if (o) { e.preventDefault(); apri(o); return; }
+    if (e.target.closest && e.target.closest('[data-beta-close]')) { e.preventDefault(); chiudi(); }
+  });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape' && dlg && !dlg.hidden) chiudi(); });
+  var wire = function () { var form = dlg.querySelector('[data-beta-form]'), ok = dlg.querySelector('.beta-ok'), err = dlg.querySelector('.beta-err');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = form.email.value.trim().toLowerCase(), profile = form.profile.value;
+    var valido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    form.email.classList.toggle('ko', !valido);
+    if (!valido) { err.textContent = 'Controlla l\'indirizzo email.'; err.hidden = false; form.email.focus(); return; }
+    if (!profile) { err.textContent = 'Scegli il tuo profilo.'; err.hidden = false; form.profile.focus(); return; }
+    err.hidden = true; var b = form.querySelector('button[type=submit]'); b.disabled = true;
+    fetch('/api/beta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, profile: profile }) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok && d && d.ok !== false, d: d }; }); })
+      .then(function (x) { if (!x.ok) throw new Error((x.d && x.d.error) || 'errore'); form.hidden = true; ok.hidden = false; ok.querySelector('button').focus(); })
+      .catch(function () { err.textContent = 'Non siamo riusciti a registrarti. Riprova tra poco.'; err.hidden = false; })
+      .then(function () { b.disabled = false; });
+  }); };
+})();
+
+/* v4.14 · le pagine interne hanno nomi inglesi: i vecchi indirizzi italiani (#prezzi, #termini…) portano ancora alla pagina giusta */
+(function () {
+  var alias = {"piattaforma":"platform","motore":"engine","mappa":"map","protocollo":"protocol","capitale":"capital","per-gestori":"for-managers","dati":"data","prezzi":"pricing","termini":"terms","rischi":"risks","piattaforma-costruisci":"platform-build","piattaforma-esegui":"platform-run","piattaforma-portafoglio":"platform-portfolio","gestori-contatto":"managers-contact","inizio":"top","principale":"main"};
+  var fix = function () { var h = location.hash.replace(/^#/, ''); if (alias[h]) { try { history.replaceState(null, '', '#' + alias[h]); } catch (e) { location.hash = alias[h]; return; } try { dispatchEvent(new HashChangeEvent('hashchange')); } catch (e) { dispatchEvent(new Event('hashchange')); } } };
+  addEventListener('hashchange', fix, true); fix();
+  // sul sito, React rimette l'indirizzo iniziale quando si attiva: si ricontrolla dopo
+  var tardi = function () { fix(); var pg = document.querySelector('.pagina[data-route]'); if (pg) { var h = location.hash.replace(/^#/, '') || 'home', s = document.querySelector('.pagina[data-route="' + h + '"]'); if (s && s.dataset.titleIt && document.title !== s.dataset.titleIt) document.title = s.dataset.titleIt; } };
+  addEventListener('load', function () { setTimeout(tardi, 50); setTimeout(tardi, 1200); setTimeout(tardi, 3000); });
+})();
 
 /* Avvio sul sito: il markup e' gia' nella pagina (reso dal server), basta far partire la landing. */
 (function () {

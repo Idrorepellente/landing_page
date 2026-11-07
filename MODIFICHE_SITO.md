@@ -1,5 +1,11 @@
 # Sito — aggiornamento del 7 novembre 2026
 
+## Ultime modifiche (v4.14)
+- **Solo italiano**: tolto il selettore IT/EN e i testi inglesi. La pagina dichiara `lang="it"`: chi usa un altro browser la traduce con la traduzione automatica.
+- **Iscrizione alla beta**: "Prova la demo", "Scarica gratis" e "Prova 2 mesi" aprono il modulo "Entra nella beta" (email + profilo), nello stile della landing. Scrive su `/api/beta`, la stessa lista che apre l'accesso durante la beta; il pannello Admin la vede come prima. Quando metterai i link veri in `LYRA_CONFIG` (`demo`, `download`), quei pulsanti torneranno link.
+- **GitHub**: la voce del footer e la scheda GitHub della pagina Community portano a https://github.com/Lyra-Capital (`LYRA_CONFIG.github`).
+- **Pagine interne con nomi inglesi**: `#platform`, `#engine`, `#map`, `#protocol`, `#capital`, `#for-managers`, `#data`, `#pricing`, `#roadmap`, `#community`, `#team`, `#faq`, `#terms`, `#privacy`, `#cookie`, `#disclaimer`, `#risks`. I vecchi nomi italiani (`#prezzi`, `#termini`, `#rischi`…) portano ancora alla pagina giusta e l'indirizzo viene corretto da solo.
+
 Come installarlo: estrai lo zip nella cartella principale del sito (quella con `package.json`), accetta di sovrascrivere, poi `npm run build` e pubblica come al solito. Non servono librerie nuove.
 
 ## Landing nuova "Lyra Capital" sulla home
