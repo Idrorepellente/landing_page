@@ -2432,3 +2432,8 @@ img.shot{display:block;width:100%;height:100%;object-fit:cover;object-position:l
 .beta-note{margin:4px 0 0;font-size:calc(12 * var(--px));opacity:.6;text-align:center}
 .beta-ok .btn{margin-top:6px}
 html.beta-aperta{overflow:hidden}
+
+/* v4.15 · footer: prima i link, sotto il copyright */
+.pm-bot{flex-direction:column;align-items:flex-start;gap:14px}
+.pm-bot .pm-copy{order:2}
+.pm-bot nav{order:1}

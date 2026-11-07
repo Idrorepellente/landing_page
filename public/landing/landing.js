@@ -768,7 +768,8 @@ function heroFan() {
 }
 
 /* ============================================================ HOME v3: la storia col desktop (Satispay) ============================================================ */
-const STEP_BG = [['#0d1426', 0], ['#ebe8e1', 1], ['#0d1426', 0], ['#ebe8e1', 1], ['#0d1426', 0]];
+// v4.15: i passi non si alternano piu' tra scuro e chiaro, seguono il tema del sito
+const STEP_BG = () => { const c = document.documentElement.dataset.tema === 'chiaro' ? ['#ebe8e1', 1] : ['#0d1426', 0]; return [c, c, c, c, c]; };
 const mix = (a, b, u) => { const A = hex(a), B = hex(b); return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * u)).join(',')})`; };
 function story() {
   const sec = $('.st'); if (!sec) return;
@@ -784,7 +785,7 @@ function story() {
     const k = lim(s / span) * N * .9999, idx = Math.min(N - 1, Math.floor(k)), fr = k - idx;
     bars.forEach((b, i) => b.style.setProperty('--f', i < idx ? 1 : i === idx ? fr.toFixed(3) : 0));
     const cu = idx >= N - 1 ? 0 : lim((fr - .78) / .22);
-    const from = STEP_BG[idx], to = STEP_BG[Math.min(N - 1, idx + 1)];
+    const SB = STEP_BG(), from = SB[idx], to = SB[Math.min(N - 1, idx + 1)];
     stage.style.setProperty('--sbg', mix(from[0], to[0], ease(cu)));
     const light = (cu < .5 ? from[1] : to[1]) === 1;
     if (light !== wasLight) { stage.classList.toggle('chiaro', light); stage.classList.toggle('giorno', light); wasLight = light; tema(); }
@@ -795,6 +796,7 @@ function story() {
     }
   };
   const ask = () => { if (!raf) raf = requestAnimationFrame(draw); };
+  if (window.MutationObserver) new MutationObserver(() => { wasLight = null; ask(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-tema'] });
   addEventListener('scroll', ask, { passive: true }); addEventListener('resize', ask); draw();
   sec._m = ask;
 }
