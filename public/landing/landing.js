@@ -786,7 +786,7 @@ function story() {
     bars.forEach((b, i) => b.style.setProperty('--f', i < idx ? 1 : i === idx ? fr.toFixed(3) : 0));
     const cu = idx >= N - 1 ? 0 : lim((fr - .78) / .22);
     const SB = STEP_BG(), from = SB[idx], to = SB[Math.min(N - 1, idx + 1)];
-    stage.style.setProperty('--sbg', mix(from[0], to[0], ease(cu)));
+    sec.style.setProperty('--sbg', mix(from[0], to[0], ease(cu))); // sul <section>, cosi' anche lo spazio sotto la scena (quando la barra del browser si nasconde) ha lo stesso colore
     const light = (cu < .5 ? from[1] : to[1]) === 1;
     if (light !== wasLight) { stage.classList.toggle('chiaro', light); stage.classList.toggle('giorno', light); wasLight = light; tema(); }
     if (idx !== last) {

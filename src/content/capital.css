@@ -2437,3 +2437,6 @@ html.beta-aperta{overflow:hidden}
 .pm-bot{flex-direction:column;align-items:flex-start;gap:14px}
 .pm-bot .pm-copy{order:2}
 .pm-bot nav{order:1}
+
+/* v4.15 · su smartphone, quando la barra del browser si nasconde, sotto la scena fissa non resta una striscia nera */
+.st{background:var(--sbg)}
