@@ -3,35 +3,27 @@ import './globals.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.lyra-capital.it'),
-  // Icone dichiarate esplicitamente: non ci si affida al solo rilevamento dei
-  // file in app/. L'.ico serve i browser che chiedono /favicon.ico da soli e
-  // che tengono quel file in cache molto a lungo; l'SVG e' la versione buona
-  // per gli schermi ad alta densita' e si adatta al tema chiaro/scuro.
-  icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
-    ],
-    apple: '/apple-icon.png',
-  },
-  title: 'Lyra — Il workbench quantitativo',
-  description: 'Costruisci strategie senza codice, validale con backtest riproducibili e mandale live sul tuo broker. Validation-first, local-first.',
+  // Icone: vengono dai file in src/app (favicon.ico, icon.svg, icon1.png 192x192, apple-icon.png).
+  // Next le dichiara da solo nel <head> e, quando ci sono i file, ignora un eventuale campo `icons` qui.
+  // Il PNG a 192 px (multiplo di 48) e' quello che Google preferisce per l'icona nei risultati di ricerca.
+  title: 'Lyra Capital — il desk quant che gira sul tuo computer',
+  description: 'Costruisci strategie con codice Python, blocchi o un copilota AI locale, validale fuori campione con walk-forward e Monte Carlo e portale verso il live. Gratis, con i tuoi dati.',
   keywords: ['trading quantitativo', 'trading algoritmico', 'backtest', 'walk-forward', 'strategie di trading', 'no-code trading', 'ensemble', 'quant', 'automazione trading', 'validazione strategie', 'Lyra'],
-  applicationName: 'Lyra',
-  authors: [{ name: 'Lyra' }],
+  applicationName: 'Lyra Capital',
+  authors: [{ name: 'Lyra Capital' }],
   robots: { index: true, follow: true },
   openGraph: {
     type: 'website',
     locale: 'it_IT',
-    siteName: 'Lyra',
+    siteName: 'Lyra Capital',
     url: 'https://www.lyra-capital.it',
-    title: 'Lyra — Il workbench quantitativo',
-    description: 'Costruisci strategie senza codice, validale con backtest riproducibili e mandale live sul tuo broker.',
+    title: 'Lyra Capital — il desk quant che gira sul tuo computer',
+    description: 'Codice, blocchi o copilota AI locale; walk-forward, Monte Carlo e portafoglio; verso il live. Gratis, con i tuoi dati.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Lyra — Il workbench quantitativo',
-    description: 'Costruisci strategie senza codice, validale con backtest riproducibili e mandale live sul tuo broker.',
+    title: 'Lyra Capital — il desk quant che gira sul tuo computer',
+    description: 'Codice, blocchi o copilota AI locale; walk-forward, Monte Carlo e portafoglio; verso il live. Gratis, con i tuoi dati.',
   },
 };
 

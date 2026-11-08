@@ -1,6 +1,19 @@
-# Sito — aggiornamento del 7 novembre 2026
+# Sito — aggiornamento dell'8 novembre 2026
 
-## Ultime modifiche (v4.15–4.16, 8 novembre)
+## Ultime modifiche (v4.19, 8 novembre)
+- **Da PC come da telefono, anche con "Effetti di animazione" spenti** (Windows › Accessibilità › Effetti visivi; i browser lo leggono come "riduci movimento"). Prima, con quell'impostazione, il sito mostrava una versione ferma:
+  - le tre frasi di "Perché Lyra" comparivano tutte insieme con il contatore fermo su "1 / 3": ora scorrono una alla volta con lo scroll, solo con dissolvenze (niente zoom, sfocature o icone che girano);
+  - i quattro passi di "Dal backtest al capitale" non avanzavano con lo scroll: ora avanzano come sul telefono, senza transizioni.
+- **Passi 01–05 su schermi larghi** (da circa 1680 px in su): il monitor non copre più il testo; resta nella sua colonna.
+- **Icona e anteprima su Google**: aggiunta l'icona PNG 192×192 (`src/app/icon1.png`, multiplo di 48 px come chiede Google) accanto a ICO e SVG; titolo e descrizione della pagina aggiornati ("Lyra Capital — il desk quant che gira sul tuo computer"), indirizzo canonico, `robots.txt` e `sitemap.xml` (`src/app/robots.ts`, `src/app/sitemap.ts`). In `src/app/layout.tsx` tolto il campo `icons`, che Next ignora quando le icone sono file in `src/app`. Google aggiorna icona e testo del risultato solo quando ripassa sulla pagina: dopo la pubblicazione, in Google Search Console usa "Controllo URL" su https://www.lyra-capital.it/ e poi "Richiedi indicizzazione"; puoi anche inviare la sitemap da "Sitemap".
+
+## Modifiche precedenti (v4.17–4.18, 8 novembre)
+- **Testi allineati all'app**: ogni funzione descritta dal sito è stata confrontata con il codice dell'app. Quello che l'app non fa ancora non è più presentato come esistente: ora è segnato "in arrivo" oppure è stato tolto. Fra le correzioni principali: copilota con un modello locale (Ollama) al posto delle chiavi OpenAI/Anthropic; runner per Interactive Brokers e MetaTrader 5 che calcolano e registrano gli ordini, con l'invio reale in arrivo; Alpaca, Binance, multi-conto, scanner, trigger, capacità, report di due diligence e universo point-in-time segnati come in arrivo; "Robustness Critic" (AI) sostituito dal verdetto di robustezza statistico che l'app calcola davvero; sette overlay di rischio al posto dei "sei gate di regime"; stress su 2018, 2020 e 2022 (non 2008); 12 strategie e approcci in libreria (non 29); commissione del marketplace al 10%, come nell'app; fonti dati reali (Yahoo, Polygon, Dukascopy). I piani a pagamento, con la prova di due mesi, sono indicati come in apertura dopo la beta. L'elenco completo è nel documento di progetto "coerenza-sito-app".
+- **Roadmap**: nuova sezione "01 · In arrivo nell'app" in cima, con il supporto alle opzioni in evidenza (grafico dei payoff a scadenza) e otto funzioni in arrivo; le release diventano la sezione 02 e il percorso dell'azienda la 03. Tolte dalla roadmap le voci già presenti nell'app (marketplace, linguaggio naturale, guardrail live) e "opzioni" dalle idee fuori piano.
+- **Legale**: cookie policy con i soli cookie e local storage usati davvero (lyra-tema, qs-theme, g_state), niente banner; informativa privacy con il modulo della beta, l'impronta del dispositivo per le licenze del marketplace e il cloud descritto per quello che fa.
+- **Team**: nomi dei fondatori nelle schede e nei testi alternativi delle foto.
+
+## Modifiche precedenti (v4.15–4.16, 8 novembre)
 - **Niente schermata di caricamento** ("Se regge, va."): tolta. La pagina resta invisibile, con lo sfondo del tema, finché stile, script e caratteri non sono pronti, e poi compare già finita: niente più frame senza stile o con la pagina sbagliata (`src/app/page.tsx`, `public/landing/landing.js`).
 - **Sezione "Passo 01–05" (funzioni sul monitor)**: lo sfondo non si alterna più tra scuro e chiaro a ogni passo; resta blu notte con il tema scuro e avorio con il tema chiaro.
 - **Striscia nera sotto i passi (smartphone)**: quando la barra del browser si nasconde, sotto la scena fissa non resta più lo spazio scuro: il colore del passo copre anche quella parte.

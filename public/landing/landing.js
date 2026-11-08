@@ -503,8 +503,10 @@ function frase(sez) {
     });
   });
   const eti = $('.fr-eti', sez), num = $('.fr-n', sez), dots = $$('.fr-dots i', sez);
-  if (RIDOTTO) { $$('.pop', sez).forEach(p => { p.classList.add('on'); FILMS[p.dataset.pop].forEach(([c]) => p.classList.add(c)); requestAnimationFrame(() => P3.still(p)); }); return; }
-  sez.classList.add('fr-vivo');
+  // v4.19 · con "riduci movimento" nel sistema le tre frasi scorrono lo stesso, ma senza movimento: solo dissolvenze, icone ferme
+  const CALMO = RIDOTTO;
+  const fermo = p => { if (p.classList.contains('on')) return; p.classList.add('on'); FILMS[p.dataset.pop].forEach(([c]) => p.classList.add(c)); requestAnimationFrame(() => P3.still(p)); };
+  sez.classList.add('fr-vivo'); if (CALMO) sez.classList.add('fr-calmo');
   const palco = $('.fr-palco', sez);
   const R = 2.4, ENTER = .2, PRE = .14, LIT0 = .2, LIT1 = .74, EXIT = .86;
   const smooth = x => { x = lim(x); return x * x * (3 - 2 * x); };
@@ -533,13 +535,14 @@ function frase(sez) {
       else if (u < 1) { const k = (u - EXIT) / (1 - EXIT); op = 1 - smooth(k); sc = 1 + (R - 1) * easeIn(k); f = 1; }
       else { op = 0; sc = R; f = 1; }
       if (op > best) { best = op; cur = di; }
+      if (CALMO) { sc = 1; bl = 0; }
       g.style.opacity = op.toFixed(3); g.style.transform = `scale(${sc.toFixed(4)})`; g.style.filter = bl > .05 ? `blur(${bl.toFixed(1)}px)` : '';
       g.classList.toggle('on', op > .5); g.setAttribute('aria-hidden', op < .05 ? 'true' : 'false');
       const n = words[di].length;
       words[di].forEach((w, i) => {
         const lit = lim(f * (n + 1) - i);
-        w.style.opacity = (.1 + .9 * lit).toFixed(3); w.style.transform = lit >= 1 ? 'none' : `translateY(${((1 - lit) * .6).toFixed(3)}em)`;
-        if (w._pop) { if (lit >= 1 && op > .05) arrive(w._pop); else if (lit < .5 || op < .05) leave(w._pop); }
+        w.style.opacity = (.1 + .9 * lit).toFixed(3); w.style.transform = lit >= 1 || CALMO ? 'none' : `translateY(${((1 - lit) * .6).toFixed(3)}em)`;
+        if (w._pop) { if (lit >= 1 && op > .05) (CALMO ? fermo : arrive)(w._pop); else if (lit < .5 || op < .05) leave(w._pop); }
       });
     });
     if (eti) { eti.classList.toggle('on', pPal > 0 || pIn > .15); eti.style.setProperty('--fr-top', (40 + 56 * pIn).toFixed(1)); }
@@ -550,7 +553,7 @@ function frase(sez) {
   collect();
   addEventListener('scroll', misura, { passive: true }); addEventListener('resize', () => { last = ''; misura(); }); addEventListener('lyra-lang', () => { collect(); last = ''; misura(); }); misura();
   sez._misura = () => { last = ''; misura(); };
-  $$('.pop', sez).forEach(p => p.addEventListener('click', () => { if (!p.classList.contains('on')) return; stop(p); setTimeout(() => play(p), 380); }));
+  if (!CALMO) $$('.pop', sez).forEach(p => p.addEventListener('click', () => { if (!p.classList.contains('on')) return; stop(p); setTimeout(() => play(p), 380); }));
 }
 
 /* ============================================================ i divisori e i nomi che salgono dalle maschere ============================================================ */
@@ -671,7 +674,7 @@ function chapters() {
 
 /* ============================================================ lingua, segnaposto, menu, moduli, prezzi ============================================================ */
 function setLang(l) {
-  html.dataset.lang = l; html.lang = l; store.s('lyra-lang', l);
+  html.dataset.lang = l; html.lang = l; void 0 /* v4.17: solo italiano, la lingua non si salva piu' */;
   $$('[data-setlang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.setlang === l)));
   $$('*').forEach(el => { for (const at of el.attributes) if (at.name.startsWith('data-i18n-')) { const [it, en] = at.value.split('|'); el.setAttribute(at.name.slice(10), l === 'en' ? en : it); } });
   const pg = onScreenPage(); if (pg) document.title = (l === 'en' ? pg.dataset.titleEn : pg.dataset.titleIt) || 'Lyra Capital';
@@ -1073,7 +1076,7 @@ document.addEventListener('click', e => {
     const TOP = (bar ? bar.getBoundingClientRect().height : 60) + 14, avail = innerHeight - TOP - 14;
     pin.classList.remove('on', 'all'); pin.style.height = ''; box.style.top = ''; if (stick) stick.style.top = '';
     const hd = stick && stick.firstElementChild, hAll = hd ? Math.ceil(box.getBoundingClientRect().bottom - hd.getBoundingClientRect().top) : h;
-    const mode = (RID || pin.hasAttribute('data-fermo')) ? '' : (stick && hAll <= avail ? 'all' : (h <= avail ? 'box' : ''));
+    const mode = pin.hasAttribute('data-fermo') ? '' : (stick && hAll <= avail ? 'all' : (h <= avail ? 'box' : ''));
     pinned = !!mode; run = N * stepLen();
     if (mode === 'all') {
       off = 0; topPx = Math.round(TOP + Math.min(18, (avail - hAll) / 2));

@@ -242,7 +242,7 @@ html.lifting .loader p{transform:translateY(-100vh);transition:opacity .4s var(-
 .fr-dots i{display:block;width:6px;height:6px;border-radius:999px;background:#C3C7D1;transition:width .35s ease,background-color .35s ease}
 .fr-dots i.on{width:28px;background:var(--fr-ink)}
 .frase.corta .fr-palco{height:210vh;height:210svh}
-@media (prefers-reduced-motion:reduce){.fr-palco,.frase.corta .fr-palco{height:auto}.fr-fissa{position:relative;height:auto;padding-block:calc(var(--sez) * 1.1)}.fr-eti{top:calc(40 * var(--fr-k))}}
+@media (prefers-reduced-motion:reduce){.frase:not(.fr-vivo) .fr-palco{height:auto}.frase:not(.fr-vivo) .fr-fissa{position:relative;height:auto;padding-block:calc(var(--sez) * 1.1)}.frase:not(.fr-vivo) .fr-eti{top:calc(40 * var(--fr-k))}}
 
 /* ---------- le piccole cose vive dentro la frase (pops) · v3.8: tessere pastello come le icone di Hopaway ---------- */
 .pop{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:none;width:1.1em;height:1.1em;border-radius:22%;background:var(--pop-bg,#F1F2F6);vertical-align:-.18em;color:var(--fr-ink,#111318);--ink:#111318;cursor:pointer}
@@ -2443,3 +2443,73 @@ html.beta-aperta{overflow:hidden}
 
 /* v4.15 · Team: foto dei fondatori al posto delle sfere */
 .scheda .pic.pic-foto img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+
+/* ---------- v4.18 · Roadmap, "In arrivo": le prossime funzioni dell'app, in testa il supporto alle opzioni ---------- */
+.rm-p-top{position:relative;display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,1fr);gap:clamp(18px,2.6vw,44px);align-items:stretch;padding:clamp(22px,2.4vw,40px);margin-bottom:clamp(14px,1.4vw,22px);border-radius:var(--r-card);overflow:hidden;color:#fff;
+  --ink:#fff;--ink-2:oklch(100% 0 0/.74);--ink-3:oklch(100% 0 0/.52);--riga:oklch(100% 0 0/.12);--velo:oklch(100% 0 0/.08);
+  background:radial-gradient(120% 150% at 100% 0%,rgba(43,181,154,.24),transparent 56%),#0b0b0b;box-shadow:inset 0 0 0 1px rgba(43,181,154,.38),0 30px 70px -34px oklch(0% 0 0/.8)}
+html[data-tema="chiaro"] .rm-p-top{background:radial-gradient(120% 150% at 100% 0%,rgba(43,181,154,.2),transparent 56%),#0b0b0b;box-shadow:0 34px 80px -36px oklch(0% 0 0/.55)}
+.rm-p-txt{display:flex;flex-direction:column;gap:12px;min-width:0}
+.rm-p-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px}
+.rm-p-ic{flex:none;display:grid;place-items:center;width:calc(46 * var(--px));height:calc(46 * var(--px));min-width:40px;min-height:40px;border-radius:calc(13 * var(--px));background:oklch(50% 0 0/.09);box-shadow:inset 0 0 0 1px var(--riga);color:var(--ink)}
+.rm-p-ic svg{width:54%;height:54%;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.rm-p-top .rm-p-ic{background:oklch(100% 0 0/.07);color:var(--acc)}
+.rm-p-top h3{font-family:var(--serif);font-weight:400;font-size:clamp(30px,calc(44 * var(--px)),54px);line-height:1.02;letter-spacing:-.035em;color:#fff;text-wrap:balance}
+.rm-p-top h3 em{font-family:var(--acc-f);font-style:normal;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.01em;font-size:1.06em}
+.rm-p-top .rm-p-txt>p{font-size:max(15px,calc(16.5 * var(--px)));line-height:1.5;color:var(--ink-2);max-width:32em;text-wrap:pretty}
+.rm-p-top .mt-chips{margin-top:auto;padding-top:10px}
+.rm-p-top .mt-chips li{background:var(--velo)}
+/* la targhetta "In arrivo", con il punto che pulsa (stessa grammatica delle card DARWIN) */
+.cs-tag{flex:none;display:inline-flex;align-items:center;gap:8px;height:calc(28 * var(--px));min-height:24px;padding:0 calc(12 * var(--px)) 0 calc(10 * var(--px));border-radius:999px;border:1px solid rgba(43,181,154,.55);background:rgba(43,181,154,.12);color:var(--acc);font-size:max(10.5px,calc(11.5 * var(--px)));font-weight:600;line-height:1;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.cs-tag::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--acc);animation:cs-dot 1.7s ease-out infinite}
+html[data-tema="chiaro"] .rm-presto .cs-tag{color:#0f7a62;border-color:rgba(15,122,98,.42);background:rgba(43,181,154,.1)}
+html[data-tema="chiaro"] .rm-presto .cs-tag::before{background:#0f7a62}
+/* il grafico dei payoff a scadenza */
+.rm-p-graf{margin:0;position:relative;display:flex;flex-direction:column;gap:10px;padding:clamp(14px,1.4vw,20px) clamp(14px,1.4vw,20px) 12px;border-radius:calc(var(--r-card) - 6px);background:oklch(100% 0 0/.035);box-shadow:inset 0 0 0 1px oklch(100% 0 0/.09);min-width:0}
+.rm-p-graf svg{display:block;width:100%;height:auto;overflow:visible}
+.rm-p-graf .ax{fill:none;stroke:oklch(100% 0 0/.26);stroke-width:1}
+.rm-p-graf .zero{fill:none;stroke:oklch(100% 0 0/.2);stroke-width:1;stroke-dasharray:3 4}
+.rm-p-graf .lb{font:500 9px/1 var(--font,system-ui);fill:oklch(100% 0 0/.5);letter-spacing:.02em}
+.rm-p-graf .pl{fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.rm-p-graf .pl.a{stroke:var(--acc)}
+.rm-p-graf .pl.b{stroke:#8fb4ff}
+.rm-p-graf .pl.c{stroke:#f4c46b}
+.js .rm-p-graf .pl{stroke-dasharray:var(--len);stroke-dashoffset:var(--len)}
+.js .rv.vis .rm-p-graf .pl{animation:rm-draw 1.7s var(--e-esce,cubic-bezier(.22,1,.36,1)) .25s forwards}
+.js .rv.vis .rm-p-graf .pl.b{animation-delay:.5s}
+.js .rv.vis .rm-p-graf .pl.c{animation-delay:.75s}
+.js .rv.via .rm-p-graf .pl{stroke-dashoffset:0}
+@keyframes rm-draw{to{stroke-dashoffset:0}}
+.rm-p-leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:max(12px,calc(12.5 * var(--px)));color:oklch(100% 0 0/.72)}
+.rm-p-leg span{display:inline-flex;align-items:center;gap:7px}
+.rm-p-leg i{display:inline-block;width:16px;height:3px;border-radius:2px}
+/* le altre funzioni in arrivo: quattro per riga su desktop */
+.rm-presto{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(14px,1.4vw,22px)}
+.rm-presto>li{display:flex;flex-direction:column;gap:10px;padding:clamp(20px,1.8vw,28px);border-radius:var(--r-card);background:var(--piano);box-shadow:inset 0 0 0 1px var(--riga);min-height:clamp(230px,17vw,262px)}
+.rm-presto h3{font-family:var(--serif);font-weight:400;font-size:calc(22 * var(--px));line-height:1.12;letter-spacing:-.03em;color:var(--ink);text-wrap:balance}
+.rm-presto>li>p{font-size:calc(14.5 * var(--px));line-height:1.48;color:var(--ink-2);text-wrap:pretty}
+.rm-presto .rm-p-hd{margin-bottom:6px}
+@media (max-width:1100px){.rm-presto{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:760px){.rm-p-top{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:599px){.rm-p-graf .lb{font-size:11.5px}}
+/* tablet e smartphone: fila orizzontale con aggancio, come le altre card della roadmap */
+@media (max-width:1023px){
+  .rm-presto{display:grid!important;grid-template-columns:none!important;grid-auto-flow:column;grid-auto-columns:calc((100% - 2 * 16px) / 2.25);gap:16px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-padding-inline:var(--gutter);margin-inline:calc(-1 * var(--gutter));padding:4px var(--gutter) 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .rm-presto::-webkit-scrollbar{display:none}
+  .rm-presto>*{scroll-snap-align:start;min-width:0}
+}
+@media (max-width:599px){.rm-presto{grid-auto-columns:85%;gap:12px}.rm-presto>li{min-height:0}.rm-p-top{padding:20px}.rm-p-hd .cs-tag{letter-spacing:.1em}}
+@media (prefers-reduced-motion:reduce){.js .rm-p-graf .pl{stroke-dashoffset:0!important;animation:none!important}.cs-tag::before{animation:none}}
+
+/* ---------- v4.19 · desktop come telefono ---------- */
+/* Le tre frasi con "riduci movimento": scorrono con lo scroll, ma cambiano solo per dissolvenza */
+.frase.fr-calmo .fr-seg{transform:none!important;filter:none!important;transition:opacity .3s linear}
+.frase.fr-calmo .fr-p{transform:none!important;transition:opacity .25s linear}
+.frase.fr-calmo .fr-eti{transform:none;transition:opacity .4s linear}
+/* Passi: su schermi larghi il monitor non esce dalla sua colonna (7/12 della griglia), quindi non copre il testo */
+@media (min-width:1200px){
+  .st .mon{--w:min(calc(min(52vw,(100svh - 170px) * 1.32,940px) * .88),calc((min(100vw - 2 * var(--gutter),1320px) - clamp(32px,5vw,88px)) * 7 / 12 - clamp(0px,2vw,40px) - 16px))}
+}
+@media (min-width:900px) and (max-width:1199px){
+  .st .mon{--w:min(100vw - 2 * var(--gutter),(100svh - 380px) * 1.321,660px,calc((100vw - 2 * var(--gutter) - clamp(32px,5vw,88px)) * 7 / 12 - clamp(0px,2vw,40px) - 16px))}
+}
