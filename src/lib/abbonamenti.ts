@@ -1,5 +1,5 @@
 /**
- * lib/abbonamenti.ts — i quattro livelli, e chi può caricare sul marketplace.
+ * lib/abbonamenti.ts — i piani, e chi può caricare sul marketplace.
  *
  * UN SOLO POSTO DOVE SI DECIDE. La domanda «questa persona può pubblicare?»
  * arriva da tre strade diverse: il canale dati dell'app (`/api/app/db`, dove
@@ -13,17 +13,20 @@
  * di chi la usa: il suo «sei abbonato?» lo può togliere. Il server è l'unico
  * punto che non si può modificare dall'esterno.
  *
- * I QUATTRO LIVELLI
+ * I CINQUE LIVELLI — gli stessi della pagina Prezzi del sito
  *
- *     tier 0   non abbonato (predefinito)   sfoglia, scarica, compra
- *     tier 1   Author                       + carica sul marketplace
- *     tier 2   Studio                       + carica sul marketplace
- *     tier 3   Desk                         + carica sul marketplace
+ *     tier 0   Gratuito (predefinito)   l'app intera; marketplace: sfoglia,
+ *                                       scarica, compra
+ *     tier 1   Pro                      privacy totale, vende sul marketplace
+ *     tier 2   Professional             + storico grezzo, 30% del generato
+ *     tier 3   Quant                    + real-time, add-on dati a parte
+ *     tier 4   Desk                     5 postazioni, sui server dello studio;
+ *                                       si vende a contratto, non dal checkout
  *
- * Oggi i tre livelli a pagamento danno la stessa cosa e differiscono per
- * prezzo: è una scelta dichiarata, non un lavoro a metà. Cosa aggiungere ai
- * due superiori si decide prima di uscire dalla beta, e sarà una UPDATE sulla
- * colonna `features`, non una modifica a questo file.
+ * I livelli sono in ORDINE DI PIANO: l'app li confronta per dire «passa a» o
+ * «scendi a». Nomi, prezzi e voci stanno nella tabella "SubscriptionPlan"
+ * (le scrive marketplace_abbonamenti.sql): qui non c'è un prezzo né una frase
+ * del catalogo.
  *
  * Gli AMMINISTRATORI non sono un livello: passano sopra a tutto, lucchetto
  * compreso. Metterli in un livello li avrebbe fatti scadere.
@@ -35,6 +38,18 @@ import { marketplaceBloccato } from '@/lib/impostazioni';
 export type Periodo = 'monthly' | 'annual';
 export const PERIODI: Periodo[] = ['monthly', 'annual'];
 
+/** Il livello più alto (Desk). Tutti i controlli di intervallo passano da qui. */
+export const TIER_MAX = 4;
+
+/**
+ * Le chiavi di `features` che dicono COME presentare il piano, non cosa dà.
+ * Escono da `features` e diventano campi del piano: un'app già installata non
+ * le conosce e, trovandole dentro `features`, le scriverebbe fra le
+ * funzionalità («Highlights: …», «Trial months: 2»).
+ */
+const CHIAVI_SCHEDA = ['highlights', 'badge', 'trial_months', 'annual_only',
+                       'sales_only', 'price_from', 'placeholder_price'];
+
 export type Piano = {
   tier: number;
   code: string;
@@ -43,12 +58,25 @@ export type Piano = {
   monthlyCents: number;
   annualCents: number;
   currency: string;
+  /** I fatti del piano (privacy, sconto, sandbox, quota…), per la tabella. */
   features: Record<string, any>;
   active: boolean;
   /** I prezzi segnaposto, da cambiare prima di aprire: lo dice il pannello. */
   placeholder: boolean;
   /** Il contenitore del nome su Stripe. Il prezzo resta qui nel database. */
   stripeProductId: string;
+  /** Le voci della scheda, nell'ordine del sito. */
+  highlights: string[];
+  /** L'etichetta della scheda («5 seats»), o vuota. */
+  badge: string;
+  /** Mesi di prova offerti con il piano; 0 = nessuna prova. */
+  trialMonths: number;
+  /** Si paga solo l'anno (Desk). */
+  annualOnly: boolean;
+  /** Non si compra dal checkout: demo e contratto (Desk). */
+  salesOnly: boolean;
+  /** Il prezzo è «da»: gli add-on dati sono a parte (Quant). */
+  priceFrom: boolean;
 };
 
 export type StatoAbbonamento = {
@@ -59,6 +87,8 @@ export type StatoAbbonamento = {
   periodo: Periodo | null;
   disdettaDal: string | null;    // disdetto, ma attivo fino a `fino`
   features: Record<string, any>;
+  /** Fine della prova in corso, se c'è una prova in corso. */
+  provaFino: string | null;
   /** Lo schema non è installato: non si sa, e non sapere vale come «no». */
   schemaMancante?: boolean;
 };
@@ -82,7 +112,13 @@ export function intervalloStripe(periodo: Periodo): 'month' | 'year' {
 }
 
 function riga2piano(r: any): Piano {
-  const features = (r.features && typeof r.features === 'object') ? r.features : {};
+  const tutte = (r.features && typeof r.features === 'object' && !Array.isArray(r.features))
+    ? r.features : {};
+  const features: Record<string, any> = {};
+  for (const [k, v] of Object.entries(tutte)) {
+    if (!CHIAVI_SCHEDA.includes(k)) features[k] = v;
+  }
+  const mesi = Math.round(Number(tutte.trial_months || 0));
   return {
     tier: Number(r.tier),
     code: String(r.code || ''),
@@ -93,8 +129,18 @@ function riga2piano(r: any): Piano {
     currency: String(r.currency || 'EUR').toUpperCase(),
     features,
     active: r.active !== false,
-    placeholder: !!features.placeholder_price,
+    placeholder: !!tutte.placeholder_price,
     stripeProductId: String(r.stripeProductId || ''),
+    highlights: Array.isArray(tutte.highlights)
+      ? tutte.highlights.filter((x: any) => typeof x === 'string' && x.trim()).map(String)
+      : [],
+    badge: typeof tutte.badge === 'string' ? tutte.badge : '',
+    // Una prova fuori misura è un errore di battitura nella tabella, non un
+    // regalo da fare: oltre un anno non si concede.
+    trialMonths: Number.isFinite(mesi) && mesi > 0 ? Math.min(mesi, 12) : 0,
+    annualOnly: !!tutte.annual_only,
+    salesOnly: !!tutte.sales_only,
+    priceFrom: !!tutte.price_from,
   };
 }
 
@@ -118,7 +164,7 @@ export async function prodottoStripe(p: Piano, pool?: any): Promise<string> {
   const { stripeCall } = await import('@/lib/stripe');
   const prod = await stripeCall('/products', {
     name: `Lyra ${p.name}`,
-    description: (p.tagline || 'Marketplace publishing').slice(0, 300),
+    description: (p.tagline || `Lyra ${p.name} plan`).slice(0, 300),
     metadata: { tier: String(p.tier), code: p.code },
   }, { idempotencyKey: 'prod:lyra:' + p.code });
   const id = String(prod.id || '');
@@ -152,7 +198,7 @@ export async function piani(pool?: any): Promise<Piano[]> {
 
 export async function piano(tier: number, pool?: any): Promise<Piano | null> {
   const t = Number(tier);
-  if (!Number.isInteger(t) || t < 1 || t > 3) return null;
+  if (!Number.isInteger(t) || t < 1 || t > TIER_MAX) return null;
   const tutti = await piani(pool);
   return tutti.find((p) => p.tier === t) || null;
 }
@@ -173,9 +219,10 @@ export async function statoAbbonamento(userId: string, pool?: any): Promise<Stat
   const db = pool || getPool();
   const vuoto: StatoAbbonamento = {
     tier: 0, stato: 'none', attivo: false, fino: null,
-    periodo: null, disdettaDal: null, features: {},
+    periodo: null, disdettaDal: null, features: {}, provaFino: null,
   };
   if (!userId) return vuoto;
+  let base: StatoAbbonamento;
   try {
     const r = await db.query(
       `SELECT "subscriptionStatus"::text   AS stato,
@@ -193,9 +240,9 @@ export async function statoAbbonamento(userId: string, pool?: any): Promise<Stat
     const attivo = stato === 'subscribed' && !scaduto;
     // Il livello conta solo se l'abbonamento vale: un livello 3 scaduto è un
     // livello 0, altrimenti le funzionalità sopravvivrebbero al pagamento.
-    const tier = attivo ? Math.max(0, Math.min(3, Number(riga.tier || 0))) : 0;
+    const tier = attivo ? Math.max(0, Math.min(TIER_MAX, Number(riga.tier || 0))) : 0;
     const p = tier ? await piano(tier, db) : null;
-    return {
+    base = {
       tier,
       stato,
       attivo,
@@ -203,6 +250,7 @@ export async function statoAbbonamento(userId: string, pool?: any): Promise<Stat
       periodo: periodoValido(riga.periodo),
       disdettaDal: riga.disdetta ? new Date(riga.disdetta).toISOString() : null,
       features: p?.features || {},
+      provaFino: null,
     };
   } catch {
     // Colonne assenti (migrazione non eseguita). Non si finge un abbonamento
@@ -210,6 +258,93 @@ export async function statoAbbonamento(userId: string, pool?: any): Promise<Stat
     // verificare, e chi chiama lo riporta.
     return { ...vuoto, stato: 'unknown', schemaMancante: true };
   }
+
+  // La prova si legge A PARTE. Le sue colonne sono le ultime arrivate: se il
+  // file SQL che le aggiunge non è ancora passato, l'abbonamento si legge lo
+  // stesso e manca solo la data della prova, invece di risultare «non
+  // verificabile» per tutti.
+  if (base.attivo) {
+    try {
+      const t = await db.query(
+        'SELECT "subscriptionTrialEnd" AS pf FROM "User" WHERE id = $1', [userId]);
+      const pf = t.rows[0]?.pf ? new Date(t.rows[0].pf) : null;
+      if (pf && pf.getTime() > Date.now()) base.provaFino = pf.toISOString();
+    } catch { /* colonna assente */ }
+  }
+  return base;
+}
+
+/**
+ * La prova di due mesi è ancora disponibile per questo account?
+ *
+ * UNA PER ACCOUNT, e solo per chi non ha mai avuto un abbonamento su Stripe:
+ * chi ha già pagato un piano conosce il prodotto, e chi ha già fatto una
+ * prova l'ha avuta. `trialUsedAt` non si svuota mai, quindi disdire durante
+ * la prova e riabbonarsi riparte pagando.
+ *
+ * Nel dubbio NO: se le colonne non ci sono (file SQL non eseguito) non si sa
+ * se la prova è già stata usata, e regalare due mesi per un errore di
+ * configurazione è un danno che non si ripara.
+ */
+export async function provaDisponibile(userId: string, pool?: any): Promise<boolean> {
+  if (!userId) return false;
+  const db = pool || getPool();
+  try {
+    const r = await db.query(
+      `SELECT "trialUsedAt" AS usata, "stripeSubscriptionId" AS sub
+         FROM "User" WHERE id = $1 LIMIT 1`, [userId]);
+    const riga = r.rows[0];
+    if (!riga) return false;
+    return !riga.usata && !riga.sub;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Fine della prova, in secondi, partendo da `inizioSec`.
+ *
+ * Mesi DI CALENDARIO, come dice il sito («due mesi di prova»), non 60
+ * giorni. Si parte dall'istante passato e non da `Date.now()`: il checkout
+ * usa il minuto della sua chiave di idempotenza, e due clic nello stesso
+ * minuto devono mandare a Stripe la stessa data.
+ */
+export function fineProvaSec(inizioSec: number, mesi: number): number {
+  const d = new Date(inizioSec * 1000);
+  const giorno = d.getUTCDate();
+  d.setUTCMonth(d.getUTCMonth() + mesi);
+  // 31 dicembre + 2 mesi non è il 3 marzo: si torna all'ultimo giorno del
+  // mese giusto invece di sconfinare nel successivo.
+  if (d.getUTCDate() !== giorno) d.setUTCDate(0);
+  return Math.floor(d.getTime() / 1000);
+}
+
+/**
+ * Il livello di un piano a partire dal suo codice o dal suo prodotto Stripe.
+ *
+ * Serve al webhook. Il numero del livello nei metadati di un abbonamento è
+ * quello di quando è nato: Desk era il livello 3 prima che arrivasse Quant, e
+ * un abbonamento Desk di allora porta ancora «tier 3». Il codice del piano
+ * (scritto nei metadati da ora in poi) e il prodotto Stripe non cambiano con
+ * la numerazione, quindi si guardano prima del numero.
+ */
+export async function tierDelPiano(codice: string, prodotto: string,
+                                   pool?: any): Promise<number> {
+  const db = pool || getPool();
+  try {
+    if (codice) {
+      const r = await db.query(
+        'SELECT tier FROM "SubscriptionPlan" WHERE code = $1 LIMIT 1', [codice]);
+      if (r.rows[0]) return Number(r.rows[0].tier);
+    }
+    if (prodotto) {
+      const r = await db.query(
+        'SELECT tier FROM "SubscriptionPlan" WHERE "stripeProductId" = $1 LIMIT 1',
+        [prodotto]);
+      if (r.rows[0]) return Number(r.rows[0].tier);
+    }
+  } catch { /* tabella assente: chi chiama usa il numero */ }
+  return 0;
 }
 
 // ===========================================================================
@@ -229,8 +364,8 @@ export type Esito =
  *      pagamento. Prima lo strato successivo lasciava pubblicare gratis, e
  *      ciò che entrava in vetrina ci restava senza che nessun filtro fosse
  *      ancora in piedi;
- *   2. l'ABBONAMENTO. A marketplace aperto, caricare richiede uno dei tre
- *      livelli. Non è il denaro: è che chi pubblica mette il proprio nome
+ *   2. l'ABBONAMENTO. A marketplace aperto, caricare richiede un piano a
+ *      pagamento (dal Pro in su). Non è il denaro: è che chi pubblica mette il proprio nome
  *      accanto a una strategia che altri faranno girare sui propri soldi, e
  *      un filtro all'ingresso vale più di qualunque moderazione a valle.
  *
@@ -268,8 +403,8 @@ export async function puoPubblicare(userId: string, email: string | undefined,
     ok: false, codice: 'no_subscription',
     error: 'publishing requires a subscription',
     detail: 'Browsing, downloading and buying stay open to everyone. '
-          + 'Publishing — free or paid — needs one of the three plans, so '
-          + 'that every artifact on the storefront has someone answering '
+          + 'Publishing — free or paid — needs a paid plan (Pro or higher), '
+          + 'so that every artifact on the storefront has someone answering '
           + 'for it.',
   };
 }

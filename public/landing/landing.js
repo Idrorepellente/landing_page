@@ -43,7 +43,7 @@ window.__LYRA_LANDING_RUN = function () {
    LYRA CAPITAL — anteprima sito. I link definitivi vanno qui: lascia "" per vedere il segnaposto.
    ============================================================ */
 const LYRA_CONFIG = {
-  github: "https://github.com/Lyra-Capital", download: "", demo: "", docs: "", discord: "", kickstarter: "", sponsors: "",
+  github: "https://github.com/Lyra-Capital", download: "", demo: "", docs: "docs/lyra-user-guide.pdf", discord: "", kickstarter: "", sponsors: "",
   email_desk: "", email_gestori: "", email_data: "",
   darwin1: "", darwin2: "", darwin3: "", darwin4: "",
   darwin_url1: "", darwin_url2: "", darwin_url3: "", darwin_url4: "",

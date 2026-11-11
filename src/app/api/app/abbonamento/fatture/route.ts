@@ -19,6 +19,7 @@ import type { NextRequest } from 'next/server';
 import { getPool } from '@/lib/pg';
 import { tokenFromRequest } from '@/lib/appToken';
 import { stripeCall, configurato, ErroreStripe } from '@/lib/stripe';
+import { piani, TIER_MAX } from '@/lib/abbonamenti';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -70,14 +71,27 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const [lista, cli, sub] = await Promise.all([
+    const [lista, cli, sub, catalogo] = await Promise.all([
       stripeCall(`/invoices?customer=${encodeURIComponent(customer)}&limit=24`),
       stripeCall(`/customers/${encodeURIComponent(customer)}?expand[]=invoice_settings.default_payment_method`)
         .catch(() => null),
       subId
         ? stripeCall(`/subscriptions/${encodeURIComponent(subId)}?expand[]=default_payment_method`).catch(() => null)
         : Promise.resolve(null),
+      piani(pool),
     ]);
+
+    // Il piano di una fattura: dal codice nei metadati, poi dal prodotto, poi
+    // dal numero. Il numero da solo sbaglia sulle fatture nate prima del
+    // catalogo di novembre 2026, quando Desk era il livello 3.
+    const perCodice = new Map(catalogo.map((x) => [x.code, x.tier] as [string, number]));
+    const perProdotto = new Map(catalogo.filter((x) => x.stripeProductId)
+      .map((x) => [x.stripeProductId, x.tier] as [string, number]));
+
+    // La finestra della prova dell'abbonamento: la fattura da zero emessa
+    // quando la prova parte si chiama «Trial», non «Charged».
+    const provaDa = Number(sub?.trial_start || 0);
+    const provaA = Number(sub?.trial_end || 0);
 
     // Le bozze non sono fatture: Stripe le tiene aperte un'ora prima di
     // emetterle, e mostrarle farebbe vedere un addebito che ancora non c'e'.
@@ -91,9 +105,14 @@ export async function GET(req: NextRequest) {
         // `subscription_details`.
         const meta = f.parent?.subscription_details?.metadata
           || f.subscription_details?.metadata || riga.metadata || {};
-        const tier = Number(meta.tier);
+        const prodotto = String(riga.price?.product || riga.pricing?.price_details?.product || '');
+        let tier = perCodice.get(String(meta.code || '')) || perProdotto.get(prodotto) || 0;
+        if (!tier) tier = Number(meta.tier);
+        const zero = Number(f.total ?? f.amount_due ?? 0) === 0;
+        const creata = Number(f.created || 0);
+        const diProva = zero && provaA > 0 && creata >= provaDa - 60 && creata < provaA;
         return {
-          tier: Number.isInteger(tier) && tier >= 1 && tier <= 3 ? tier : null,
+          tier: Number.isInteger(tier) && tier >= 1 && tier <= TIER_MAX ? tier : null,
           period: String(meta.periodo || ''),
           id: String(f.id || ''),
           number: String(f.number || ''),
@@ -102,7 +121,7 @@ export async function GET(req: NextRequest) {
           periodEnd: iso(riga.period?.end ?? f.period_end),
           amountCents: Number(f.status === 'paid' ? f.amount_paid : f.amount_due) || 0,
           currency: String(f.currency || 'eur').toUpperCase(),
-          status: String(f.status || ''),
+          status: diProva ? 'trial' : String(f.status || ''),
           description: String(riga.description || f.description || ''),
           hostedInvoiceUrl: String(f.hosted_invoice_url || ''),
           invoicePdf: String(f.invoice_pdf || ''),

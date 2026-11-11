@@ -1,6 +1,17 @@
-# Sito — aggiornamento dell'8 novembre 2026
+# Sito — aggiornamento dell'11 novembre 2026
 
-## Ultime modifiche (v4.21, 8 novembre)
+## Ultime modifiche (v4.22, 11 novembre)
+- **Footer › Documentazione** apre la *User guide*, il manuale dell'app in inglese, in PDF in una scheda nuova. Il file è `public/docs/lyra-user-guide.pdf` (indirizzo `/docs/lyra-user-guide.pdf`), ottimizzato per il web: la prima pagina si vede prima che sia scaricato tutto. Stesso collegamento nel footer delle pagine vecchie (`src/content/_footer.html`), che comunque rimandano alla home.
+- **Abbonamenti dell'app = piani del sito.** Il backend che l'app interroga ora vende i piani della pagina Prezzi: Pro (49 €/mese, 490 €/anno), Professional (149/1.490), Quant (da 200/2.000, più i dati) e Desk (8.000 €/anno). Prima erano tre segnaposto (Author, Studio, Desk a 9/19/39 €).
+  - Livelli da 0 a 4 (`src/lib/abbonamenti.ts`, `TIER_MAX`), con Desk al 4.
+  - Catalogo con le voci delle schede (`highlights`), l'etichetta, i mesi di prova, solo annuale, solo a contratto e prezzo «da»: escono da `features` e diventano campi del piano, così le app già installate non li scrivono come funzionalità.
+  - Checkout: **prova di due mesi** su Pro, Professional e Quant, una per account (mesi di calendario, carta richiesta, primo addebito alla fine della prova); **Desk rifiutato** con il codice `sales_only` (si vende a contratto, dall'app si chiede una demo); il codice del piano nei metadati dell'abbonamento.
+  - Webhook e fatture riconoscono il piano dal codice o dal prodotto Stripe: un abbonamento Desk nato quando Desk era il livello 3 resta Desk. Il webhook scrive la fine della prova e la prima prova dell'account; la fattura da zero della prova risulta «trial».
+  - `GET /api/app/abbonamento` aggiunge `provaDisponibile` e `provaFino`; la pagina di ritorno dal pagamento, con la prova, dice che non è stato addebitato nulla.
+- **Da fare sul database**: rieseguire `marketplace_abbonamenti.sql` (nel progetto dell'app) sul Postgres del sito. Scrive il catalogo una volta sola, sposta Desk dal livello 3 al 4 con abbonati e storico, allarga i vincoli e aggiunge le colonne della prova. Finché non passa, il sito continua a funzionare con i piani vecchi e senza la prova.
+- File: `src/content/capital.html`, `src/content/_footer.html`, `public/landing/landing.js`, `public/docs/lyra-user-guide.pdf` (nuovo), `src/lib/abbonamenti.ts`, `src/app/api/app/abbonamento/route.ts`, `src/app/api/app/abbonamento/checkout/route.ts`, `src/app/api/app/abbonamento/fatture/route.ts`, `src/app/api/dashboard/piani/route.ts`, `src/app/api/market/webhook/route.ts`, `src/app/subscription/thank-you/page.tsx`.
+
+## Modifiche precedenti (v4.21, 8 novembre)
 - **Piattaforma › Runner e simulatore**, allineata alle protezioni aggiunte nell'app dopo la revisione degli ordini reali:
   - "Runner multi-strategia": la conferma degli ordini reali vale per un solo conto;
   - "Kill-switch a tre livelli": un conto oltre il limite chiude subito le posizioni e resta chiuso anche dopo un riavvio o con un altro runner, finché non lo riapri; un errore che si ripete ferma il runner;

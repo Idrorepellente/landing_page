@@ -4,7 +4,7 @@ import { getPool } from '@/lib/pg';
 import { verificaFirmaWebhook, stripeCall } from '@/lib/stripe';
 import { idNuovo } from '@/lib/marketplace';
 import { inviaRicevuta } from '@/lib/mailer';
-import { periodoValido } from '@/lib/abbonamenti';
+import { periodoValido, tierDelPiano, TIER_MAX } from '@/lib/abbonamenti';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -334,8 +334,15 @@ async function abbonamentoAggiornato(pool: any, sub: any) {
   }
 
   const { stato, vale } = traduciStato(sub?.status);
-  const tierMeta = Number(meta.tier || 0);
-  const tier = vale && tierMeta >= 1 && tierMeta <= 3 ? tierMeta : 0;
+  // Il livello si riconosce prima dal CODICE del piano (nei metadati da
+  // novembre 2026) e dal PRODOTTO Stripe, poi dal numero. Il numero da solo
+  // non basta: Desk era il livello 3 prima che arrivasse Quant, e un
+  // abbonamento Desk nato allora porta ancora «tier 3» nei metadati.
+  const prodotto = String(sub?.items?.data?.[0]?.price?.product?.id
+    || sub?.items?.data?.[0]?.price?.product || '');
+  let tierPiano = await tierDelPiano(String(meta.code || ''), prodotto, pool);
+  if (!tierPiano) tierPiano = Number(meta.tier || 0);
+  const tier = vale && tierPiano >= 1 && tierPiano <= TIER_MAX ? tierPiano : 0;
   const periodo = periodoValido(meta.periodo)
     || (String(sub?.items?.data?.[0]?.price?.recurring?.interval || '') === 'year'
         ? 'annual' : 'monthly');
@@ -357,6 +364,31 @@ async function abbonamentoAggiornato(pool: any, sub: any) {
             "stripeCustomerId"       = COALESCE("stripeCustomerId", $8)
       WHERE id = $1`,
     [uid, stato, tier, fine, periodo, disdetta, subId || null, customer || null]);
+
+  // ── la prova ──────────────────────────────────────────────────────────
+  // In una UPDATE a parte, perche' le due colonne sono le ultime arrivate:
+  // se il file SQL che le aggiunge non e' ancora passato, lo stato
+  // dell'abbonamento qui sopra deve essere scritto lo stesso.
+  //   - `subscriptionTrialEnd`: la fine della prova finche' la prova e' in
+  //     corso; vuota quando finisce (o se non c'e' mai stata);
+  //   - `trialUsedAt`: la prima volta che l'account ha una prova. Non si
+  //     svuota mai: la prova e' una per account.
+  const fineProva = Number(sub?.trial_end || 0);
+  const inProva = String(sub?.status || '').toLowerCase() === 'trialing'
+    && fineProva * 1000 > Date.now();
+  try {
+    await pool.query(
+      `UPDATE "User"
+          SET "subscriptionTrialEnd" = $2,
+              "trialUsedAt" = CASE WHEN $3::boolean
+                                   THEN COALESCE("trialUsedAt", NOW())
+                                   ELSE "trialUsedAt" END
+        WHERE id = $1`,
+      [uid, inProva ? new Date(fineProva * 1000) : null, fineProva > 0]);
+  } catch (e: any) {
+    console.error('[webhook] trial columns not written (run marketplace_abbonamenti.sql):',
+                  String(e?.message || e));
+  }
 }
 
 /**
@@ -379,6 +411,7 @@ async function abbonamentoDaSessione(pool: any, sess: any): Promise<string | nul
       ...(sub.metadata || {}),
       uid: String(sess?.metadata?.uid || sess?.client_reference_id || ''),
       tier: String(sess?.metadata?.tier || ''),
+      code: String(sess?.metadata?.code || ''),
       periodo: String(sess?.metadata?.periodo || ''),
     };
   }

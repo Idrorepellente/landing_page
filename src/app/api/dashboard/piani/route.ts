@@ -1,10 +1,12 @@
 /**
- * I prezzi dei tre abbonamenti, dal pannello di amministrazione.
+ * I prezzi dei quattro piani a pagamento, dal pannello di amministrazione.
  *
- * Stanno nel database e si cambiano da qui perche' sono SEGNAPOSTO: i numeri
- * veri si decidono in uscita dalla beta, e un prezzo scritto nel codice
- * vorrebbe dire un rilascio per cambiarlo. Un prezzo che richiede un rilascio
- * non si cambia quando serve.
+ * Stanno nel database e si cambiano da qui: un prezzo scritto nel codice
+ * vorrebbe dire un rilascio per cambiarlo, e un prezzo che richiede un
+ * rilascio non si cambia quando serve. Il catalogo di partenza (quello del
+ * sito: Pro, Professional, Quant, Desk) lo scrive marketplace_abbonamenti.sql;
+ * qui si ritoccano prezzi, nome e frase. Le voci delle schede e i fatti dei
+ * piani stanno in `features` e si cambiano con una UPDATE.
  *
  * Cambiare un prezzo QUI non ritocca gli abbonamenti in corso: Stripe
  * continua a fatturare la cifra pattuita con ciascun cliente, e il nuovo
@@ -16,7 +18,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { checkSecret } from '@/lib/dashApi';
 import { getPool } from '@/lib/pg';
-import { piani, PERIODI } from '@/lib/abbonamenti';
+import { piani, PERIODI, TIER_MAX } from '@/lib/abbonamenti';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -59,8 +61,9 @@ export async function POST(req: NextRequest) {
     try { b = await req.json(); } catch { /* vuoto */ }
 
     const tier = Number(b?.tier);
-    if (!Number.isInteger(tier) || tier < 1 || tier > 3) {
-      return NextResponse.json({ error: 'tier must be 1, 2 or 3' }, { status: 400 });
+    if (!Number.isInteger(tier) || tier < 1 || tier > TIER_MAX) {
+      return NextResponse.json({ error: `tier must be between 1 and ${TIER_MAX}` },
+                               { status: 400 });
     }
 
     const mensile = b?.monthlyCents;
