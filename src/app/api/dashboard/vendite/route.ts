@@ -22,6 +22,7 @@ import { checkSecret } from '@/lib/dashApi';
 import { getPool } from '@/lib/pg';
 import { marketplaceBloccato, impostaLucchetto } from '@/lib/impostazioni';
 import { piani } from '@/lib/abbonamenti';
+import { assicuraCatalogo, spiegaSchema } from '@/lib/allineaCatalogo';
 import { stripeCall, configurato } from '@/lib/stripe';
 
 export const runtime = 'nodejs';
@@ -32,6 +33,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
   const pool = getPool();
+  // Prima lo schema (tabelle, colonne, piani del catalogo): lo crea il sito.
+  await assicuraCatalogo(pool);
   const bloccato = await marketplaceBloccato(pool);
 
   let inVendita = 0;
@@ -96,6 +99,7 @@ export async function POST(req: NextRequest) {
 
     const chi = String(b?.richiedente || 'admin').trim().toLowerCase();
     const pool = getPool();
+    await assicuraCatalogo(pool);
 
     // ── NON SI APRE IL MARKETPLACE SENZA LE FONDAMENTA ────────────────
     // Aprire senza i piani significa che al primo tentativo di pubblicare
@@ -107,8 +111,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({
           error: 'subscription plans are not installed',
           detail: 'Opening the marketplace now would ask authors for a plan '
-                + 'that does not exist. Run marketplace_abbonamenti.sql on '
-                + 'the site Postgres first.',
+                + 'that does not exist. ' + spiegaSchema(),
         }, { status: 409 });
       }
 
@@ -154,8 +157,7 @@ export async function POST(req: NextRequest) {
     if (/relation .*AppSetting.* does not exist/i.test(t)) {
       return NextResponse.json({
         error: 'The AppSetting table does not exist yet.',
-        detail: 'Run marketplace_beta.sql and marketplace_abbonamenti.sql on '
-              + 'the site Postgres.',
+        detail: spiegaSchema(),
       }, { status: 500 });
     }
     return NextResponse.json({ error: t }, { status: 500 });

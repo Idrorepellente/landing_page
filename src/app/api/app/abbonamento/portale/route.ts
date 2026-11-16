@@ -19,6 +19,7 @@ import type { NextRequest } from 'next/server';
 import { getPool } from '@/lib/pg';
 import { tokenFromRequest } from '@/lib/appToken';
 import { stripeCall, configurato, baseUrl, ErroreStripe } from '@/lib/stripe';
+import { assicuraCatalogo, spiegaSchema } from '@/lib/allineaCatalogo';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -32,6 +33,7 @@ export async function POST(req: NextRequest) {
   // configurati», un messaggio di sistema per una persona che non ha fatto
   // niente di storto e che deve solo sapere che non ha nulla da gestire.
   const pool = getPool();
+  await assicuraCatalogo(pool);
   let customer = '';
   try {
     const r = await pool.query(
@@ -40,7 +42,7 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json({
       error: 'subscriptions are not installed on the site database',
-      detail: 'Run marketplace_abbonamenti.sql on the site Postgres.',
+      detail: spiegaSchema(),
     }, { status: 500 });
   }
 

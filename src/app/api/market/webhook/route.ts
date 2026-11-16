@@ -367,7 +367,8 @@ async function abbonamentoAggiornato(pool: any, sub: any) {
 
   // ── la prova ──────────────────────────────────────────────────────────
   // In una UPDATE a parte, perche' le due colonne sono le ultime arrivate:
-  // se il file SQL che le aggiunge non e' ancora passato, lo stato
+  // le aggiunge l'allineamento del catalogo (lib/allineaCatalogo.ts, passato
+  // qui sopra con tierDelPiano), e se quello non e' riuscito lo stato
   // dell'abbonamento qui sopra deve essere scritto lo stesso.
   //   - `subscriptionTrialEnd`: la fine della prova finche' la prova e' in
   //     corso; vuota quando finisce (o se non c'e' mai stata);
@@ -386,8 +387,8 @@ async function abbonamentoAggiornato(pool: any, sub: any) {
         WHERE id = $1`,
       [uid, inProva ? new Date(fineProva * 1000) : null, fineProva > 0]);
   } catch (e: any) {
-    console.error('[webhook] trial columns not written (run marketplace_abbonamenti.sql):',
-                  String(e?.message || e));
+    console.error('[webhook] trial columns not written (the plan catalog is not aligned yet,'
+                  + ' see the Plans card in the admin panel):', String(e?.message || e));
   }
 }
 

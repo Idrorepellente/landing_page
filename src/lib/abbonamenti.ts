@@ -24,9 +24,11 @@
  *                                       si vende a contratto, non dal checkout
  *
  * I livelli sono in ORDINE DI PIANO: l'app li confronta per dire «passa a» o
- * «scendi a». Nomi, prezzi e voci stanno nella tabella "SubscriptionPlan"
- * (le scrive marketplace_abbonamenti.sql): qui non c'è un prezzo né una frase
- * del catalogo.
+ * «scendi a». Nomi, prezzi e voci si decidono in lib/catalogo.ts (lo stesso
+ * file da cui la pagina Prezzi prende i numeri) e stanno nella tabella
+ * "SubscriptionPlan", che il sito allinea da solo al catalogo alla prima
+ * lettura dopo un rilascio (lib/allineaCatalogo.ts): qui non c'è un prezzo né
+ * una frase del catalogo.
  *
  * Gli AMMINISTRATORI non sono un livello: passano sopra a tutto, lucchetto
  * compreso. Metterli in un livello li avrebbe fatti scadere.
@@ -34,6 +36,7 @@
 import { getPool } from '@/lib/pg';
 import { isAdminCompleto } from '@/lib/appToken';
 import { marketplaceBloccato } from '@/lib/impostazioni';
+import { assicuraCatalogo, spiegaSchema } from '@/lib/allineaCatalogo';
 
 export type Periodo = 'monthly' | 'annual';
 export const PERIODI: Periodo[] = ['monthly', 'annual'];
@@ -178,11 +181,15 @@ export async function prodottoStripe(p: Piano, pool?: any): Promise<string> {
 }
 
 /**
- * Il catalogo. Vuoto se la tabella non c'è: chi chiama mostra «non ancora
- * configurato» invece di inventarsi dei prezzi.
+ * Il catalogo, dal database: lo stesso di lib/catalogo.ts, perché prima di
+ * leggerlo il sito lo allinea (una volta per istanza, vedi
+ * lib/allineaCatalogo.ts). Vuoto se la tabella non c'è e non si è potuta
+ * creare: chi chiama mostra «non ancora configurato» invece di inventarsi dei
+ * prezzi.
  */
 export async function piani(pool?: any): Promise<Piano[]> {
   const db = pool || getPool();
+  await assicuraCatalogo(db);
   try {
     const r = await db.query(
       `SELECT tier, code, name, tagline, "monthlyCents", "annualCents",
@@ -222,6 +229,10 @@ export async function statoAbbonamento(userId: string, pool?: any): Promise<Stat
     periodo: null, disdettaDal: null, features: {}, provaFino: null,
   };
   if (!userId) return vuoto;
+  // Prima lo schema: dopo un rilascio le colonne della prova e il livello 4
+  // (Desk) li porta l'allineamento del catalogo, e questa può essere la prima
+  // richiesta dell'istanza.
+  await assicuraCatalogo(db);
   let base: StatoAbbonamento;
   try {
     const r = await db.query(
@@ -259,10 +270,10 @@ export async function statoAbbonamento(userId: string, pool?: any): Promise<Stat
     return { ...vuoto, stato: 'unknown', schemaMancante: true };
   }
 
-  // La prova si legge A PARTE. Le sue colonne sono le ultime arrivate: se il
-  // file SQL che le aggiunge non è ancora passato, l'abbonamento si legge lo
-  // stesso e manca solo la data della prova, invece di risultare «non
-  // verificabile» per tutti.
+  // La prova si legge A PARTE. Le sue colonne sono le ultime arrivate: se
+  // l'allineamento non le ha potute aggiungere (vedi lib/allineaCatalogo.ts),
+  // l'abbonamento si legge lo stesso e manca solo la data della prova, invece
+  // di risultare «non verificabile» per tutti.
   if (base.attivo) {
     try {
       const t = await db.query(
@@ -282,13 +293,14 @@ export async function statoAbbonamento(userId: string, pool?: any): Promise<Stat
  * prova l'ha avuta. `trialUsedAt` non si svuota mai, quindi disdire durante
  * la prova e riabbonarsi riparte pagando.
  *
- * Nel dubbio NO: se le colonne non ci sono (file SQL non eseguito) non si sa
- * se la prova è già stata usata, e regalare due mesi per un errore di
- * configurazione è un danno che non si ripara.
+ * Nel dubbio NO: se le colonne non ci sono (l'allineamento del catalogo non
+ * ha potuto aggiungerle) non si sa se la prova è già stata usata, e regalare
+ * due mesi per un errore di configurazione è un danno che non si ripara.
  */
 export async function provaDisponibile(userId: string, pool?: any): Promise<boolean> {
   if (!userId) return false;
   const db = pool || getPool();
+  await assicuraCatalogo(db);
   try {
     const r = await db.query(
       `SELECT "trialUsedAt" AS usata, "stripeSubscriptionId" AS sub
@@ -331,6 +343,9 @@ export function fineProvaSec(inizioSec: number, mesi: number): number {
 export async function tierDelPiano(codice: string, prodotto: string,
                                    pool?: any): Promise<number> {
   const db = pool || getPool();
+  // Il webhook può essere la prima richiesta dopo un rilascio: i livelli
+  // devono essere già quelli del catalogo (Desk al 4).
+  await assicuraCatalogo(db);
   try {
     if (codice) {
       const r = await db.query(
@@ -394,9 +409,8 @@ export async function puoPubblicare(userId: string, email: string | undefined,
     return {
       ok: false, codice: 'schema',
       error: 'subscriptions are not installed on the site database',
-      detail: 'Run marketplace_abbonamenti.sql on the site Postgres. Until '
-            + 'then nobody can publish, because there is no way to tell who '
-            + 'is entitled to.',
+      detail: spiegaSchema() + ' Until then nobody can publish, because '
+            + 'there is no way to tell who is entitled to.',
     };
   }
   return {

@@ -30,6 +30,7 @@ import {
   piano, periodoValido, prezzoCents, intervalloStripe, statoAbbonamento,
   prodottoStripe, provaDisponibile, fineProvaSec, TIER_MAX,
 } from '@/lib/abbonamenti';
+import { spiegaSchema } from '@/lib/allineaCatalogo';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
     if (/column|relation|does not exist|violates|constraint/i.test(testo)) {
       return NextResponse.json({
         error: 'The site database is not ready for subscriptions.',
-        detail: testo + '. Run marketplace_abbonamenti.sql on the site Postgres.',
+        detail: testo + '. ' + spiegaSchema(),
       }, { status: 500 });
     }
     return NextResponse.json({ error: testo }, { status: 500 });
@@ -96,8 +97,8 @@ async function gestisci(req: NextRequest) {
     return NextResponse.json({
       error: 'unknown plan',
       detail: `tier must be between 1 and ${TIER_MAX}, and the plan must be `
-            + 'active. If the plans table is empty, run '
-            + 'marketplace_abbonamenti.sql.',
+            + 'active. If no plan is active, the plans table is not set up: '
+            + spiegaSchema(),
     }, { status: 400 });
   }
 

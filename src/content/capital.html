@@ -229,7 +229,7 @@
   <section class="pn giorno" data-gt id="piani" aria-labelledby="pn-t">
     <div class="giro pn-testa">
       <h2 class="pn-h rv" id="pn-t"><span class="pn-g"><span class="l-it">Piani e</span></span> <em><span class="l-it">prezzi</span></em></h2>
-      <div class="pn-lato rv"><p><span class="l-it">Il gratuito è l'app intera. I piani a pagamento aprono dopo la beta, con due mesi di prova.<br>Tocca un piano per i dettagli.</span></p>
+      <div class="pn-lato rv"><p><span class="l-it">Il gratuito è l'app intera. I piani a pagamento aprono dopo la beta, con {{prova:mesi:parole}} mesi di prova.<br>Tocca un piano per i dettagli.</span></p>
         <div class="pn-frecce"><button type="button" class="pr-fr" data-pn="-1" aria-label="Piano precedente"><svg viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button><button type="button" class="pr-fr" data-pn="1" aria-label="Piano successivo"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button></div>
       </div>
     </div>
@@ -250,17 +250,17 @@
         </article>
         <article class="pn-c" role="listitem" data-piano="pro">
           <div class="pn-pan">
-            <div class="pn-top"><b>Pro</b><span class="pn-tag"><span class="l-it">2 mesi di prova</span></span></div>
+            <div class="pn-top"><b>Pro</b><span class="pn-tag"><span class="l-it">{{prova:mesi}} mesi di prova</span></span></div>
             <p class="pn-tt"><span class="l-it">Privacy totale.</span><br><span class="pn-g"><span class="l-it">Sandbox dal 2030.</span></span></p>
             <div class="pn-fondo">
               <div class="pn-sx">
-                <p class="pn-prezzo"><b>49</b><small>€</small><span><span class="l-it">/mese</span></span></p>
-                <div class="pn-az"><a class="pn-btn" href="#pricing"><span class="l-it">Prova 2 mesi</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><button class="pn-det" type="button" data-pn-apri="pro" aria-expanded="false" aria-controls="pnd-pro"><span class="l-it">Dettagli</span></button></div>
+                <p class="pn-prezzo"><b>{{prezzo:pro:mese}}</b><small>€</small><span><span class="l-it">/mese</span></span></p>
+                <div class="pn-az"><a class="pn-btn" href="#pricing"><span class="l-it">Prova {{prova:mesi}} mesi</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><button class="pn-det" type="button" data-pn-apri="pro" aria-expanded="false" aria-controls="pnd-pro"><span class="l-it">Dettagli</span></button></div>
               </div>
               <div class="pn-quota"><span class="pn-qi" aria-hidden="true"><svg class="lyra-mk" viewBox="0 0 100 100" aria-hidden="true" fill="currentColor"><use href="#lyra-mark"/></svg></span><span><small><span class="l-it">Quota sul generato</span></small><b>10% · <span class="l-it">del generato</span></b></span></div>
             </div>
           </div>
-          <ul class="pn-lista"><li><span class="l-it">Tutto il gratuito</span></li><li><span class="l-it">Privacy totale</span></li><li><span class="l-it">Marketplace −10%, puoi vendere</span></li><li><span class="l-it">Sandbox dati dal 2030</span></li><li><span class="l-it">10% del generato</span></li><li><span class="l-it">490 € all'anno, 2 mesi gratis</span></li></ul>
+          <ul class="pn-lista"><li><span class="l-it">Tutto il gratuito</span></li><li><span class="l-it">Privacy totale</span></li><li><span class="l-it">Marketplace −10%, puoi vendere</span></li><li><span class="l-it">Sandbox dati dal 2030</span></li><li><span class="l-it">10% del generato</span></li><li><span class="l-it">{{prezzo:pro:anno}} € all'anno, {{annuale:mesi-gratis}} mesi gratis</span></li></ul>
         </article>
         <article class="pn-c pn-scuro" role="listitem" data-piano="professional">
           <div class="pn-pan">
@@ -268,8 +268,8 @@
             <p class="pn-tt"><span class="l-it">Storico grezzo in locale.</span><br><span class="pn-g"><span class="l-it">E il 30% del generato.</span></span></p>
             <div class="pn-fondo">
               <div class="pn-sx">
-                <p class="pn-prezzo"><b>149</b><small>€</small><span><span class="l-it">/mese</span></span></p>
-                <div class="pn-az"><a class="pn-btn" href="#pricing"><span class="l-it">Prova 2 mesi</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><button class="pn-det" type="button" data-pn-apri="professional" aria-expanded="false" aria-controls="pnd-professional"><span class="l-it">Dettagli</span></button></div>
+                <p class="pn-prezzo"><b>{{prezzo:professional:mese}}</b><small>€</small><span><span class="l-it">/mese</span></span></p>
+                <div class="pn-az"><a class="pn-btn" href="#pricing"><span class="l-it">Prova {{prova:mesi}} mesi</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><button class="pn-det" type="button" data-pn-apri="professional" aria-expanded="false" aria-controls="pnd-professional"><span class="l-it">Dettagli</span></button></div>
               </div>
               <div class="pn-quota"><span class="pn-qi" aria-hidden="true"><svg class="lyra-mk" viewBox="0 0 100 100" aria-hidden="true" fill="currentColor"><use href="#lyra-mark"/></svg></span><span><small><span class="l-it">Quota sul generato</span></small><b>30% · <span class="l-it">del generato</span></b></span></div>
             </div>
@@ -282,8 +282,8 @@
             <p class="pn-tt"><span class="l-it">Tutto il Professional.</span><br><span class="pn-g"><span class="l-it">Più il real-time.</span></span></p>
             <div class="pn-fondo">
               <div class="pn-sx">
-                <p class="pn-prezzo"><em><span class="l-it">da</span></em><b>200</b><small>€</small><span><span class="l-it">/mese + dati</span></span></p>
-                <div class="pn-az"><a class="pn-btn" href="#pricing"><span class="l-it">Prova 2 mesi</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><button class="pn-det" type="button" data-pn-apri="quant" aria-expanded="false" aria-controls="pnd-quant"><span class="l-it">Dettagli</span></button></div>
+                <p class="pn-prezzo"><em><span class="l-it">da</span></em><b>{{prezzo:quant:mese}}</b><small>€</small><span><span class="l-it">/mese + dati</span></span></p>
+                <div class="pn-az"><a class="pn-btn" href="#pricing"><span class="l-it">Prova {{prova:mesi}} mesi</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><button class="pn-det" type="button" data-pn-apri="quant" aria-expanded="false" aria-controls="pnd-quant"><span class="l-it">Dettagli</span></button></div>
               </div>
               <div class="pn-quota"><span class="pn-qi" aria-hidden="true"><svg class="lyra-mk" viewBox="0 0 100 100" aria-hidden="true" fill="currentColor"><use href="#lyra-mark"/></svg></span><span><small><span class="l-it">Quota sul generato</span></small><b>30% · <span class="l-it">del generato</span></b></span></div>
             </div>
@@ -296,7 +296,7 @@
             <p class="pn-tt"><span class="l-it">Per consulenti e boutique.</span><br><span class="pn-g"><span class="l-it">Sui vostri server.</span></span></p>
             <div class="pn-fondo">
               <div class="pn-sx">
-                <p class="pn-prezzo"><b>8.000</b><small>€</small><span><span class="l-it">/anno</span></span></p>
+                <p class="pn-prezzo"><b>{{prezzo:desk:anno}}</b><small>€</small><span><span class="l-it">/anno</span></span></p>
                 <div class="pn-az"><a class="pn-btn" href="#desk-demo"><span class="l-it">Richiedi demo</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><button class="pn-det" type="button" data-pn-apri="desk" aria-expanded="false" aria-controls="pnd-desk"><span class="l-it">Dettagli</span></button></div>
               </div>
               <div class="pn-quota"><span class="pn-qi" aria-hidden="true"><svg class="lyra-mk" viewBox="0 0 100 100" aria-hidden="true" fill="currentColor"><use href="#lyra-mark"/></svg></span><span><small><span class="l-it">Quota sul generato</span></small><b>30% · <span class="l-it">del generato</span></b></span></div>
@@ -332,7 +332,7 @@
             <div class="pd-testo"><span class="pd-tag"><span class="l-it">In più del gratuito</span></span><h4><span class="l-it">Le tue strategie restano tue</span></h4><p><span class="l-it">Privacy totale su codice e metriche. Nel marketplace compri con il 10% di sconto e puoi vendere le tue strategie.</span></p></div>
             <div class="pd-cruscotto" aria-hidden="true">
               <span class="pd-titoletto">Pro · <span class="l-it">in sintesi</span></span>
-              <div class="pd-tiles"><span class="pd-tile"><small><span class="l-it">Marketplace</span></small><b><span class="l-it">−10% e vendi</span></b></span><span class="pd-tile"><small><span class="l-it">Annuale</span></small><b>490 €</b></span></div>
+              <div class="pd-tiles"><span class="pd-tile"><small><span class="l-it">Marketplace</span></small><b><span class="l-it">−10% e vendi</span></b></span><span class="pd-tile"><small><span class="l-it">Annuale</span></small><b>{{prezzo:pro:anno}} €</b></span></div>
               <div class="pd-grafico"><small><span class="l-it">Quota sul generato per piano</span></small><svg viewBox="0 0 220 70" preserveAspectRatio="none"><polyline points="10,62 60,52 110,22 160,22 210,22" fill="none" stroke="#f2b45a" stroke-width="2"/><g fill="#f2b45a"><circle cx="10" cy="62" r="3"/><circle cx="60" cy="52" r="3"/><circle cx="110" cy="22" r="3"/><circle cx="160" cy="22" r="3"/><circle cx="210" cy="22" r="3"/></g></svg><span class="pd-assi"><i>Free</i><i>Pro</i><i>Prof.</i><i>Quant</i><i>Desk</i></span></div>
               <span class="pd-acc"><small><span class="l-it">Privacy</span></small><b><span class="l-it">totale</span></b></span>
             </div>
@@ -351,7 +351,7 @@
             <div class="pd-testo"><span class="pd-tag"><span class="l-it">In più del Pro</span></span><h4><span class="l-it">Dati grezzi sulla tua macchina</span></h4><p><span class="l-it">Storico grezzo in locale dal 2030, con il 10% di sconto sui vendor. Sandbox su più mercati e marketplace al −20%.</span></p></div>
             <div class="pd-cruscotto" aria-hidden="true">
               <span class="pd-titoletto">Professional · <span class="l-it">in sintesi</span></span>
-              <div class="pd-tiles"><span class="pd-tile"><small><span class="l-it">Marketplace</span></small><b>−20%</b></span><span class="pd-tile"><small><span class="l-it">Annuale</span></small><b>1.490 €</b></span></div>
+              <div class="pd-tiles"><span class="pd-tile"><small><span class="l-it">Marketplace</span></small><b>−20%</b></span><span class="pd-tile"><small><span class="l-it">Annuale</span></small><b>{{prezzo:professional:anno}} €</b></span></div>
               <div class="pd-grafico"><small><span class="l-it">Quota sul generato per piano</span></small><svg viewBox="0 0 220 70" preserveAspectRatio="none"><polyline points="10,62 60,52 110,22 160,22 210,22" fill="none" stroke="#f2b45a" stroke-width="2"/><g fill="#f2b45a"><circle cx="10" cy="62" r="3"/><circle cx="60" cy="52" r="3"/><circle cx="110" cy="22" r="3"/><circle cx="160" cy="22" r="3"/><circle cx="210" cy="22" r="3"/></g></svg><span class="pd-assi"><i>Free</i><i>Pro</i><i>Prof.</i><i>Quant</i><i>Desk</i></span></div>
               <span class="pd-acc"><small><span class="l-it">Vendor dati</span></small><b>−10%</b></span>
             </div>
@@ -361,10 +361,10 @@
             <h4><span class="l-it">Dati e mercati</span></h4><p><span class="l-it">Il sandbox si allarga a più mercati e lo storico grezzo resta sulla tua macchina.</span></p>
           </div>
         </div>
-        <div class="pd-piede"><p class="pd-big"><small><span class="l-it">Quota</span></small><b>30%</b></p><p class="pd-big-t"><span class="l-it">Del generato dalle strategie allocate: tre volte il Pro, per contratto.</span></p></div>
+        <div class="pd-piede"><p class="pd-big"><small><span class="l-it">Quota</span></small><b>30%</b></p><p class="pd-big-t"><span class="l-it">Del generato dalle strategie allocate: {{quota:professional:pro:parole}} volte il Pro, per contratto.</span></p></div>
       </div>
       <div class="pd" id="pnd-quant" data-pd="quant" role="region" aria-label="Dettagli del piano Quant" hidden>
-        <div class="pd-testa"><h3 class="pd-h"><span class="l-it">Quant: il real-time con licenza di borsa</span></h3><p class="pd-lato"><span class="l-it">Il prezzo parte da 200 € al mese; i dati di borsa si aggiungono per mercato.</span></p><button class="pd-x" type="button" data-pn-chiudi aria-label="Chiudi i dettagli"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+        <div class="pd-testa"><h3 class="pd-h"><span class="l-it">Quant: il real-time con licenza di borsa</span></h3><p class="pd-lato"><span class="l-it">Il prezzo parte da {{prezzo:quant:mese}} € al mese; i dati di borsa si aggiungono per mercato.</span></p><button class="pd-x" type="button" data-pn-chiudi aria-label="Chiudi i dettagli"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
         <div class="pd-griglia">
           <div class="pd-bianca">
             <div class="pd-testo"><span class="pd-tag"><span class="l-it">In più del Professional</span></span><h4><span class="l-it">Dati di borsa in tempo reale</span></h4><p><span class="l-it">Dal 2032 il real-time con licenza di borsa, a pacchetti per mercato. Sandbox esteso e storico grezzo inclusi.</span></p></div>
@@ -372,7 +372,7 @@
               <span class="pd-titoletto">Quant · <span class="l-it">in sintesi</span></span>
               <div class="pd-tiles"><span class="pd-tile"><small><span class="l-it">Real-time</span></small><b>2032</b></span><span class="pd-tile"><small><span class="l-it">Add-on</span></small><b><span class="l-it">per mercato</span></b></span></div>
               <div class="pd-grafico"><small><span class="l-it">Quota sul generato per piano</span></small><svg viewBox="0 0 220 70" preserveAspectRatio="none"><polyline points="10,62 60,52 110,22 160,22 210,22" fill="none" stroke="#f2b45a" stroke-width="2"/><g fill="#f2b45a"><circle cx="10" cy="62" r="3"/><circle cx="60" cy="52" r="3"/><circle cx="110" cy="22" r="3"/><circle cx="160" cy="22" r="3"/><circle cx="210" cy="22" r="3"/></g></svg><span class="pd-assi"><i>Free</i><i>Pro</i><i>Prof.</i><i>Quant</i><i>Desk</i></span></div>
-              <span class="pd-acc"><small><span class="l-it">Annuale</span></small><b>2.000 €</b></span>
+              <span class="pd-acc"><small><span class="l-it">Annuale</span></small><b>{{prezzo:quant:anno}} €</b></span>
             </div>
           </div>
           <div class="pd-nera">
@@ -690,20 +690,20 @@
     <a class="wk-back" href="#home"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg><span class="l-it">Torna alla home</span></a>
     <p class="wk-eye"><span class="l-it">Prezzi</span></p>
     <h1 class="wk-t"><span class="l-it">Il gratuito è l'app <em>intera</em>.</span></h1>
-    <p class="wk-lede"><span class="l-it">Si paga per la privacy, i dati e una quota più alta del generato. Non per usare l'app. I piani a pagamento aprono dopo la beta, con due mesi di prova su ognuno.</span></p>
+    <p class="wk-lede"><span class="l-it">Si paga per la privacy, i dati e una quota più alta del generato. Non per usare l'app. I piani a pagamento aprono dopo la beta, con {{prova:mesi:parole}} mesi di prova su ognuno.</span></p>
   </section>
   <section class="giro" style="padding-bottom:var(--sez)">
-    <div class="bill-wrap"><div class="bill" role="group" aria-label="Fatturazione"><button type="button" data-bill="m" data-target="ptab" aria-pressed="false"><span class="l-it">Mensile</span></button><button type="button" class="bill-y" data-bill="y" data-target="ptab" aria-pressed="true"><span class="l-it">Annuale</span><span class="bill-off"><span class="l-it">2 mesi gratis</span></span></button></div><p class="bill-nota"><span class="l-it">Con l'annuale paghi <b>10 mesi su 12</b>, su ogni piano a pagamento.</span></p></div>
+    <div class="bill-wrap"><div class="bill" role="group" aria-label="Fatturazione"><button type="button" data-bill="m" data-target="ptab" aria-pressed="false"><span class="l-it">Mensile</span></button><button type="button" class="bill-y" data-bill="y" data-target="ptab" aria-pressed="true"><span class="l-it">Annuale</span><span class="bill-off"><span class="l-it">{{annuale:mesi-gratis}} mesi gratis</span></span></button></div><p class="bill-nota"><span class="l-it">Con l'annuale paghi <b>{{annuale:mesi-pagati}} mesi su 12</b>, su ogni piano a pagamento.</span></p></div>
     <div class="pz-tabs" role="group" aria-label="Scegli il piano da vedere"><button type="button" data-pz="1" aria-pressed="false"><span class="l-it">Gratuito</span></button><button type="button" data-pz="2" aria-pressed="false">Pro</button><button type="button" data-pz="3" aria-pressed="true">Professional</button><button type="button" data-pz="4" aria-pressed="false">Quant</button><button type="button" data-pz="5" aria-pressed="false">Desk</button></div>
     <div class="prezzi-wrap annuale" id="ptab" data-col="3">
       <table class="prezzi">
         <thead><tr>
           <th scope="col"></th>
           <th scope="col"><span class="pz-n"><span class="l-it">Gratuito</span></span><span class="pp">0 €</span><span class="pu"><span class="l-it">per sempre</span></span></th>
-          <th scope="col"><span class="pz-n">Pro</span><span class="pp"><span class="py">490 €</span><span class="pm">49 €</span></span><span class="pu"><span class="py"><span class="l-it">all'anno</span></span><span class="pm"><span class="l-it">al mese</span></span></span></th>
-          <th scope="col" class="hl"><span class="pz-n">Professional</span><span class="pp"><span class="py">1.490 €</span><span class="pm">149 €</span></span><span class="pu"><span class="py"><span class="l-it">all'anno</span></span><span class="pm"><span class="l-it">al mese</span></span></span></th>
-          <th scope="col"><span class="pz-n">Quant</span><span class="pp"><span class="py">2.000 €</span><span class="pm">200 €</span></span><span class="pu"><span class="py"><span class="l-it">all'anno + add-on dati</span></span><span class="pm"><span class="l-it">al mese + add-on dati</span></span></span></th>
-          <th scope="col"><span class="pz-n">Desk</span><span class="pp">8.000 €</span><span class="pu"><span class="l-it">all'anno · 5 postazioni</span></span></th>
+          <th scope="col"><span class="pz-n">Pro</span><span class="pp"><span class="py">{{prezzo:pro:anno}} €</span><span class="pm">{{prezzo:pro:mese}} €</span></span><span class="pu"><span class="py"><span class="l-it">all'anno</span></span><span class="pm"><span class="l-it">al mese</span></span></span></th>
+          <th scope="col" class="hl"><span class="pz-n">Professional</span><span class="pp"><span class="py">{{prezzo:professional:anno}} €</span><span class="pm">{{prezzo:professional:mese}} €</span></span><span class="pu"><span class="py"><span class="l-it">all'anno</span></span><span class="pm"><span class="l-it">al mese</span></span></span></th>
+          <th scope="col"><span class="pz-n">Quant</span><span class="pp"><span class="py">{{prezzo:quant:anno}} €</span><span class="pm">{{prezzo:quant:mese}} €</span></span><span class="pu"><span class="py"><span class="l-it">all'anno + add-on dati</span></span><span class="pm"><span class="l-it">al mese + add-on dati</span></span></span></th>
+          <th scope="col"><span class="pz-n">Desk</span><span class="pp">{{prezzo:desk:anno}} €</span><span class="pu"><span class="l-it">all'anno · 5 postazioni</span></span></th>
         </tr></thead>
         <tbody>
           <tr><th scope="row"><span class="l-it">Costruzione e backtest in locale, con i tuoi dati</span></th><td class="si">✓</td><td class="si">✓</td><td class="hl si">✓</td><td class="si">✓</td><td class="si">✓</td></tr>
@@ -717,14 +717,14 @@
           <tr><th scope="row"><span class="l-it">Real-time con licenza di borsa</span></th><td>–</td><td>–</td><td class="hl">–</td><td>✓ <span class="tag" data-grade="target">2032</span></td><td class="si">✓</td></tr>
           <tr><th scope="row"><span class="l-it">Quota sul generato delle strategie allocate</span></th><td><span class="l-it">0% · entra nel track record</span></td><td class="si">10%</td><td class="hl si">30%</td><td class="si">30%</td><td class="si">30%</td></tr>
           <tr><th scope="row"><span class="l-it">Postazioni, export compliance, white-label, SLA</span></th><td>–</td><td>–</td><td class="hl">–</td><td>–</td><td><span class="l-it">5 postazioni</span></td></tr>
-          <tr><th scope="row"></th><td><a class="btn btn-vetro" href="#" data-ph="download"><span class="l-it">Scarica</span></a></td><td><a class="btn btn-vetro" href="#" data-ph="download"><span class="l-it">Prova 2 mesi</span></a></td><td class="hl"><a class="btn" href="#" data-ph="download"><span class="l-it">Prova 2 mesi</span></a></td><td><a class="btn btn-vetro" href="#" data-ph="download"><span class="l-it">Prova 2 mesi</span></a></td><td><a class="btn btn-vetro" href="#desk-demo"><span class="l-it">Richiedi demo</span></a></td></tr>
+          <tr><th scope="row"></th><td><a class="btn btn-vetro" href="#" data-ph="download"><span class="l-it">Scarica</span></a></td><td><a class="btn btn-vetro" href="#" data-ph="download"><span class="l-it">Prova {{prova:mesi}} mesi</span></a></td><td class="hl"><a class="btn" href="#" data-ph="download"><span class="l-it">Prova {{prova:mesi}} mesi</span></a></td><td><a class="btn btn-vetro" href="#" data-ph="download"><span class="l-it">Prova {{prova:mesi}} mesi</span></a></td><td><a class="btn btn-vetro" href="#desk-demo"><span class="l-it">Richiedi demo</span></a></td></tr>
         </tbody>
       </table>
     </div>
     <div class="faq" style="margin-top:clamp(48px,6vw,88px)">
         <details><summary><span class="l-it">Cosa cambia davvero fra gratuito e Pro?</span></summary><div class="ans"><p class="corpo"><span class="l-it">L'app è la stessa. Il Pro aggiunge la privacy totale delle tue strategie, la vendita nel marketplace, il sandbox sui dati istituzionali e il 10% del generato se una tua strategia viene allocata.</span></p></div></details>
-        <details><summary><span class="l-it">Perché il Professional costa tre volte il Pro?</span></summary><div class="ans"><p class="corpo"><span class="l-it">Aggiunge lo storico grezzo in locale e porta la quota sul generato dal 10% al 30%. Per chi pensa di essere allocato, la differenza si ripaga da sola.</span></p></div></details>
-        <details><summary><span class="l-it">Come funziona la prova di due mesi?</span></summary><div class="ans"><p class="corpo"><span class="l-it">Ogni piano a pagamento si prova per due mesi. Poi scegli mensile o annuale (dieci mensilità: due sono gratis), oppure torni al gratuito senza perdere nulla.</span></p></div></details>
+        <details><summary><span class="l-it">Perché il Professional costa {{rapporto:professional:pro:parole}} volte il Pro?</span></summary><div class="ans"><p class="corpo"><span class="l-it">Aggiunge lo storico grezzo in locale e porta la quota sul generato dal 10% al 30%. Per chi pensa di essere allocato, la differenza si ripaga da sola.</span></p></div></details>
+        <details><summary><span class="l-it">Come funziona la prova di {{prova:mesi:parole}} mesi?</span></summary><div class="ans"><p class="corpo"><span class="l-it">Ogni piano a pagamento si prova per {{prova:mesi:parole}} mesi. Poi scegli mensile o annuale ({{annuale:mesi-pagati:parole}} mensilità: {{annuale:mesi-gratis:parole}} sono gratis), oppure torni al gratuito senza perdere nulla.</span></p></div></details>
         <details><summary><span class="l-it">Se smetto di pagare, perdo le mie strategie?</span></summary><div class="ans"><p class="corpo"><span class="l-it">No. Strategie e dati sono sulla tua macchina. Torni al gratuito, che resta l'app completa.</span></p></div></details>
     </div>
   </section>
@@ -790,7 +790,7 @@
     <ol class="rm-rel">
       <li class="rv rm-ora"><div class="rm-top"><span class="rm-v">2027</span><span class="tag" data-grade="ours"><span class="l-it">in corso</span></span></div><h3><span class="l-it">Release pubblica</span></h3><p><span class="l-it">L'app gratuita su GitHub, con la community come primo tester e primo sostenitore.</span></p><ul class="mt-chips"><li><span class="l-it">binari</span></li><li><span class="l-it">SDK dei plugin</span></li><li><span class="l-it">documentazione</span></li><li>Sponsors · Kickstarter</li></ul></li>
       <li class="rv"><div class="rm-top"><span class="rm-v">2028</span><span class="tag" data-grade="target">beta</span></div><h3><span class="l-it">Beta dei piani</span></h3><p><span class="l-it">Beta chiusa dei piani a pagamento con i tester più attivi, e il contratto tipo per chi porta strategie al capitale.</span></p><ul class="mt-chips"><li><span class="l-it">beta chiusa</span></li><li><span class="l-it">contratto tipo</span></li><li><span class="l-it">prime candidature</span></li></ul></li>
-      <li class="rv"><div class="rm-top"><span class="rm-v">2029</span><span class="tag" data-grade="target"><span class="l-it">lancio</span></span></div><h3><span class="l-it">Lancio pubblico</span></h3><p><span class="l-it">Piani Pro, Professional e Quant aperti a tutti, con due mesi di prova su ognuno.</span></p><ul class="mt-chips"><li>Pro · Professional · Quant</li><li><span class="l-it">libreria classificata</span></li><li><span class="l-it">prova di 2 mesi</span></li></ul></li>
+      <li class="rv"><div class="rm-top"><span class="rm-v">2029</span><span class="tag" data-grade="target"><span class="l-it">lancio</span></span></div><h3><span class="l-it">Lancio pubblico</span></h3><p><span class="l-it">Piani Pro, Professional e Quant aperti a tutti, con {{prova:mesi:parole}} mesi di prova su ognuno.</span></p><ul class="mt-chips"><li>Pro · Professional · Quant</li><li><span class="l-it">libreria classificata</span></li><li><span class="l-it">prova di {{prova:mesi}} mesi</span></li></ul></li>
       <li class="rv"><div class="rm-top"><span class="rm-v">2030</span><span class="rm-cov">52/83</span></div><h3><span class="l-it">Sandbox e dati grezzi</span></h3><p><span class="l-it">Sandbox sui dati istituzionali dal Pro in su, storico grezzo in locale per il Professional e corsi di formazione nel marketplace.</span></p><ul class="mt-chips"><li><span class="l-it">sandbox istituzionale</span></li><li><span class="l-it">storico grezzo</span></li><li><span class="l-it">formazione</span></li></ul></li>
       <li class="rv"><div class="rm-top"><span class="rm-v">2031</span></div><h3><span class="l-it">Governance delle strategie</span></h3><p><span class="l-it">Gestire le strategie in produzione: decadimento misurato contro il backtest, riduzione, sostituzione e ritiro. E un'AI che critica la robustezza, accanto al verdetto statistico di oggi.</span></p><ul class="mt-chips"><li>governance</li><li><span class="l-it">decadimento live</span></li><li><span class="l-it">AI critica</span></li></ul></li>
       <li class="rv"><div class="rm-top"><span class="rm-v">2032</span></div><h3>Real-time</h3><p><span class="l-it">Real-time con licenza di borsa nel piano Quant, a pacchetti per mercato.</span></p><ul class="mt-chips"><li>NYSE · Nasdaq</li><li><span class="l-it">pacchetti per mercato</span></li></ul></li>
@@ -920,7 +920,7 @@
       <li><span class="k"><span class="l-it">7 · Contenuti dell'Utente</span></span><span class="v"><span class="l-it">Le tue strategie restano tue. Concedi a Lyra Capital una licenza non esclusiva, limitata e revocabile per trattarle solo quanto serve a erogare i Servizi. Durante la beta codice e metriche restano sulla tua macchina: li trattiamo solo se li pubblichi nel marketplace. Con i piani a pagamento, nel gratuito metriche e codice saranno visibili a Lyra Capital e non verranno usati senza il tuo consenso; dal Pro la privacy è totale; nel Desk tutto resta sui server dello studio.</span></span></li>
       <li><span class="k"><span class="l-it">8 · Candidature al capitale</span></span><span class="v"><span class="l-it">La candidatura è facoltativa, per singola strategia e regolata da un contratto separato. L'allocazione avviene tramite soggetti terzi vigilati, come Darwinex, e gestori professionali, alle loro condizioni. La quota all'autore dipende dal piano e dal contratto. Nessuna allocazione è garantita.</span></span></li>
       <li><span class="k"><span class="l-it">9 · Marketplace</span></span><span class="v"><span class="l-it">Gli utenti scambiano codice e logica, mai segnali operativi o raccomandazioni personalizzate. Lyra Capital è il fornitore tecnologico, non è parte dei rapporti fra autori e acquirenti e non garantisce qualità, sicurezza o performance dei componenti. Una strategia venduta sul marketplace non può essere candidata al capitale.</span></span></li>
-      <li><span class="k"><span class="l-it">10 · Piani e pagamenti</span></span><span class="v"><span class="l-it">Le funzioni a pagamento seguono i piani pubblicati, con le imposte indicate all'acquisto. I piani a pagamento aprono dopo la beta, ciascuno con una prova di due mesi. I pagamenti passano da fornitori terzi. Gli abbonamenti si rinnovano automaticamente salvo diversa previsione di legge; puoi disattivare il rinnovo dalle impostazioni. Non applichiamo commissioni sul tuo trading.</span></span></li>
+      <li><span class="k"><span class="l-it">10 · Piani e pagamenti</span></span><span class="v"><span class="l-it">Le funzioni a pagamento seguono i piani pubblicati, con le imposte indicate all'acquisto. I piani a pagamento aprono dopo la beta, ciascuno con una prova di {{prova:mesi:parole}} mesi. I pagamenti passano da fornitori terzi. Gli abbonamenti si rinnovano automaticamente salvo diversa previsione di legge; puoi disattivare il rinnovo dalle impostazioni. Non applichiamo commissioni sul tuo trading.</span></span></li>
       <li><span class="k"><span class="l-it">11 · Nessuna consulenza</span></span><span class="v"><span class="l-it">Nulla di ciò che la Piattaforma mostra o produce è consulenza finanziaria, legale o fiscale, né raccomandazione o sollecitazione all'investimento. Le decisioni sono tue e ne rispondi tu.</span></span></li>
       <li><span class="k"><span class="l-it">12 · Proprietà intellettuale</span></span><span class="v"><span class="l-it">Software, marchio, loghi, testi e grafica appartengono a Lyra Capital o ai suoi licenzianti. Ricevi una licenza d'uso personale, limitata, non esclusiva e non trasferibile; nessun altro diritto è ceduto.</span></span></li>
       <li><span class="k"><span class="l-it">13 · Garanzie</span></span><span class="v"><span class="l-it">I Servizi sono forniti così come sono e secondo disponibilità. Nei limiti di legge non garantiamo continuità, assenza di errori, accuratezza dei dati, idoneità a uno scopo o risultati.</span></span></li>
