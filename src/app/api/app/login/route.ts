@@ -7,9 +7,10 @@ import { consentito, azzera, messaggioLimite } from '@/lib/limiti';
 import { verifica as verificaTotp } from '@/lib/totp';
 import { creaCodice, verificaCodice } from '@/lib/authcodes';
 import { inviaEmail, postaConfigurata } from '@/lib/mailer';
+import { betaAttiva, ammessoInBeta, BETA_NON_AMMESSO } from '@/lib/beta';
 import {
-  betaAttiva, ammessoInBeta, BETA_NON_AMMESSO, BETA_SENZA_PASSWORD,
-} from '@/lib/beta';
+  motivoSenzaAccount, primaPasswordInUso, PASSAGGIO_PASSWORD_MS,
+} from '@/lib/betaAccount';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -71,18 +72,18 @@ export async function POST(req: NextRequest) {
     // Con la beta attiva gli unici indirizzi che possono entrare sono quelli
     // ammessi: iscritti dal sito, invitati dal pannello, amministratori.
     //
-    // DUE CASI DIVERSI, e qui sta il punto di tutta questa parte:
+    // CASI DIVERSI, e qui sta il punto di tutta questa parte:
     //
     //   nessun account + indirizzo AMMESSO
-    //     È il primo accesso di chi si è iscritto alla beta. Non ha una
-    //     password perché non ha un account: ha solo lasciato un indirizzo sul
-    //     form. Rispondere «credenziali non valide» lo lascia davanti a un
-    //     muro, convinto di aver sbagliato a digitare — e il percorso
-    //     previsto, «dimentica password», non lo trova nessuno da solo.
-    //     Quindi si dice dove andare.
+    //     Gli account della beta li crea il sistema (lib/betaAccount.ts):
+    //     un indirizzo ammesso senza account e' una richiesta arrivata
+    //     quando i posti erano finiti (BETA_IN_LISTA), oppure un account non
+    //     ancora creato (BETA_SENZA_ACCOUNT). Rispondere «credenziali non
+    //     valide» lo lascerebbe davanti a un muro, convinto di aver
+    //     sbagliato a digitare: si dice com'e' la situazione.
     //
     //   indirizzo NON ammesso
-    //     Rifiutato, con l'indicazione di iscriversi alla beta.
+    //     Rifiutato, con l'indicazione di chiedere l'accesso alla beta.
     //
     // L'ORDINE conta. Per un account che ESISTE il controllo della beta viene
     // DOPO la verifica della password: altrimenti provando indirizzi a uno a
@@ -102,10 +103,8 @@ export async function POST(req: NextRequest) {
     // primo accesso di chi si è iscritto alla beta.
     if (!user) {
       if (beta) {
-        return NextResponse.json(
-          (await ammessoInBeta(getPool(), email))
-            ? BETA_SENZA_PASSWORD : BETA_NON_AMMESSO,
-          { status: 403 });
+        return NextResponse.json(await motivoSenzaAccount(getPool(), email),
+                                 { status: 403 });
       }
       return NextResponse.json({ error: 'invalid credentials' }, { status: 401 });
     }
@@ -119,6 +118,22 @@ export async function POST(req: NextRequest) {
     }
     if (beta && !(await ammessoInBeta(getPool(), String(user.email)))) {
       return NextResponse.json(BETA_NON_AMMESSO, { status: 403 });
+    }
+
+    // ---- LA PRIMA PASSWORD DELLA BETA -----------------------------------
+    // Un account creato dal sistema entra la prima volta con la password
+    // arrivata per email. Il token NON si rilascia: si risponde con un
+    // passaggio breve che serve solo a sceglierne una propria
+    // (/api/app/login/password). Cosi' la password dell'email — che resta
+    // scritta in una casella di posta — vale una volta sola.
+    if (await primaPasswordInUso(getPool(), String(user.id))) {
+      await azzera(chiaveLimite);   // password corretta: non e' un tentativo a vuoto
+      return NextResponse.json({
+        devePassword: true,
+        challenge: createToken(String(user.id), String(user.email),
+                               PASSAGGIO_PASSWORD_MS, 'password'),
+        email: String(user.email),
+      }, { status: 200 });
     }
 
     // ---- VERIFICA IN DUE PASSAGGI ----------------------------------------

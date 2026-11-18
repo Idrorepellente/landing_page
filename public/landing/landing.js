@@ -908,10 +908,26 @@ document.addEventListener('click', e => {
     if (c) apri(c.classList.contains('on') ? null : c.dataset.piano);
   });
   sec.addEventListener('keydown', e => { if (e.key === 'Escape') apri(null); });
-  // v3.8 · il modulo demo del Desk vive nel pannello del piano: #desk-demo lo apre e ci porta lì
+  // v3.8 · il riquadro della demo del Desk vive nel pannello del piano: #desk-demo lo apre e ci porta lì.
+  // v4.25 · nessun bottone porta più qui (le demo aprono più avanti), ma un indirizzo con #desk-demo funziona ancora.
   const demo = () => { if (location.hash !== '#desk-demo') return; apri('desk'); setTimeout(() => { const f = document.getElementById('desk-demo'); if (f) f.scrollIntoView({ behavior: lento(), block: 'start' }); }, 160); };
   addEventListener('hashchange', demo); demo();
-  sec.addEventListener('click', e => { if (e.target.closest('a[href="#desk-demo"]') && location.hash === '#desk-demo') demo(); });
+})();
+
+/* v4.25 · i bottoni spenti con «Coming soon» (per ora le demo del Desk). Il messaggio compare in CSS al passaggio
+   del mouse e al focus da tastiera; qui il clic e il tocco (sul telefono non c'è hover), che lo accendono per un
+   paio di secondi, e Esc, che lo chiude finché il puntatore o il focus non se ne vanno. */
+(() => {
+  document.querySelectorAll('[data-presto]').forEach(b => {
+    if (b.dataset.prestoPronto) return; b.dataset.prestoPronto = '1';
+    let t = 0;
+    const spegni = () => { clearTimeout(t); b.classList.remove('presto-on'); };
+    b.addEventListener('click', e => { e.preventDefault(); b.classList.remove('presto-x'); b.classList.add('presto-on'); clearTimeout(t); t = setTimeout(spegni, 2400); });
+    b.addEventListener('keydown', e => { if (e.key === 'Escape') { spegni(); b.classList.add('presto-x'); } });
+    b.addEventListener('blur', () => { spegni(); b.classList.remove('presto-x'); });
+    // col dito il puntatore «esce» subito dopo il tocco: conta solo il mouse (o la penna), il tocco si spegne da solo
+    b.addEventListener('pointerleave', e => { if (e.pointerType === 'touch') return; spegni(); b.classList.remove('presto-x'); });
+  });
 })();
 
 /* v3.8 · titoli dei capitoli su una riga: se il titolo non entra nella larghezza, il corpo scende quanto basta */
@@ -1304,7 +1320,9 @@ document.addEventListener('click', e => {
 };
 
 /* v4.14 · iscrizione alla beta: i pulsanti "Prova la demo" e "Scarica gratis" aprono il modulo finche' i link veri non ci sono.
-   Il modulo scrive su /api/beta del sito (email + profilo), la stessa lista che apre l'accesso durante la beta. */
+   Il modulo scrive su /api/beta del sito (email + profilo), la stessa lista che apre l'accesso durante la beta.
+   v4.24 · la richiesta crea l'account (fino al limite dei posti): il messaggio finale dice com'e' andata — account creato,
+   posti esauriti (lista d'attesa), richiesta gia' fatta — e un rifiuto del sito si legge com'e' (dominio senza posta, troppe richieste). */
 (function () {
   if (window.__lyraBeta) return; window.__lyraBeta = true;
   var html = document.documentElement, ultimo = null, dlg = null, pronto = false;
@@ -1321,18 +1339,32 @@ document.addEventListener('click', e => {
   var wire = function () { var form = dlg.querySelector('[data-beta-form]'), ok = dlg.querySelector('.beta-ok'), err = dlg.querySelector('.beta-err');
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    var email = form.email.value.trim().toLowerCase(), profile = form.profile.value;
+    var email = form.email.value.trim().toLowerCase(), profile = form.profile.value, sito = form.sito ? form.sito.value : '';
     var valido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     form.email.classList.toggle('ko', !valido);
     if (!valido) { err.textContent = 'Controlla l\'indirizzo email.'; err.hidden = false; form.email.focus(); return; }
     if (!profile) { err.textContent = 'Scegli il tuo profilo.'; err.hidden = false; form.profile.focus(); return; }
     err.hidden = true; var b = form.querySelector('button[type=submit]'); b.disabled = true;
-    fetch('/api/beta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, profile: profile }) })
-      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok && d && d.ok !== false, d: d }; }); })
-      .then(function (x) { if (!x.ok) throw new Error((x.d && x.d.error) || 'errore'); form.hidden = true; ok.hidden = false; ok.querySelector('button').focus(); })
-      .catch(function () { err.textContent = 'Non siamo riusciti a registrarti. Riprova tra poco.'; err.hidden = false; })
+    fetch('/api/beta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email, profile: profile, sito: sito }) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok && d && d.ok !== false, d: d, stato: r.status }; }); })
+      .then(function (x) {
+        if (!x.ok) { var e = new Error((x.d && x.d.error) || 'errore'); e.mostra = x.stato === 400 || x.stato === 429; throw e; }
+        esito(x.d || {}); form.hidden = true; ok.hidden = false; ok.querySelector('button').focus();
+      })
+      .catch(function (e) { err.textContent = (e && e.mostra && e.message) || 'Non siamo riusciti a registrarti. Riprova tra poco.'; err.hidden = false; })
       .then(function () { b.disabled = false; });
-  }); };
+  });
+  /* il messaggio finale: dipende da com'e' andata la richiesta */
+  var esito = function (d) {
+    var t = ok.querySelector('[data-beta-titolo]'), p = ok.querySelector('[data-beta-testo]'); if (!t || !p) return;
+    var lista = d.esito === 'lista' || (d.esito === 'gia' && d.stato === 'lista');
+    if (lista) { t.textContent = 'Posti esauriti.'; p.textContent = 'La beta è al completo: la tua richiesta resta in lista e, se si libera un posto, ti scriviamo noi.'; return; }
+    if (d.esito === 'gia') { t.textContent = 'Ci sei già.'; p.textContent = 'La tua richiesta è già registrata: quando la beta parte ti scriviamo noi, con il link per scaricare l\'app.'; return; }
+    if (d.invitato) { t.textContent = 'Sei dentro.'; p.textContent = 'Ti abbiamo appena scritto: trovi il link per scaricare l\'app e le credenziali per entrare. Se non vedi l\'email, guarda nello spam.'; return; }
+    if (d.esito === 'esistente') { t.textContent = 'Sei dentro.'; p.textContent = 'Con questo indirizzo hai già un account: quando la beta parte ti scriviamo noi, con il link per scaricare l\'app.'; return; }
+    t.textContent = 'Sei dentro.'; p.textContent = 'Abbiamo creato il tuo account. Quando la beta parte ti scriviamo noi, con il link per scaricare l\'app e le credenziali per entrare.';
+  };
+  };
 })();
 
 /* v4.14 · le pagine interne hanno nomi inglesi: i vecchi indirizzi italiani (#prezzi, #termini…) portano ancora alla pagina giusta */

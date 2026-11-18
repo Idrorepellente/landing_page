@@ -297,7 +297,7 @@
             <div class="pn-fondo">
               <div class="pn-sx">
                 <p class="pn-prezzo"><b>{{prezzo:desk:anno}}</b><small>€</small><span><span class="l-it">/anno</span></span></p>
-                <div class="pn-az"><a class="pn-btn" href="#desk-demo"><span class="l-it">Richiedi demo</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a><button class="pn-det" type="button" data-pn-apri="desk" aria-expanded="false" aria-controls="pnd-desk"><span class="l-it">Dettagli</span></button></div>
+                <div class="pn-az"><button class="pn-btn presto presto-giu" type="button" aria-disabled="true" aria-describedby="presto-desk-1" data-presto><span class="l-it">Richiedi demo</span><span class="presto-tip" aria-hidden="true">Coming soon</span><span id="presto-desk-1" hidden>Coming soon</span></button><button class="pn-det" type="button" data-pn-apri="desk" aria-expanded="false" aria-controls="pnd-desk"><span class="l-it">Dettagli</span></button></div>
               </div>
               <div class="pn-quota"><span class="pn-qi" aria-hidden="true"><svg class="lyra-mk" viewBox="0 0 100 100" aria-hidden="true" fill="currentColor"><use href="#lyra-mark"/></svg></span><span><small><span class="l-it">Quota sul generato</span></small><b>30% · <span class="l-it">del generato</span></b></span></div>
             </div>
@@ -400,9 +400,12 @@
           </div>
         </div>
         <div class="pd-piede"><p class="pd-big"><small><span class="l-it">Quota</span></small><b>30%</b></p><p class="pd-big-t"><span class="l-it">Del generato dalle strategie allocate, per ogni postazione, per contratto.</span></p></div>
-        <div class="pd-demo" id="desk-demo">
-          <div class="pd-demo-t"><span class="pd-tag"><span class="l-it">Contatto</span></span><h4><span class="l-it">Una demo sui vostri numeri</span></h4><p><span class="l-it">Vi mostriamo la piattaforma sulle strategie dello studio. Oppure scrivici: <span class="ph" data-phk="email_desk">da completare · email commerciale</span></span></p></div>
-          <form class="form" data-preview>
+        <!-- v4.25 · le demo per studi e società non sono ancora aperte: il riquadro lo dice e il bottone resta spento.
+             Il modulo per le aziende è pronto ma nascosto; per riaprirlo vedi MODIFICHE_SITO.md, v4.25 -->
+        <div class="pd-demo pd-presto" id="desk-demo">
+          <div class="pd-demo-t"><span class="cs-tag"><span class="l-it">In arrivo</span></span><h4><span class="l-it">Una demo sui vostri numeri</span></h4><p><span class="l-it">Vi mostreremo la piattaforma sulle strategie dello studio. Le richieste di demo per studi e società aprono a breve; intanto potete scriverci: <span class="ph" data-phk="email_desk">da completare · email commerciale</span></span></p></div>
+          <div class="pd-demo-az"><button class="btn presto" type="button" aria-disabled="true" aria-describedby="presto-desk-3" data-presto><span class="l-it">Richiedi una demo</span><span class="presto-tip" aria-hidden="true">Coming soon</span><span id="presto-desk-3" hidden>Coming soon</span></button></div>
+          <form class="form" data-preview hidden>
             <label for="d-name"><span class="l-it">Nome e cognome</span><input id="d-name" name="name" autocomplete="name" required></label>
             <label for="d-firm"><span class="l-it">Studio o società</span><input id="d-firm" name="firm" autocomplete="organization" required></label>
             <label for="d-mail" class="full">Email<input id="d-mail" type="email" name="email" autocomplete="email" required></label>
@@ -717,7 +720,7 @@
           <tr><th scope="row"><span class="l-it">Real-time con licenza di borsa</span></th><td>–</td><td>–</td><td class="hl">–</td><td>✓ <span class="tag" data-grade="target">2032</span></td><td class="si">✓</td></tr>
           <tr><th scope="row"><span class="l-it">Quota sul generato delle strategie allocate</span></th><td><span class="l-it">0% · entra nel track record</span></td><td class="si">10%</td><td class="hl si">30%</td><td class="si">30%</td><td class="si">30%</td></tr>
           <tr><th scope="row"><span class="l-it">Postazioni, export compliance, white-label, SLA</span></th><td>–</td><td>–</td><td class="hl">–</td><td>–</td><td><span class="l-it">5 postazioni</span></td></tr>
-          <tr><th scope="row"></th><td><a class="btn btn-vetro" href="#" data-ph="download"><span class="l-it">Scarica</span></a></td><td><a class="btn btn-vetro" href="#" data-ph="download"><span class="l-it">Prova {{prova:mesi}} mesi</span></a></td><td class="hl"><a class="btn" href="#" data-ph="download"><span class="l-it">Prova {{prova:mesi}} mesi</span></a></td><td><a class="btn btn-vetro" href="#" data-ph="download"><span class="l-it">Prova {{prova:mesi}} mesi</span></a></td><td><a class="btn btn-vetro" href="#desk-demo"><span class="l-it">Richiedi demo</span></a></td></tr>
+          <tr><th scope="row"></th><td><a class="btn btn-vetro" href="#" data-ph="download"><span class="l-it">Scarica</span></a></td><td><a class="btn btn-vetro" href="#" data-ph="download"><span class="l-it">Prova {{prova:mesi}} mesi</span></a></td><td class="hl"><a class="btn" href="#" data-ph="download"><span class="l-it">Prova {{prova:mesi}} mesi</span></a></td><td><a class="btn btn-vetro" href="#" data-ph="download"><span class="l-it">Prova {{prova:mesi}} mesi</span></a></td><td><button class="btn btn-vetro presto" type="button" aria-disabled="true" aria-describedby="presto-desk-2" data-presto><span class="l-it">Richiedi demo</span><span class="presto-tip" aria-hidden="true">Coming soon</span><span id="presto-desk-2" hidden>Coming soon</span></button></td></tr>
         </tbody>
       </table>
     </div>
@@ -1097,18 +1100,19 @@
     <button class="beta-x" type="button" data-beta-close aria-label="Chiudi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     <p class="beta-eye">Beta su invito</p>
     <h2 id="beta-t">Entra nella <span class="tw"><em>beta</em></span>.</h2>
-    <p class="beta-p">Durante la beta l'app si prova su invito. Lasciaci l'email: ti apriamo l'accesso e ti scriviamo quando c'è una novità.</p>
+    <p class="beta-p">Durante la beta l'app si prova su invito. Lasciaci l'email: creiamo il tuo account e, quando la beta parte, ti mandiamo il link per scaricare l'app e le credenziali per entrare.</p>
     <form class="beta-form" data-beta-form novalidate>
       <label><span>Email</span><input type="email" name="email" required placeholder="tu@email.com" autocomplete="email" inputmode="email"></label>
       <label><span>Il tuo profilo</span><select name="profile" required><option value="">Seleziona…</option><option>Non programmo</option><option>So programmare un po'</option><option>Quant / esperto</option></select></label>
+      <label class="beta-hp" aria-hidden="true"><span>Sito web</span><input type="text" name="sito" tabindex="-1" autocomplete="off"></label>
       <button class="btn beta-invia" type="submit"><span>Richiedi accesso</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
       <p class="beta-err" role="alert" hidden></p>
       <p class="beta-note">Gratis · nessuna carta richiesta · le strategie restano tue</p>
     </form>
     <div class="beta-ok" hidden>
       <p class="beta-eye">Fatto</p>
-      <h3>Sei nella lista.</h3>
-      <p class="beta-p">L'accesso si apre con l'email che hai indicato. Ti scriviamo noi.</p>
+      <h3 data-beta-titolo>Sei dentro.</h3>
+      <p class="beta-p" data-beta-testo>Abbiamo creato il tuo account. Quando la beta parte ti scriviamo noi, con il link per scaricare l'app e le credenziali per entrare.</p>
       <button class="btn" type="button" data-beta-close>Chiudi</button>
     </div>
   </div>

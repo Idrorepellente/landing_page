@@ -20,6 +20,7 @@ import { getPool } from '@/lib/pg';
 import { nomeUtenteLibero } from '@/lib/utenti';
 import { createToken, isConfigured } from '@/lib/appToken';
 import { baseUrl } from '@/lib/stripe';
+import { betaAttiva, ammessoInBeta } from '@/lib/beta';
 
 export const runtime = 'nodejs';
 
@@ -124,6 +125,13 @@ export async function GET(req: NextRequest) {
     }
 
     const pool = getPool();
+    // Durante la beta la porta di Google vale come quella con la password:
+    // entra solo chi e' ammesso, e nessun account nuovo nasce da qui (li crea
+    // il sistema, vedi lib/betaAccount.ts).
+    const beta = await betaAttiva(pool);
+    if (beta && !(await ammessoInBeta(pool, email))) {
+      return NextResponse.redirect(`${baseUrl(req)}/accesso?err=beta`);
+    }
     // Si cerca prima per `sub`: l'email può cambiare proprietario, il `sub` no.
     let r = await pool.query(
       'SELECT id, email FROM "User" WHERE "googleSub" = $1 LIMIT 1', [sub]);
@@ -138,6 +146,9 @@ export async function GET(req: NextRequest) {
         await pool.query('UPDATE "User" SET "googleSub" = $2 WHERE id = $1',
                          [user.id, sub]);
       } else {
+        if (beta) {
+          return NextResponse.redirect(`${baseUrl(req)}/accesso?err=beta`);
+        }
         const id = crypto.randomUUID();
         // Nessuna password: si scrive un segnaposto che bcrypt non può mai
         // produrre, così nessuna password al mondo apre questo account.

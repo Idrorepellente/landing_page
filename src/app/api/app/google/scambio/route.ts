@@ -15,6 +15,7 @@ import { getPool } from '@/lib/pg';
 import { nomeUtenteLibero } from '@/lib/utenti';
 import { createToken, isConfigured } from '@/lib/appToken';
 import { betaAttiva, ammessoInBeta, BETA_NON_AMMESSO } from '@/lib/beta';
+import { motivoSenzaAccount } from '@/lib/betaAccount';
 
 export const runtime = 'nodejs';
 
@@ -90,7 +91,8 @@ export async function POST(req: NextRequest) {
     //
     // Google e' una porta d'ingresso diversa dalla password, e va chiusa
     // anch'essa: proteggere una sola delle due lascia l'altra spalancata.
-    if (await betaAttiva(pool) && !(await ammessoInBeta(pool, email))) {
+    const beta = await betaAttiva(pool);
+    if (beta && !(await ammessoInBeta(pool, email))) {
       return NextResponse.json(BETA_NON_AMMESSO, { status: 403 });
     }
 
@@ -109,6 +111,12 @@ export async function POST(req: NextRequest) {
         await pool.query('UPDATE "User" SET "googleSub" = $2 WHERE id = $1',
                          [user.id, sub]);
       } else {
+        // Durante la beta nessun account nasce da qui: li crea il sistema
+        // (lib/betaAccount.ts). Un indirizzo ammesso senza account e' in
+        // lista d'attesa o aspetta il suo; il motivo si dice.
+        if (beta) {
+          return NextResponse.json(await motivoSenzaAccount(pool, email), { status: 403 });
+        }
         const id = crypto.randomUUID();
         await pool.query(
           `INSERT INTO "User"(id, email, "passwordHash", "displayName", username,

@@ -15,6 +15,7 @@ import { inviaEmail, postaConfigurata } from '@/lib/mailer';
 import { creaCodice, verificaCodice } from '@/lib/authcodes';
 import { nuovoSegreto, verifica as verificaTotp, urlOtpauth } from '@/lib/totp';
 import { cifra, decifra, cifraturaAttiva } from '@/lib/segreti';
+import { passwordCambiata } from '@/lib/betaAccount';
 
 export const runtime = 'nodejs';
 
@@ -107,6 +108,8 @@ export async function POST(req: NextRequest) {
         + 'WHERE id = $1', [u.id]).catch(() => {});
       await pool.query('UPDATE "User" SET "passwordHash" = $2 WHERE id = $1',
                        [u.id, hash]);
+      // la prima password della beta, se c'era, non vale piu'
+      await passwordCambiata(pool, String(u.id));
       return NextResponse.json({ ok: true });
     }
 

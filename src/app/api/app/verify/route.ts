@@ -5,8 +5,9 @@ import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 import { getPool } from '@/lib/pg';
 import { createToken, isConfigured } from '@/lib/appToken';
-import { betaAttiva, ammessoInBeta, BETA_NON_AMMESSO } from '@/lib/beta';
-import { nomeUtenteLibero, nuovoId } from '@/lib/utenti';
+import { betaAttiva, ammessoInBeta, BETA_NON_AMMESSO, BETA_ISCRIZIONI_CHIUSE } from '@/lib/beta';
+import { nuovoId } from '@/lib/utenti';
+import { passwordCambiata } from '@/lib/betaAccount';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -31,22 +32,22 @@ export const dynamic = 'force-dynamic';
  * massimo di tentativi, e l'invio è limitato nel tempo per indirizzo. Le
  * risposte non rivelano se un indirizzo è registrato.
  *
- * IL RECUPERO PASSWORD È ANCHE IL PRIMO ACCESSO IN BETA
- * ----------------------------------------------------
- * Chi si iscrive alla beta dal form del sito lascia un indirizzo, non crea un
- * account: non ha una password, e non ha nemmeno una riga in "User". Il
- * percorso previsto per entrare la prima volta è proprio «dimentica
- * password», e prima non funzionava — in due punti:
+ * DURANTE LA BETA: NIENTE ISCRIZIONI, IL RECUPERO SOLO PER CHI HA UN ACCOUNT
+ * -------------------------------------------------------------------------
+ * Con la beta attiva gli account li crea il sistema (lib/betaAccount.ts): uno
+ * per ogni richiesta dal form del sito e quelli aggiunti dal pannello, con una
+ * password spedita per email. Qui quindi:
  *
- *   - la RICHIESTA del codice vedeva che l'indirizzo non è registrato e
- *     rispondeva «ok, inviato» senza inviare niente. Chi aspettava il codice
- *     aspettava per sempre;
- *   - la CONFERMA, anche con un codice valido, rispondeva «User not found».
+ *   - `register` risponde BETA_ISCRIZIONI_CHIUSE, alla richiesta del codice e
+ *     alla conferma;
+ *   - il recupero vale per gli account che ESISTONO. Prima, con la beta
+ *     attiva, il recupero creava l'account di un indirizzo ammesso al primo
+ *     accesso: era il modo di entrare quando la richiesta lasciava solo un
+ *     indirizzo. Ora l'account c'e' gia', e un recupero che crea account
+ *     sarebbe una porta d'iscrizione aperta durante la beta.
  *
- * Ora, con la beta attiva e l'indirizzo ammesso, la richiesta invia il codice
- * anche a chi non ha un account, e la conferma CREA l'account con la password
- * scelta. Fuori dalla beta il comportamento resta quello di prima: il
- * recupero non è una scorciatoia per registrarsi.
+ * Una password scelta con il recupero rende inutile la prima password della
+ * beta: la sua copia cifrata si cancella (passwordCambiata).
  */
 
 const CODE_TTL_MIN = 20;
@@ -89,23 +90,12 @@ async function sendMail(to: string, subject: string, text: string, html: string)
   });
 }
 
-/**
- * `primoAccesso` cambia le parole, non il meccanismo.
- *
- * Chi entra per la prima volta in beta passa dal recupero password senza aver
- * mai avuto una password: «il tuo codice per REIMPOSTARE la password» lo
- * manderebbe a cercare quella vecchia, che non esiste. Due parole diverse
- * costano niente e togliono il dubbio nel momento in cui conta.
- */
-function mailBody(purpose: string, code: string, primoAccesso = false) {
-  const what = purpose !== 'reset' ? 'confirm your address'
-    : (primoAccesso ? 'set the password for your beta access'
-                    : 'reset your password');
-  const subject = purpose === 'reset'
-    ? (primoAccesso ? 'Lyra · set your password' : 'Lyra · password code')
-    : 'Lyra · confirmation code';
+/** Il messaggio con il codice: conferma dell'indirizzo o recupero. */
+function mailBody(purpose: string, code: string) {
+  const what = purpose !== 'reset' ? 'confirm your address' : 'reset your password';
+  const subject = purpose === 'reset' ? 'Lyra · password code' : 'Lyra · confirmation code';
   const text =
-    `Il tuo codice per ${what} e': ${code}\n\n` +
+    `Your code to ${what}: ${code}\n\n` +
     `It expires in ${CODE_TTL_MIN} minutes. If you did not ask for anything, ignore this message.`;
   const html =
     `<div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#18181b">` +
@@ -153,8 +143,11 @@ export async function POST(req: NextRequest) {
       const ammesso = beta ? await ammessoInBeta(pool, email) : true;
 
       if (purpose === 'register') {
-        // Il motivo si dice: chi prova a registrarsi deve sapere che serve
-        // l'iscrizione alla beta, altrimenti riprova credendo a un guasto.
+        // Durante la beta nessuno si registra da se': il motivo si dice,
+        // altrimenti si riprova credendo a un guasto.
+        if (beta) {
+          return NextResponse.json(BETA_ISCRIZIONI_CHIUSE, { status: 403 });
+        }
         if (!ammesso) {
           return NextResponse.json(BETA_NON_AMMESSO, { status: 403 });
         }
@@ -183,18 +176,10 @@ export async function POST(req: NextRequest) {
       }
 
       // ── A CHI SI SPEDISCE DAVVERO IL CODICE DI RECUPERO ───────────────
-      // A chi ha un account, come sempre. E — questa è la parte nuova — a
-      // chi NON ce l'ha ma è ammesso alla beta: per lui questo è il primo
-      // accesso, e il codice è l'unico modo per arrivare a una password.
-      // Prima si rispondeva «ok, inviato» senza inviare niente, e il percorso
-      // previsto per entrare in beta finiva in un'attesa infinita.
-      //
-      // Fuori dalla beta nulla cambia: a un indirizzo senza account non si
-      // manda nulla, altrimenti il recupero diventerebbe una scorciatoia per
-      // registrarsi senza passare dall'iscrizione.
-      const spedire = purpose === 'register'
-        || exists.rows.length > 0
-        || (beta && ammesso);
+      // A chi ha un account. A un indirizzo senza account non si manda
+      // nulla, con la beta attiva o no: il recupero non e' una scorciatoia
+      // per registrarsi (gli account della beta li crea il sistema).
+      const spedire = purpose === 'register' || exists.rows.length > 0;
 
       // La riga si scrive SEMPRE, anche quando non si spedisce. Non è uno
       // spreco: è ciò che chiude un oracolo. L'attesa fra due invii si misura
@@ -215,16 +200,14 @@ export async function POST(req: NextRequest) {
                expires_at = EXCLUDED.expires_at, attempts = 0, created_at = now()`,
         [email, purpose, sha(code),
          JSON.stringify({ username, displayName: String(body?.displayName || ''),
-                          inviata: spedire,
-                          nuovoAccount: purpose === 'reset' && !exists.rows.length }),
+                          inviata: spedire }),
          String(CODE_TTL_MIN)]);
 
       if (!spedire) {
         return NextResponse.json({ ok: true, sent: true });
       }
 
-      const m = mailBody(purpose, code,
-                         purpose === 'reset' && !exists.rows.length);
+      const m = mailBody(purpose, code);
       await sendMail(email, m.subject, m.text, m.html);
       return NextResponse.json({ ok: true, sent: true, ttlMinutes: CODE_TTL_MIN });
     }
@@ -261,21 +244,27 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Invalid code.' }, { status: 400 });
       }
 
-      const hash = await bcrypt.hash(password, 12);
-      let uid: string;
-      let profile: { username: string | null; displayName: string | null } =
-        { username: null, displayName: null };
-
       // Il controllo della beta si RIFA' qui, non si eredita da quello fatto
       // alla richiesta del codice: fra i due momenti passano fino a venti
-      // minuti, e in quel tempo un indirizzo puo' essere stato togliato dalla
-      // lista. Il permesso va verificato quando si agisce, non quando si
-      // chiede.
+      // minuti, e in quel tempo la beta puo' essersi accesa o un indirizzo
+      // puo' essere stato tolto dalla lista. Il permesso va verificato quando
+      // si agisce, non quando si chiede.
       const beta = await betaAttiva(pool);
+      // l'iscrizione e' chiusa per TUTTI mentre la beta e' attiva, anche per
+      // chi e' ammesso: il suo account lo crea il sistema
+      if (purpose === 'register' && beta) {
+        return NextResponse.json(BETA_ISCRIZIONI_CHIUSE, { status: 403 });
+      }
       const ammesso = beta ? await ammessoInBeta(pool, email) : true;
       if (!ammesso) {
         return NextResponse.json(BETA_NON_AMMESSO, { status: 403 });
       }
+
+      // l'hash (costo 12) solo per una richiesta che andra' in porto
+      const hash = await bcrypt.hash(password, 12);
+      let uid: string;
+      let profile: { username: string | null; displayName: string | null } =
+        { username: null, displayName: null };
 
       if (purpose === 'register') {
         const dup = await pool.query('SELECT id FROM "User" WHERE lower(email) = $1 LIMIT 1', [email]);
@@ -295,37 +284,15 @@ export async function POST(req: NextRequest) {
           'SELECT id, username, "displayName" FROM "User" WHERE lower(email) = $1 LIMIT 1', [email]);
 
         if (!u.rows.length) {
-          // ── PRIMO ACCESSO IN BETA ──────────────────────────────────────
-          // Nessun account: chi si e' iscritto alla beta ha lasciato un
-          // indirizzo, non si e' registrato. Il codice e' stato verificato
-          // poche righe sopra, quindi questa casella e' sua: l'account si crea
-          // adesso, con la password che ha appena scelto.
-          //
-          // Fuori dalla beta resta il 404 di prima: il recupero non deve
-          // diventare una scorciatoia per registrarsi senza iscrizione.
-          if (!beta) {
-            return NextResponse.json({ error: 'User not found.' }, { status: 404 });
-          }
-          const username = await nomeUtenteLibero(pool, email);
-          uid = nuovoId();
-          profile = { username, displayName: username };
-          await pool.query(
-            'INSERT INTO "User"(id, email, username, "passwordHash", "displayName", "createdAt") '
-            + 'VALUES ($1,$2,$3,$4,$5, now())',
-            [uid, email, username, hash, username]);
-          await pool.query('DELETE FROM app_email_codes WHERE email = $1 AND purpose = $2',
-                           [email, purpose]);
-          return NextResponse.json({
-            ok: true,
-            creato: true,
-            token: createToken(uid, email),
-            user: { id: uid, email, ...profile },
-          });
+          // Nessun account: il recupero non ne crea (vedi l'intestazione).
+          return NextResponse.json({ error: 'User not found.' }, { status: 404 });
         }
 
         uid = String(u.rows[0].id);
         profile = { username: u.rows[0].username ?? null, displayName: u.rows[0].displayName ?? null };
         await pool.query('UPDATE "User" SET "passwordHash" = $1 WHERE id = $2', [hash, uid]);
+        // la prima password della beta, se c'era, non vale piu'
+        await passwordCambiata(pool, uid);
       }
 
       await pool.query('DELETE FROM app_email_codes WHERE email = $1 AND purpose = $2', [email, purpose]);

@@ -58,6 +58,62 @@ export async function inviaEmail(
   }
 }
 
+/**
+ * Un trasporto da RIUSARE per più messaggi di fila (gli inviti della beta):
+ * una connessione SMTP aperta una volta, invece di una stretta di mano TLS
+ * per ogni destinatario. Chi lo crea lo chiude con `close()`.
+ */
+export function trasportoCondiviso() {
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+  if (!user || !pass) throw new Error('SMTP_USER / SMTP_PASS not configured');
+  const host = process.env.SMTP_HOST || REGISTER_SMTP_HOST;
+  const port = Number(process.env.SMTP_PORT)
+    || (host === REGISTER_SMTP_HOST ? REGISTER_SMTP_PORT : 587);
+  return nodemailer.createTransport({
+    host, port,
+    secure: port === 465,
+    auth: { user, pass },
+    pool: true,
+    maxConnections: 1,       // un server di posta piccolo non ama le raffiche
+    maxMessages: 100,
+  });
+}
+
+/**
+ * Come `inviaEmail`, ma dice PERCHÉ un messaggio non è partito.
+ *
+ * Gli inviti della beta si spediscono dal pannello di amministrazione, e lì
+ * «non inviato» senza un motivo non porta a nessuna azione: il motivo vero —
+ * casella inesistente, credenziali SMTP sbagliate, limite del provider — è
+ * quello che dice cosa fare.
+ */
+export async function inviaEmailEsito(
+  a: string, oggetto: string, testo: string, html?: string,
+  trasporto?: ReturnType<typeof trasportoCondiviso>,
+): Promise<{ ok: boolean; errore?: string }> {
+  if (!a) return { ok: false, errore: 'no recipient' };
+  if (!postaConfigurata()) {
+    return { ok: false, errore: 'mail is not configured on the site (SMTP_USER / SMTP_PASS)' };
+  }
+  try {
+    const t = trasporto || trasportoCondiviso();
+    await t.sendMail({
+      from: process.env.EMAIL_FROM || `Lyra <${process.env.SMTP_USER}>`,
+      to: a,
+      subject: oggetto,
+      text: testo,
+      html,
+    });
+    if (!trasporto) t.close();
+    return { ok: true };
+  } catch (e: any) {
+    const testoErrore = String(e?.response || e?.message || e).replace(/\s+/g, ' ').trim();
+    console.error('[mail] sending failed:', testoErrore);
+    return { ok: false, errore: testoErrore.slice(0, 300) };
+  }
+}
+
 // ─────────────────────────── ricevuta d'acquisto ───────────────────────────
 
 function soldi(cents: number, valuta = 'EUR'): string {

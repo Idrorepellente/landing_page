@@ -33,6 +33,15 @@
  * Sono in UNIONE, non in alternativa. Tenere solo la seconda avrebbe reso
  * decorativa la lista del pannello; tenere solo la terza avrebbe costretto a
  * ricopiare a mano ogni iscrizione.
+ *
+ * DA NOVEMBRE 2026: NIENTE ISCRIZIONI DURANTE LA BETA
+ * ---------------------------------------------------
+ * Con la beta attiva NESSUNO crea un account da sé, nemmeno un indirizzo
+ * ammesso: gli account li crea il sistema, uno per ogni richiesta dal form del
+ * sito (fino al limite) e quelli aggiunti dal pannello (vedi
+ * lib/betaAccount.ts). Le porte d'iscrizione — modulo dell'app, codice di
+ * conferma, Google per un indirizzo nuovo, il vecchio «primo accesso» dal
+ * recupero password — rispondono con BETA_ISCRIZIONI_CHIUSE.
  */
 import { getPool } from '@/lib/pg';
 import { isAdminCompleto } from '@/lib/appToken';
@@ -138,32 +147,42 @@ export async function conteggiBeta(pool?: any): Promise<{ iscrizioni: number; in
 //  rifiuto che non porta a nessuna azione è un vicolo cieco.
 // ===========================================================================
 
-/** Indirizzo NON ammesso: va chiesta l'iscrizione alla beta. */
+/** Indirizzo NON ammesso: va chiesto l'accesso alla beta. */
 export const BETA_NON_AMMESSO = {
   error: 'This address is not admitted to the beta.',
-  detail: 'Lyra is in closed beta: only the addresses signed up for it can '
-        + 'sign in or create an account. Sign up on the site and try again, '
-        + 'or ask whoever runs the beta to add you.',
+  detail: 'Lyra is in closed beta: only the addresses that requested it can '
+        + 'sign in. Request access on lyra-capital.it (Entra nella beta), or '
+        + 'ask whoever runs the beta to add you.',
   code: 'beta_non_ammesso',
 };
 
 /**
- * Indirizzo AMMESSO ma senza password: è il primo accesso.
- *
- * Questo messaggio esiste perché senza di esso il percorso previsto non si
- * trova. Chi si iscrive alla beta dal sito non ha un account: ha solo lasciato
- * un indirizzo. Quando prova ad accedere non c'è nessuna password da
- * verificare, e la risposta onesta — «credenziali non valide» — lo lascia
- * davanti a un muro, convinto di aver sbagliato a digitare.
- *
- * Dice quindi dove andare. Rivela che l'indirizzo è nella lista della beta e
- * che non ha ancora una password: nessuna delle due cose è sfruttabile, perché
- * per impostare la password serve leggere il codice spedito a quella casella.
+ * Durante la beta nessuno crea un account da sé: lo crea il sistema.
+ * Il motivo si dice, e si dice dove andare: altrimenti si riprova
+ * all'infinito credendo a un guasto.
  */
-export const BETA_SENZA_PASSWORD = {
-  error: 'This address is admitted to the beta but has no password yet.',
-  detail: 'Signing up for the beta left us your address, not an account. '
-        + 'Use «Forgot password» with this same address: you will get a code '
-        + 'by email and set the password you will sign in with from now on.',
-  code: 'beta_senza_password',
+export const BETA_ISCRIZIONI_CHIUSE = {
+  error: 'Sign-up is closed during the beta.',
+  detail: 'Lyra is in closed beta: accounts are created for the people who '
+        + 'request access on lyra-capital.it, and the sign-in details arrive '
+        + 'by email when the beta opens. If you already have an account, '
+        + 'sign in with it.',
+  code: 'beta_iscrizioni_chiuse',
 };
+
+/** La richiesta c'e', ma e' arrivata quando i posti erano finiti. */
+export const BETA_IN_LISTA = {
+  error: 'Your beta request is on the waiting list.',
+  detail: 'All beta places were taken when your request arrived: we keep it, '
+        + 'and if a place frees up the sign-in details arrive by email.',
+  code: 'beta_in_lista',
+};
+
+/** Indirizzo ammesso, account non ancora creato o non ancora inviato. */
+export const BETA_SENZA_ACCOUNT = {
+  error: 'This address has no account yet.',
+  detail: 'Accounts are created by the beta team: the sign-in details '
+        + '(email and first password) arrive by email when the beta starts.',
+  code: 'beta_senza_account',
+};
+
