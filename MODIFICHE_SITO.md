@@ -1,6 +1,12 @@
 # Sito — aggiornamento del 26 novembre 2026
 
-## Ultime modifiche (v4.30, 26 novembre)
+## Ultime modifiche (v4.31, 26 novembre)
+- **User guide aggiornata** con l'aggiornamento 57 dell'app (`public/docs/lyra-user-guide.pdf`, 118 pagine): in Studio › Genetics, mentre la pagina carica, lo spazio a destra mostra l'albero che si accende dalla radice e la riga di ciò che sta arrivando (i mattoni, poi le strategie evolute). `documenti.json` porta il peso nuovo.
+- **Prove** (in locale): `node prove/prova-documenti.mjs` 15/15.
+- **Da fare**: niente sul database. Lo zip è cumulativo: contiene anche v4.26–v4.30, se non sono ancora pubblicate. Estrai lo zip nella cartella del sito, `npm run build`, pubblica.
+- File: `public/docs/lyra-user-guide.pdf`, `src/content/documenti.json`, `MODIFICHE_SITO.md`.
+
+## Modifiche precedenti (v4.30, 26 novembre)
 - **Documenti aggiornati** con l'aggiornamento 56 dell'app: il replay della View resta allo stesso momento cambiando timeframe, asset o strategia, senza mostrare ciò che non è ancora successo. La User guide (`public/docs/lyra-user-guide.pdf`, 118 pagine), nella View, riscrive «Trading by hand in the replay»:
   - «One moment, every chart»: la candela in formazione (fermi alle 10:37 sul minuto, l'ora delle 10:00 con i soli primi 37 minuti), costruita dalle candele più fini e nascosta senza di loro, con una figura nuova;
   - avanti che completa la candela in formazione, indicatori e confronti con il valore a quel momento, i disegni della strategia fermi all'ultima candela completa;
