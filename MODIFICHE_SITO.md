@@ -1,6 +1,33 @@
 # Sito — aggiornamento del 26 novembre 2026
 
-## Ultime modifiche (v4.27, 26 novembre)
+## Ultime modifiche (v4.30, 26 novembre)
+- **Documenti aggiornati** con l'aggiornamento 56 dell'app: il replay della View resta allo stesso momento cambiando timeframe, asset o strategia, senza mostrare ciò che non è ancora successo. La User guide (`public/docs/lyra-user-guide.pdf`, 118 pagine), nella View, riscrive «Trading by hand in the replay»:
+  - «One moment, every chart»: la candela in formazione (fermi alle 10:37 sul minuto, l'ora delle 10:00 con i soli primi 37 minuti), costruita dalle candele più fini e nascosta senza di loro, con una figura nuova;
+  - avanti che completa la candela in formazione, indicatori e confronti con il valore a quel momento, i disegni della strategia fermi all'ultima candela completa;
+  - «Trading»: una posizione per asset, misurata sul grafico su cui è stata aperta.
+- «From your trades to a strategy» dice che ogni asset va all'agente come un replay a sé, sul timeframe più fine a cui vi si è operato. La guida delle strategie, in «In the View», dice che sulla candela in formazione i disegni aspettano la chiusura (PDF *Writing strategies*, Markdown `strategies/GUIDE_STRATEGIE_CUSTOM.md`, zip dei Markdown). `documenti.json` porta pagine, dimensioni e righe nuove.
+- **Prove** (in locale): `node prove/prova-documenti.mjs` 15/15.
+- **Da fare**: niente sul database. Lo zip è cumulativo: contiene anche v4.26–v4.29, se non sono ancora pubblicate. Estrai lo zip nella cartella del sito, `npm run build`, pubblica.
+- File: `public/docs/lyra-user-guide.pdf`, `public/docs/lyra-guide-strategies.pdf`, `public/docs/agent/strategies/GUIDE_STRATEGIE_CUSTOM.md`, `public/docs/lyra-agent-guides.zip`, `src/content/documenti.json`, `MODIFICHE_SITO.md`.
+
+## Modifiche precedenti (v4.29, 26 novembre)
+- **Documenti aggiornati** con l'aggiornamento 55 dell'app: «Save debug data» si accende solo con «Keep the data the live downloads», perché la View disegna i dati di debug sulle barre del live. La User guide, nella pagina Data («The data of the live runners»), spiega:
+  - perché il debug vuole i dati del live tenuti;
+  - che spegnerli spegne anche il debug;
+  - che riaccenderli lascia il debug spento finché non lo si sceglie;
+  - che un runner partito senza tenerli registra dal suo prossimo avvio.
+- La guida delle strategie, nelle «Three rules» dei disegni, dice la stessa cosa (PDF *Writing strategies*, Markdown `strategies/GUIDE_STRATEGIE_CUSTOM.md`, zip dei Markdown). `documenti.json` porta dimensioni e righe nuove.
+- **Prove** (in locale): `node prove/prova-documenti.mjs` 15/15.
+- **Da fare**: niente sul database. Lo zip è cumulativo: contiene anche v4.26–v4.28, se non sono ancora pubblicate. Estrai lo zip nella cartella del sito, `npm run build`, pubblica.
+- File: `public/docs/lyra-user-guide.pdf`, `public/docs/lyra-guide-strategies.pdf`, `public/docs/agent/strategies/GUIDE_STRATEGIE_CUSTOM.md`, `public/docs/lyra-agent-guides.zip`, `src/content/documenti.json`, `MODIFICHE_SITO.md`.
+
+## Modifiche precedenti (v4.28, 26 novembre)
+- **User guide aggiornata** con l'aggiornamento 54 dell'app (`public/docs/lyra-user-guide.pdf`, 117 pagine): nella Overview «Computed once», i numeri di un progetto si calcolano una volta e si tengono finché il progetto, i suoi stream, i dati o il codice che usa non cambiano; nella View «While it loads», i tre pallini del caricamento. `documenti.json` porta pagine e peso nuovi.
+- **Prove** (in locale): `node prove/prova-documenti.mjs` 15/15.
+- **Da fare**: niente sul database. Lo zip è cumulativo (contiene anche v4.26 e v4.27). Estrai lo zip nella cartella del sito, `npm run build`, pubblica.
+- File: `public/docs/lyra-user-guide.pdf`, `src/content/documenti.json`, `MODIFICHE_SITO.md`.
+
+## Modifiche precedenti (v4.27, 26 novembre)
 - **Documenti aggiornati** con l'aggiornamento 53 dell'app (un titolo che smette di quotare: il backtest chiude la posizione alla sua ultima chiusura). La guida delle strategie ha la sezione «Delisted assets and index membership»: che cosa fa il motore quando una serie finisce, l'appartenenza a un indice letta da una categoria di dati, l'uscita dall'indice affidata alla strategia con un `flat_signal`. È nel PDF *Writing strategies* e nel Markdown `strategies/GUIDE_STRATEGIE_CUSTOM.md` (anche nello zip dei Markdown). La User guide ha la nota «Stocks that stopped trading» nella pagina Data. `documenti.json` porta le nuove dimensioni e righe.
 - **Prove** (in locale): `node prove/prova-documenti.mjs` 15/15, `node prove/prova-catalogo.mjs` 22/22; in Chromium sul sito compilato le stesse 38 verifiche della v4.26, al computer in scuro e in chiaro e al telefono.
 - **Da fare**: niente sul database. Lo zip è cumulativo: contiene anche la v4.26, se non è ancora pubblicata. Estrai lo zip nella cartella del sito, `npm run build`, pubblica.

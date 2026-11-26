@@ -2424,9 +2424,12 @@ CSS name. **Dash**: `"solid"`, `"dashed"`, `"dotted"`.
   (quick tests, validation) `chart()` returns a surface that does
   nothing: the same code runs everywhere. Recording is on in the walk-forward,
   for its out-of-sample bars, and in the live only with **Save debug data**
-  on (Settings → Data → Live data): then each live bar is recorded with the
-  trades of the stream (`output/live_debug/<strategy>/<session>/`) and the
-  View shows them as «<strategy> · live». With the setting off the drawing
+  on (Settings → Data → Live data). That setting needs **Keep the data the
+  live downloads**, since the View draws the live drawings on the live bars,
+  and a runner started without keeping them records from its next start.
+  Then each live bar is recorded with the trades of the stream
+  (`output/live_debug/<strategy>/<session>/`) and the View shows them as
+  «<strategy> · live». With the setting off the drawing
   calls cost a variable read and nothing else — unlike the values read with
   `core.custom_indicators`, which are part of the decision and are always
   computed.
@@ -2452,7 +2455,9 @@ backgrounds move to the candle that contains the end of the strategy's bar
 their time. Each pane has its legend with the values under the cursor; a click
 on a value hides that plot, the eye hides everything the strategy drew.
 *Indicators → Strategy* and the settings panel turn plots and drawings off.
-In the replay only what existed at the cursor bar is drawn.
+In the replay only what existed at the last complete bar is drawn: on a bar
+still forming (the replay stopped inside an hour seen on the hourly chart) the
+drawings wait for its close, as the strategy does.
 
 Walk-forward folds start from scratch: a ray or an open box that a fold could
 not remove stops where the fold ends.

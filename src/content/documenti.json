@@ -2,8 +2,8 @@
   "guidaUtente": {
     "file": "/docs/lyra-user-guide.pdf",
     "titolo": "User guide",
-    "pagine": 116,
-    "byte": 21925697
+    "pagine": 118,
+    "byte": 22181899
   },
   "guide": [
     {
@@ -16,7 +16,7 @@
         "strategies/GUIDE_STRATEGIE_CUSTOM.md",
         "strategies/GUIDE_STRATEGIE_BLUEPRINT.md"
       ],
-      "byte": 940694
+      "byte": 940997
     },
     {
       "file": "/docs/lyra-guide-overlays.pdf",
@@ -59,9 +59,9 @@
       "file": "/docs/agent/strategies/GUIDE_STRATEGIE_CUSTOM.md",
       "uso": "scrivere una strategia in Python",
       "usoEn": "writing a strategy in code",
-      "righe": 3130,
-      "sha256": "b2b3c06a503ee9f64f720c242b4aef5a6e15c1c54a100111a276e2f64b68bd0a",
-      "byte": 145514
+      "righe": 3135,
+      "sha256": "cebc4e025efed700b96ae171b7332660203786a7a80436f818806ebf8250bad0",
+      "byte": 145851
     },
     {
       "chiave": "strategy_blueprint",
@@ -136,6 +136,6 @@
   ],
   "pacchettoAgente": {
     "file": "/docs/lyra-agent-guides.zip",
-    "byte": 84129
+    "byte": 84255
   }
 }
