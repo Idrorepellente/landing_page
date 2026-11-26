@@ -1,0 +1,52 @@
+# ===========================================================================
+#  Sito Lyra (Next.js su Vercel): che cosa NON va nel repository
+# ===========================================================================
+
+# dipendenze: le reinstalla npm (Vercel le scarica a ogni build)
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# quello che costruisce Next: si rifà a ogni build
+/.next/
+/out/
+
+# variabili d'ambiente e chiavi: stanno su Vercel, mai su GitHub
+.env
+.env.*
+!.env.example
+*.pem
+
+# il collegamento locale della CLI di Vercel
+.vercel
+
+# TypeScript: li rigenera Next a ogni build
+*.tsbuildinfo
+next-env.d.ts
+
+# file di lavoro che non fanno parte del sito
+#   build/     una copia vecchia della cartella build dell'APP (settembre): il sito non la usa
+#   uploads/   immagini incollate a luglio mentre si disegnava la landing: il sito non le usa
+#   _preview-landing.html   l'anteprima statica della landing, per lo sviluppo locale
+#   .thumbnail              la miniatura dello strumento con cui era nato il progetto
+/build
+/uploads
+/_preview-landing.html
+/.thumbnail
+
+# prove e log
+/coverage
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+*.log
+
+# sistema ed editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp

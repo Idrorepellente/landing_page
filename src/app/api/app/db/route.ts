@@ -1,0 +1,228 @@
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { getPool } from '@/lib/pg';
+import { tokenFromRequest, versioneValida, isAdmin, isAdminCompleto } from '@/lib/appToken';
+import { puoPubblicare } from '@/lib/abbonamenti';
+import manifest from '@/lib/appQueries.json';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+/**
+ * Canale dati dell'app desktop.
+ *
+ * L'app NON invia più SQL: chiede una query per nome, scegliendola da un elenco
+ * che il sito conosce in anticipo (`appQueries.json`, generato dal codice
+ * dell'app). Tutto il resto viene rifiutato, quindi non è possibile leggere
+ * tabelle non previste né alterare il database, nemmeno con un token valido.
+ *
+ * Per le query legate a un utente il manifest indica quale parametro
+ * rappresenta l'identità: quel valore viene SOSTITUITO con l'id ricavato dal
+ * token, così chiedere i dati di un altro non serve a nulla.
+ */
+
+type OpDef = {
+  sql: string;
+  userParam: number | null;
+  source?: string;
+  /**
+   * Query che ATTRAVERSA gli account: l'elenco di tutti gli artefatti col
+   * loro codice, i feedback con le email, il registro delle pubblicazioni
+   * automatiche, le contestazioni di tutti, gli accessi.
+   *
+   * Per queste non esiste un parametro dell'identità da riscrivere — per
+   * mestiere leggono i dati di chiunque — quindi l'unico controllo possibile
+   * è QUI: l'applicazione gira sulla macchina di chi la usa, il token è suo,
+   * e il suo controllo «sei amministratore?» lo può togliere.
+   */
+  admin?: boolean;
+  /**
+   * Query che METTE QUALCOSA IN VETRINA (le INSERT su "Artifact").
+   *
+   * Il permesso di pubblicare ha due strati — il lucchetto del marketplace e
+   * l'abbonamento — e finche' stavano solo nell'applicazione non proteggevano
+   * niente: l'app gira sulla macchina di chi la usa, il token e' suo, e una
+   * chiamata a questo endpoint si costruisce a mano in tre righe. Chiunque
+   * avesse un account poteva inserire una riga in "Artifact" a marketplace
+   * chiuso e senza abbonamento. Il controllo e' QUI perche' qui non si
+   * aggira.
+   */
+  pubblica?: boolean;
+};
+const OPS = (manifest as any).ops as Record<string, OpDef>;
+
+// %s (stile psycopg) -> $1, $2 … (node-postgres)
+function toPgPlaceholders(sql: string): string {
+  let i = 0;
+  return sql.replace(/%s/g, () => '$' + ++i);
+}
+
+const WRITE = /^\s*(INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|TRUNCATE)/i;
+
+export async function POST(req: NextRequest) {
+  const auth = tokenFromRequest(req);
+  // Il token e' firmato e non scaduto, ma potrebbe essere stato REVOCATO:
+  // e' il controllo che rende utile cambiare la password dopo un furto.
+  if (auth && !(await versioneValida(auth, getPool()))) {
+    return NextResponse.json(
+      { error: 'access revoked: sign in again from the\'accesso' },
+      { status: 401 },
+    );
+  }
+  if (!auth) {
+    return NextResponse.json(
+      { error: 'token assente o scaduto: esegui di nuovo l\'accesso' },
+      { status: 401 },
+    );
+  }
+
+  let body: any;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'bad json' }, { status: 400 });
+  }
+
+  const op = String(body?.op || '');
+  const def = OPS[op];
+  if (!def) {
+    // niente dettagli: un elenco degli op validi aiuterebbe solo chi sonda
+    return NextResponse.json({ error: 'action not allowed' }, { status: 403 });
+  }
+
+  // Riservate agli amministratori: stessa risposta di una query inesistente,
+  // perché sapere che un'operazione esiste ed è negata è già un'informazione.
+  if (def.admin && !(await isAdminCompleto(auth.email, getPool()))) {
+    return NextResponse.json({ error: 'action not allowed' }, { status: 403 });
+  }
+
+  // Pubblicare: lucchetto del marketplace, poi abbonamento. Gli
+  // amministratori passano sopra entrambi.
+  //
+  // Qui la risposta DICE il motivo, al contrario delle riservate agli
+  // amministratori: la differenza non e' una dimenticanza. Sapere che esiste
+  // un'operazione riservata e' un'informazione utile a chi sta sondando;
+  // sapere che il marketplace e' chiuso, o che serve un abbonamento, e'
+  // un'informazione utile a chi sta provando a pubblicare — ed e' cio' che
+  // l'app mostra all'utente invece di un rifiuto muto.
+  if (def.pubblica) {
+    const esito = await puoPubblicare(auth.uid, auth.email, getPool());
+    if (!esito.ok) {
+      return NextResponse.json(
+        { error: esito.error, detail: esito.detail, code: esito.codice },
+        { status: 403 });
+    }
+  }
+
+  const params: any[] = Array.isArray(body?.params) ? [...body.params] : [];
+  const expected = (def.sql.match(/%s/g) || []).length;
+  if (params.length !== expected) {
+    return NextResponse.json(
+      { error: `parametri attesi ${expected}, ricevuti ${params.length}` },
+      { status: 400 },
+    );
+  }
+
+  // identità: imposta dal server, mai dal client
+  if (def.userParam !== null && def.userParam !== undefined) {
+    params[def.userParam] = auth.uid;
+  }
+
+  // Struttura del database. Le sole istruzioni ammesse sono i CREATE TABLE IF
+  // NOT EXISTS gia' presenti nell'elenco: fanno parte del codice dell'app, che
+  // crea le proprie tabelle al primo utilizzo. Saltarli lasciava l'app senza
+  // tabelle (i feedback, per esempio, non si salvavano). Tutto il resto —
+  // DROP, TRUNCATE, ALTER — resta vietato anche se finisse nell'elenco.
+  if (/^\s*(DROP|TRUNCATE|ALTER)/i.test(def.sql)) {
+    return NextResponse.json({ error: 'action not allowed' }, { status: 403 });
+  }
+  if (/^\s*CREATE/i.test(def.sql)
+      && !/^\s*CREATE\s+(TABLE|INDEX)\s+IF\s+NOT\s+EXISTS/i.test(def.sql)) {
+    return NextResponse.json({ error: 'action not allowed' }, { status: 403 });
+  }
+
+  const sql = toPgPlaceholders(def.sql);
+  try {
+    const res = await getPool().query(sql, params);
+    return NextResponse.json({
+      ok: true,
+      rows: res.rows,
+      rowCount: res.rowCount,
+      write: WRITE.test(def.sql) || undefined,
+    });
+  } catch (e: any) {
+    const msg = String(e?.message || e);
+
+    // La colonna "kind" di Artifact e' un tipo enumerato. L'app invia il valore
+    // come testo: di norma Postgres lo converte da se', ma quando il parametro
+    // arriva gia' tipizzato come text la conversione non e' automatica e
+    // l'inserimento viene rifiutato. In quel caso si riprova una volta sola,
+    // dichiarando esplicitamente il tipo della colonna.
+    const enumIssue = /enum|type .*kind|column "kind"/i.test(msg);
+    if (enumIssue && /INSERT INTO "Artifact"/i.test(def.sql)) {
+      try {
+        const t = await getPool().query(
+          `SELECT t.typname AS name FROM pg_type t
+             JOIN pg_attribute a ON a.atttypid = t.oid
+             JOIN pg_class c ON c.oid = a.attrelid
+            WHERE c.relname = 'Artifact' AND a.attname = 'kind' LIMIT 1`);
+        const en = t.rows[0]?.name;
+        if (en) {
+          // il terzo parametro e' "kind": $3 -> $3::"<tipo>"
+          const casted = sql.replace(/\$3(?![0-9])/, `$3::"${en}"`);
+          const res2 = await getPool().query(casted, params);
+          return NextResponse.json({ ok: true, rows: res2.rows,
+                                     rowCount: res2.rowCount, write: true,
+                                     nota: 'tipo di kind dichiarato esplicitamente' });
+        }
+      } catch (e2: any) {
+        return NextResponse.json(
+          { ok: false, error: `${msg} | secondo tentativo: ${String(e2?.message || e2)}` },
+          { status: 500 });
+      }
+    }
+    return NextResponse.json({ ok: false, error: msg }, { status: 500 });
+  }
+}
+
+/** Diagnostica: dice se il token è valido, senza rivelare altro. */
+export async function GET(req: NextRequest) {
+  const auth = tokenFromRequest(req);
+  if (!auth) return NextResponse.json({ ok: false }, { status: 401 });
+  return NextResponse.json({
+    ok: true,
+    email: auth.email,
+    admin: await isAdminCompleto(auth.email, getPool()),
+    ops: Object.keys(OPS).length,
+    version: (manifest as any).version ?? null,
+  });
+}
+
+/**
+ * Verifica di allineamento.
+ *
+ * L'app invia le impronte delle query che intende usare e riceve l'elenco di
+ * quelle che il sito non conosce. Serve a distinguere subito "il sito e'
+ * indietro di un aggiornamento" da un guasto vero: sono situazioni con gli
+ * stessi sintomi ma rimedi opposti. Non espone nulla — chi chiede possiede gia'
+ * le impronte, e non si restituisce mai il testo delle query.
+ */
+export async function PUT(req: NextRequest) {
+  if (!tokenFromRequest(req)) {
+    return NextResponse.json({ ok: false }, { status: 401 });
+  }
+  let body: any;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: 'bad json' }, { status: 400 });
+  }
+  const wanted: string[] = Array.isArray(body?.ops) ? body.ops.map(String) : [];
+  const missing = wanted.filter((h) => !OPS[h]);
+  return NextResponse.json({
+    ok: missing.length === 0,
+    richieste: wanted.length,
+    sconosciute: missing.length,
+    ops: Object.keys(OPS).length,
+  });
+}

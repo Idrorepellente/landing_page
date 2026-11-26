@@ -1,0 +1,141 @@
+{
+  "guidaUtente": {
+    "file": "/docs/lyra-user-guide.pdf",
+    "titolo": "User guide",
+    "pagine": 115,
+    "byte": 21924165
+  },
+  "guide": [
+    {
+      "file": "/docs/lyra-guide-strategies.pdf",
+      "titolo": "Writing strategies",
+      "etichetta": "Strategie",
+      "descrizione": "Il contratto, il descrittore, l'allocatore, le uscite e il live; e le strategie disegnate come grafo di nodi.",
+      "pagine": 82,
+      "fonti": [
+        "strategies/GUIDE_STRATEGIE_CUSTOM.md",
+        "strategies/GUIDE_STRATEGIE_BLUEPRINT.md"
+      ],
+      "byte": 933303
+    },
+    {
+      "file": "/docs/lyra-guide-overlays.pdf",
+      "titolo": "Writing overlays",
+      "etichetta": "Overlay",
+      "descrizione": "Quanta esposizione dell'ensemble tenere: il contratto, un esempio che funziona, la manutenzione e i dati esterni.",
+      "pagine": 8,
+      "fonti": [
+        "overlays/OVERLAY_TEMPLATE.md"
+      ],
+      "byte": 359453
+    },
+    {
+      "file": "/docs/lyra-guide-weight-modes.pdf",
+      "titolo": "Writing weight modes",
+      "etichetta": "Weight mode",
+      "descrizione": "Come un progetto pesa i suoi stream: il contratto, gli import ammessi, un esempio, la validazione.",
+      "pagine": 9,
+      "fonti": [
+        "weights/WEIGHT_MODE_TEMPLATE.md"
+      ],
+      "byte": 362702
+    },
+    {
+      "file": "/docs/lyra-guide-metrics.pdf",
+      "titolo": "Writing metrics",
+      "etichetta": "Metriche",
+      "descrizione": "Un numero o un grafico sull'equity di uno stream o di un ensemble: le serie, i dati del sistema, gli esempi.",
+      "pagine": 14,
+      "fonti": [
+        "metrics/METRIC_TEMPLATE.md"
+      ],
+      "byte": 417273
+    }
+  ],
+  "agente": [
+    {
+      "chiave": "strategy",
+      "percorso": "strategies/GUIDE_STRATEGIE_CUSTOM.md",
+      "file": "/docs/agent/strategies/GUIDE_STRATEGIE_CUSTOM.md",
+      "uso": "scrivere una strategia in Python",
+      "usoEn": "writing a strategy in code",
+      "righe": 3065,
+      "sha256": "9136ec05685bac45af3f93de08c6cf597967ed74970df17e52acfc563822a733",
+      "byte": 142202
+    },
+    {
+      "chiave": "strategy_blueprint",
+      "percorso": "strategies/GUIDE_STRATEGIE_BLUEPRINT.md",
+      "file": "/docs/agent/strategies/GUIDE_STRATEGIE_BLUEPRINT.md",
+      "uso": "disegnare una strategia come grafo di nodi (blueprint)",
+      "usoEn": "drawing a strategy as a node graph (blueprint)",
+      "righe": 288,
+      "sha256": "fb15ac2cbf01d19613111facc3f1b1d34f50d1e87791f33fb3b59b6881955fce",
+      "byte": 11465
+    },
+    {
+      "chiave": "weights",
+      "percorso": "weights/WEIGHT_MODE_TEMPLATE.md",
+      "file": "/docs/agent/weights/WEIGHT_MODE_TEMPLATE.md",
+      "uso": "scrivere un weight mode dell'ensemble",
+      "usoEn": "writing an ensemble weight mode",
+      "righe": 233,
+      "sha256": "30e24ee6eb372daadd0e6d95fedd4414e087dfa680118a9fcdf5bdbd68bbdf9c",
+      "byte": 10243
+    },
+    {
+      "chiave": "overlay",
+      "percorso": "overlays/OVERLAY_TEMPLATE.md",
+      "file": "/docs/agent/overlays/OVERLAY_TEMPLATE.md",
+      "uso": "scrivere un overlay di esposizione",
+      "usoEn": "writing an exposure overlay",
+      "righe": 214,
+      "sha256": "1f2f5f62cc4216242034c70f2dd42106d72020171f257683fc78f03795c67533",
+      "byte": 8959
+    },
+    {
+      "chiave": "metric",
+      "percorso": "metrics/METRIC_TEMPLATE.md",
+      "file": "/docs/agent/metrics/METRIC_TEMPLATE.md",
+      "uso": "scrivere una metrica (numero o grafico)",
+      "usoEn": "writing a custom metric (number or chart)",
+      "righe": 438,
+      "sha256": "5e80d6fa7cce82d3e1e2905778e89dc26ab8eab1d6d9ef9089ec32f55748d4f7",
+      "byte": 20203
+    },
+    {
+      "chiave": "indicator",
+      "percorso": "indicators/INDICATOR_TEMPLATE.md",
+      "file": "/docs/agent/indicators/INDICATOR_TEMPLATE.md",
+      "uso": "scrivere un indicatore del grafico",
+      "usoEn": "writing a chart indicator",
+      "righe": 223,
+      "sha256": "11a2c997d32143c2eb2727216dff52ec59ddc2d1c88a165c664f76f05ee56252",
+      "byte": 12585
+    },
+    {
+      "chiave": "regime",
+      "percorso": "regime/GUIDE_REGIMI.md",
+      "file": "/docs/agent/regime/GUIDE_REGIMI.md",
+      "uso": "i regimi: regole, mercati e chi scrive cosa",
+      "usoEn": "regimes: rules, markets and who writes what",
+      "righe": 190,
+      "sha256": "c2e687976d71146616ec9f3ee800ebc01768ec9bdda1948563903cf8d023842f",
+      "byte": 7073
+    },
+    {
+      "chiave": "regime_rule",
+      "percorso": "regime/logics/LOGIC_TEMPLATE.md",
+      "file": "/docs/agent/regime/logics/LOGIC_TEMPLATE.md",
+      "uso": "scrivere una regola di regime",
+      "usoEn": "writing a regime rule",
+      "righe": 93,
+      "sha256": "d7bc4b28918f989d8d2b107d5df6edeefd51905f54d73f56755f5663d8bc6ff3",
+      "byte": 3370
+    }
+  ],
+  "pacchettoAgente": {
+    "file": "/docs/lyra-agent-guides.zip",
+    "byte": 82964
+  }
+}

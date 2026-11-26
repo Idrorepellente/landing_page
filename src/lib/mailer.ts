@@ -1,0 +1,294 @@
+import nodemailer from 'nodemailer';
+
+/**
+ * Posta del sito.
+ *
+ * Le credenziali sono le stesse gia' usate da /api/dashboard/email
+ * (SMTP_USER, SMTP_PASS, SMTP_HOST, SMTP_PORT, EMAIL_FROM): qui pero' si
+ * spedisce direttamente, senza passare per una chiamata HTTP al proprio sito.
+ * Il webhook di Stripe deve rispondere in fretta e non puo' permettersi un
+ * viaggio in piu' verso se stesso.
+ */
+
+const REGISTER_SMTP_HOST = 'authsmtp.securemail.pro';
+const REGISTER_SMTP_PORT = 465;
+
+export function postaConfigurata(): boolean {
+  return !!(process.env.SMTP_USER && process.env.SMTP_PASS);
+}
+
+function trasporto() {
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+  if (!user || !pass) throw new Error('SMTP_USER / SMTP_PASS not configured');
+
+  const host = process.env.SMTP_HOST || REGISTER_SMTP_HOST;
+  const port = Number(process.env.SMTP_PORT)
+    || (host === REGISTER_SMTP_HOST ? REGISTER_SMTP_PORT : 587);
+
+  return nodemailer.createTransport({
+    host, port,
+    secure: port === 465,          // 465 = SSL implicito, 587 = STARTTLS
+    auth: { user, pass },
+  });
+}
+
+/**
+ * Spedisce. Non solleva mai: un guasto della posta non deve far fallire il
+ * webhook, altrimenti Stripe ritenta e si rischia di rielaborare un pagamento
+ * gia' registrato. L'the purchase stands, the receipt is' un di piu'.
+ */
+export async function inviaEmail(
+  a: string, oggetto: string, testo: string, html?: string,
+): Promise<boolean> {
+  if (!a || !postaConfigurata()) return false;
+  try {
+    const t = trasporto();
+    await t.sendMail({
+      from: process.env.EMAIL_FROM || `Lyra <${process.env.SMTP_USER}>`,
+      to: a,
+      subject: oggetto,
+      text: testo,
+      html,
+    });
+    return true;
+  } catch (e) {
+    console.error('[mail] sending failed:', e);
+    return false;
+  }
+}
+
+/**
+ * Un trasporto da RIUSARE per più messaggi di fila (gli inviti della beta):
+ * una connessione SMTP aperta una volta, invece di una stretta di mano TLS
+ * per ogni destinatario. Chi lo crea lo chiude con `close()`.
+ */
+export function trasportoCondiviso() {
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+  if (!user || !pass) throw new Error('SMTP_USER / SMTP_PASS not configured');
+  const host = process.env.SMTP_HOST || REGISTER_SMTP_HOST;
+  const port = Number(process.env.SMTP_PORT)
+    || (host === REGISTER_SMTP_HOST ? REGISTER_SMTP_PORT : 587);
+  return nodemailer.createTransport({
+    host, port,
+    secure: port === 465,
+    auth: { user, pass },
+    pool: true,
+    maxConnections: 1,       // un server di posta piccolo non ama le raffiche
+    maxMessages: 100,
+  });
+}
+
+/**
+ * Come `inviaEmail`, ma dice PERCHÉ un messaggio non è partito.
+ *
+ * Gli inviti della beta si spediscono dal pannello di amministrazione, e lì
+ * «non inviato» senza un motivo non porta a nessuna azione: il motivo vero —
+ * casella inesistente, credenziali SMTP sbagliate, limite del provider — è
+ * quello che dice cosa fare.
+ */
+export async function inviaEmailEsito(
+  a: string, oggetto: string, testo: string, html?: string,
+  trasporto?: ReturnType<typeof trasportoCondiviso>,
+): Promise<{ ok: boolean; errore?: string }> {
+  if (!a) return { ok: false, errore: 'no recipient' };
+  if (!postaConfigurata()) {
+    return { ok: false, errore: 'mail is not configured on the site (SMTP_USER / SMTP_PASS)' };
+  }
+  try {
+    const t = trasporto || trasportoCondiviso();
+    await t.sendMail({
+      from: process.env.EMAIL_FROM || `Lyra <${process.env.SMTP_USER}>`,
+      to: a,
+      subject: oggetto,
+      text: testo,
+      html,
+    });
+    if (!trasporto) t.close();
+    return { ok: true };
+  } catch (e: any) {
+    const testoErrore = String(e?.response || e?.message || e).replace(/\s+/g, ' ').trim();
+    console.error('[mail] sending failed:', testoErrore);
+    return { ok: false, errore: testoErrore.slice(0, 300) };
+  }
+}
+
+// ─────────────────────────── ricevuta d'acquisto ───────────────────────────
+
+function soldi(cents: number, valuta = 'EUR'): string {
+  const s: Record<string, string> = { EUR: '\u20ac', USD: '$', GBP: '\u00a3' };
+  return (Number(cents || 0) / 100).toFixed(2).replace('.', ',') + ' ' + (s[valuta] || valuta);
+}
+
+export type DatiRicevuta = {
+  email: string;
+  artefatto: string;
+  importoCents: number;
+  valuta: string;
+  consegna: string;          // 'local' | 'streamed'
+  purchaseId: string;
+  data: Date;
+};
+
+export async function inviaRicevuta(d: DatiRicevuta): Promise<boolean> {
+  const importo = soldi(d.importoCents, d.valuta);
+  const quando = d.data.toLocaleString('it-IT', { dateStyle: 'long', timeStyle: 'short' });
+
+  const comeSiUsa = d.consegna === 'streamed'
+    ? 'This artifact runs without installation: it is not saved on your '
+      + 'computer, si carica al momento dell\'uso. Serve una connessione a internet.'
+    : 'Puoi installarlo dalla pagina Marketplace dell\'app: i file vengono scritti '
+      + 'in the project folder.';
+
+  const testo = [
+    `Thanks for your purchase.`,
+    ``,
+    `Artefatto : ${d.artefatto}`,
+    `Amount   : ${importo}`,
+    `Date      : ${quando}`,
+    `Riferimento: ${d.purchaseId}`,
+    ``,
+    comeSiUsa,
+    ``,
+    `You will find it in the Marketplace page of the app.`,
+    ``,
+    `If you did not make this purchase, reply to this email.`,
+  ].join('\n');
+
+  const html = `
+<div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+            max-width:520px;margin:0 auto;color:#1f2328;line-height:1.55">
+  <h2 style="margin:0 0 4px;font-size:20px">Acquisto confermato</h2>
+  <p style="margin:0 0 20px;color:#6e7681;font-size:14px">
+    Il pagamento è andato a buon fine.</p>
+
+  <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:20px">
+    <tr><td style="padding:8px 0;color:#6e7681">Artefatto</td>
+        <td style="padding:8px 0;text-align:right;font-weight:600">${escapeHtml(d.artefatto)}</td></tr>
+    <tr><td style="padding:8px 0;color:#6e7681;border-top:1px solid #e5e7eb">Amount</td>
+        <td style="padding:8px 0;text-align:right;font-weight:600;border-top:1px solid #e5e7eb">${importo}</td></tr>
+    <tr><td style="padding:8px 0;color:#6e7681;border-top:1px solid #e5e7eb">Data</td>
+        <td style="padding:8px 0;text-align:right;border-top:1px solid #e5e7eb">${escapeHtml(quando)}</td></tr>
+    <tr><td style="padding:8px 0;color:#6e7681;border-top:1px solid #e5e7eb">Riferimento</td>
+        <td style="padding:8px 0;text-align:right;font-family:monospace;font-size:12px;border-top:1px solid #e5e7eb">${escapeHtml(d.purchaseId)}</td></tr>
+  </table>
+
+  <p style="margin:0 0 16px;font-size:14px">${escapeHtml(comeSiUsa)}</p>
+  <p style="margin:0 0 20px;font-size:14px">
+    Lo trovi già disponibile nella pagina <b>Marketplace</b> dell'app.</p>
+  <p style="margin:0;font-size:12px;color:#6e7681;border-top:1px solid #e5e7eb;padding-top:14px">
+    If you did not make this purchase, reply to this email.</p>
+</div>`;
+
+  return inviaEmail(d.email, `Acquisto confermato — ${d.artefatto}`, testo, html);
+}
+
+function escapeHtml(t: string): string {
+  return String(t ?? '').replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ESITO DI UNA RICHIESTA DI RIMBORSO
+
+   Una richiesta si chiude in quattro modi, e ognuno merita parole diverse:
+   chi si sente dire «pratica chiusa» senza sapere se ha avuto ragione o
+   torto deve chiedere, e chiedere costa a entrambi.
+
+   L'email si manda SEMPRE, anche quando l'esito e' negativo: il silenzio
+   dopo una lamentela e' the thing that wastes the most' fiducia.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+export type EsitoRimborso = 'rimborsato' | 'respinto' | 'ritirato' | 'chiuso';
+
+export type DatiEsitoRimborso = {
+  email: string;
+  artefatto: string;
+  esito: EsitoRimborso;
+  motivo?: string;
+  importoCents?: number;    // solo se rimborsato
+  valuta?: string;
+  claimId: string;
+  daAmministratore: boolean;
+};
+
+/** Titolo, riga d'apertura e spiegazione, per ciascun esito. */
+function testiEsito(d: DatiEsitoRimborso) {
+  const nome = d.artefatto || 'l\'artefatto';
+  switch (d.esito) {
+    case 'rimborsato':
+      return {
+        oggetto: `Refund approved — ${nome}`,
+        titolo: 'Your request has been accepted',
+        corpo: `We have reviewed your request on <b>${nome}</b> and `
+             + 'accolta. L\'the amount goes back to the payment method you used:  '
+             + 'your bank normally credits it within five to ten working '
+             + 'days.',
+      };
+    case 'respinto':
+      return {
+        oggetto: `Refund request declined — ${nome}`,
+        titolo: 'Your request was not accepted',
+        corpo: `We have reviewed your request on <b>${nome}</b>. The `
+             + 'checks found no discrepancy against what '
+             + 'dichiarato dall\'autore, e l\'the purchase stands:  '
+             + 'l\'the artifact remains yours and usable.',
+      };
+    case 'ritirato':
+      return {
+        oggetto: `Refund request withdrawn — ${nome}`,
+        titolo: 'You withdrew your request',
+        corpo: `The request on <b>${nome}</b> was closed at your `
+             + 'request. No refund was issued and the\'acquisto '
+             + 'stands. If the problem happens again you can open a '
+             + 'new one.',
+      };
+    default:
+      return {
+        oggetto: `Refund request closed — ${nome}`,
+        titolo: 'Your request has been closed',
+        corpo: `The request on <b>${nome}</b> was closed without issuing `
+             + 'a refund.',
+      };
+  }
+}
+
+export async function inviaEsitoRimborso(d: DatiEsitoRimborso): Promise<boolean> {
+  const t = testiEsito(d);
+  const importo = (d.esito === 'rimborsato' && d.importoCents)
+    ? soldi(d.importoCents, d.valuta || 'EUR') : null;
+
+  const righe: string[] = [];
+  righe.push(`<p style="margin:0 0 14px">${t.corpo}</p>`);
+  if (importo) {
+    righe.push(`<p style="margin:0 0 14px;font-size:20px"><b>${importo}</b></p>`);
+  }
+  if (d.motivo) {
+    // Il motivo si riporta testualmente: riassumerlo cambierebbe cio' che
+    // e' stato deciso, e questa email e' il documento che resta.
+    righe.push('<p style="margin:0 0 6px;font-size:12px;color:#6b7280;'
+      + 'text-transform:uppercase;letter-spacing:.08em">Reason</p>'
+      + `<p style="margin:0 0 14px;padding:10px 12px;background:#f6f7f9;`
+      + `border-radius:6px">${d.motivo}</p>`);
+  }
+  righe.push('<p style="margin:14px 0 0;font-size:13px;color:#6b7280">'
+    + 'La conversazione resta consultabile nell\'applicazione, sezione '
+    + 'Refund. If something does not add up, reply to this email.</p>');
+  righe.push(`<p style="margin:18px 0 0;font-size:11px;color:#9aa1ab">`
+    + `Request reference: ${d.claimId}</p>`);
+
+  const html = `<div style="font-family:system-ui,-apple-system,Roboto,sans-serif;`
+    + `max-width:560px;margin:0 auto;padding:24px;color:#111827">`
+    + `<h2 style="margin:0 0 16px;font-size:19px">${t.titolo}</h2>`
+    + righe.join('') + '</div>';
+
+  // Il testo semplice non e' un ripiego: alcuni client mostrano solo quello,
+  // e una email vuota sarebbe peggio di nessuna email.
+  const testo = [t.titolo, '', t.corpo.replace(/<[^>]+>/g, ''),
+                 importo ? `Amount: ${importo}` : '',
+                 d.motivo ? `Reason: ${d.motivo}` : '',
+                 `Riferimento: ${d.claimId}`].filter(Boolean).join('\n');
+
+  return inviaEmail(d.email, t.oggetto, testo, html);
+}
