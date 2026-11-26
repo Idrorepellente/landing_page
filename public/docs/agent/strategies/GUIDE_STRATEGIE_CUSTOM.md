@@ -1185,6 +1185,71 @@ filtered = filter_universe(symbols_full_universe, DESCRIPTOR)
 # filtered holds only the tickers the strategy allows
 ```
 
+### Delisted assets and index membership
+
+A universe built from today's constituents of an index holds only the
+survivors: the companies that were taken over, went bankrupt or dropped out of
+the index are missing, and the backtest of a stock strategy looks better than
+reality would have been. A backtest without that bias needs two things: the
+prices of every asset that was ever a member, delisted ones included (Yahoo
+Finance drops delisted tickers, Polygon keeps them), and the membership
+itself: who was in the index on each date.
+
+**What the engine does when a series ends.** A delisted asset has bars up to
+its last trading day, then nothing. When the series of a symbol ends more than
+7 days before the end of the backtest, the engine closes a position on it at
+the close of its last bar, with the usual costs, and from the next bar its
+signals no longer take part in the sizing (`backtest/fine_serie.py`). The
+trade's reason is `exit_trigger:series_end`. A series that ends within the
+last 7 days is left alone, because it is more likely a file updated a day
+earlier than the others; gaps in the middle of a series do not count. The live
+runner does not apply the rule: there a series that stops may be a feed
+problem, and the broker holds the real position. Strategies with
+`bypass=True` compute their own returns and handle a delisting themselves.
+
+**Membership as auxiliary data.** Create a per-asset category on the Data
+page, for example `sp500_members`, with one file per ticker and a column
+`in_index`: 1 on the date the asset joins, 0 on the date it leaves
+(re-entries are just more rows). Declare it in `required_external_data` and
+read it with `custom_series`, which aligns it as-of: at every bar, the last
+value known by then. A ticker reused by another company needs a different
+symbol for each company (`ABC`, `ABC_2008`), otherwise two price histories end
+up in one file.
+
+**Leaving the index is the strategy's job.** An asset that leaves the index
+but stays listed keeps its prices, so the engine has nothing to do: the
+strategy closes the position. A symbol missing from the signals means "I
+hold", so it must emit a `flat_signal`: if it simply stops naming the symbol,
+the position stays open.
+
+```python
+from core.node_data import custom_series
+from core.types import flat_signal
+
+def __init__(self, **params):
+    super().__init__()
+    self._membership = {}            # symbol -> in_index series, built once
+
+def _member(self, sym, ind, t_decision) -> bool:
+    series = self._membership.get(sym)
+    if series is None:
+        bars = ind.close.to_frame("close")
+        bars.attrs["symbol"] = sym   # the 1:1 file is data/sp500_members/<sym>.parquet
+        series = self._membership[sym] = custom_series("sp500_members", "in_index", bars)
+    known = series.loc[:t_decision]
+    return len(known) > 0 and known.iloc[-1] > 0.5
+
+def generate_signals(self, t_decision, t_execution, indicators_by_symbol, portfolio):
+    signals = []
+    for sym, ind in indicators_by_symbol.items():
+        if not self._member(sym, ind, t_decision):
+            if sym in portfolio.positions:
+                signals.append(flat_signal(sym, t_execution, style=self.style))
+            continue
+        ...                          # the strategy's own logic, on members only
+    return signals
+```
+
 ### FX strategies
 
 FX spot pairs (`AssetClass.FX_SPOT`) are handled transparently by the framework. A strategy trading FX simply declares:

@@ -1,6 +1,12 @@
 # Sito — aggiornamento del 26 novembre 2026
 
-## Ultime modifiche (v4.26, 26 novembre)
+## Ultime modifiche (v4.27, 26 novembre)
+- **Documenti aggiornati** con l'aggiornamento 53 dell'app (un titolo che smette di quotare: il backtest chiude la posizione alla sua ultima chiusura). La guida delle strategie ha la sezione «Delisted assets and index membership»: che cosa fa il motore quando una serie finisce, l'appartenenza a un indice letta da una categoria di dati, l'uscita dall'indice affidata alla strategia con un `flat_signal`. È nel PDF *Writing strategies* e nel Markdown `strategies/GUIDE_STRATEGIE_CUSTOM.md` (anche nello zip dei Markdown). La User guide ha la nota «Stocks that stopped trading» nella pagina Data. `documenti.json` porta le nuove dimensioni e righe.
+- **Prove** (in locale): `node prove/prova-documenti.mjs` 15/15, `node prove/prova-catalogo.mjs` 22/22; in Chromium sul sito compilato le stesse 38 verifiche della v4.26, al computer in scuro e in chiaro e al telefono.
+- **Da fare**: niente sul database. Lo zip è cumulativo: contiene anche la v4.26, se non è ancora pubblicata. Estrai lo zip nella cartella del sito, `npm run build`, pubblica.
+- File: `public/docs/lyra-user-guide.pdf`, `public/docs/lyra-guide-strategies.pdf`, `public/docs/agent/strategies/GUIDE_STRATEGIE_CUSTOM.md`, `public/docs/lyra-agent-guides.zip`, `src/content/documenti.json`, `MODIFICHE_SITO.md`.
+
+## Modifiche precedenti (v4.26, 26 novembre)
 - **Pagina Documentazione** (`#docs`, anche `/documentazione`): una pagina interna come le altre, solo per scaricare i documenti. Tre sezioni:
   - **User guide**, il manuale dell'app: «Scarica la User guide» oppure «Aprila nel browser» (si apre prima di essere scaricata tutta), con pagine e peso;
   - **Le guide degli artefatti**: quattro PDF nuovi, *Writing strategies*, *Writing overlays*, *Writing weight modes*, *Writing metrics*. Sono le guide che l'agente legge prima di scrivere un artefatto, impaginate come la User guide e in inglese come i Markdown da cui sono generate. La guida delle strategie ha due parti, il codice e i blueprint;

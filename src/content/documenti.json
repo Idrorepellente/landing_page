@@ -2,8 +2,8 @@
   "guidaUtente": {
     "file": "/docs/lyra-user-guide.pdf",
     "titolo": "User guide",
-    "pagine": 115,
-    "byte": 21924165
+    "pagine": 116,
+    "byte": 21925697
   },
   "guide": [
     {
@@ -11,12 +11,12 @@
       "titolo": "Writing strategies",
       "etichetta": "Strategie",
       "descrizione": "Il contratto, il descrittore, l'allocatore, le uscite e il live; e le strategie disegnate come grafo di nodi.",
-      "pagine": 82,
+      "pagine": 83,
       "fonti": [
         "strategies/GUIDE_STRATEGIE_CUSTOM.md",
         "strategies/GUIDE_STRATEGIE_BLUEPRINT.md"
       ],
-      "byte": 933303
+      "byte": 940694
     },
     {
       "file": "/docs/lyra-guide-overlays.pdf",
@@ -59,9 +59,9 @@
       "file": "/docs/agent/strategies/GUIDE_STRATEGIE_CUSTOM.md",
       "uso": "scrivere una strategia in Python",
       "usoEn": "writing a strategy in code",
-      "righe": 3065,
-      "sha256": "9136ec05685bac45af3f93de08c6cf597967ed74970df17e52acfc563822a733",
-      "byte": 142202
+      "righe": 3130,
+      "sha256": "b2b3c06a503ee9f64f720c242b4aef5a6e15c1c54a100111a276e2f64b68bd0a",
+      "byte": 145514
     },
     {
       "chiave": "strategy_blueprint",
@@ -136,6 +136,6 @@
   ],
   "pacchettoAgente": {
     "file": "/docs/lyra-agent-guides.zip",
-    "byte": 82964
+    "byte": 84129
   }
 }
