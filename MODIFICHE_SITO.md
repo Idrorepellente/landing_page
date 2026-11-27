@@ -1,6 +1,18 @@
-# Sito — aggiornamento del 26 novembre 2026
+# Sito — aggiornamento del 27 novembre 2026
 
-## Ultime modifiche (v4.31, 26 novembre)
+## Ultime modifiche (v4.33, 27 novembre)
+- **User guide aggiornata** con l'aggiornamento 59 dell'app (`public/docs/lyra-user-guide.pdf`, 120 pagine): nella View «The Volume Profile», lo strumento che oltre alle zone di supporto e resistenza disegna il volume scambiato a ogni prezzo e il POC, con una figura nuova; in Studio › AI agent la chat a tutto schermo (il pulsante con i quattro angoli, Esc), con le due figure della chat rifatte. `documenti.json` porta pagine e dimensione nuove.
+- **Prove** (in locale): `node prove/prova-documenti.mjs` 15/15.
+- **Da fare**: niente sul database. Lo zip è cumulativo: contiene anche v4.26–v4.32, se non sono ancora pubblicate. Estrai lo zip nella cartella del sito, `npm run build`, pubblica.
+- File: `public/docs/lyra-user-guide.pdf`, `src/content/documenti.json`, `MODIFICHE_SITO.md`.
+
+## Modifiche precedenti (v4.32, 27 novembre)
+- **User guide aggiornata** con l'aggiornamento 58 dell'app (`public/docs/lyra-user-guide.pdf`, 118 pagine): in Studio › Genetics, le mutazioni guidate dall'agente usano un modello installato in Ollama, e l'elenco dei modelli arriva un attimo dopo la pagina («Looking for local models…» finché non arriva, «No local model found» se Ollama è spento). `documenti.json` porta il peso nuovo.
+- **Prove** (in locale): `node prove/prova-documenti.mjs` 15/15.
+- **Da fare**: niente sul database. Lo zip è cumulativo: contiene anche v4.26–v4.31, se non sono ancora pubblicate. Estrai lo zip nella cartella del sito, `npm run build`, pubblica.
+- File: `public/docs/lyra-user-guide.pdf`, `src/content/documenti.json`, `MODIFICHE_SITO.md`.
+
+## Modifiche precedenti (v4.31, 26 novembre)
 - **User guide aggiornata** con l'aggiornamento 57 dell'app (`public/docs/lyra-user-guide.pdf`, 118 pagine): in Studio › Genetics, mentre la pagina carica, lo spazio a destra mostra l'albero che si accende dalla radice e la riga di ciò che sta arrivando (i mattoni, poi le strategie evolute). `documenti.json` porta il peso nuovo.
 - **Prove** (in locale): `node prove/prova-documenti.mjs` 15/15.
 - **Da fare**: niente sul database. Lo zip è cumulativo: contiene anche v4.26–v4.30, se non sono ancora pubblicate. Estrai lo zip nella cartella del sito, `npm run build`, pubblica.
